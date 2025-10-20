@@ -1,6 +1,6 @@
 from flask import Flask, Blueprint, render_template, request, session, redirect, url_for, flash, abort
 from flask_login import login_user, login_required, logout_user
-from base import db
+from base import db, registration_toggle
 from base.models import User
 from base.users.forms import RegistrationForm, LoginForm
 from werkzeug.security import generate_password_hash, check_password_hash
@@ -10,16 +10,20 @@ users_blueprint = Blueprint('users', __name__, template_folder='templates/users'
 
 @users_blueprint.route('/register', methods=['GET', 'POST'])
 def register():
-    form = RegistrationForm()
-    if form.validate_on_submit():
-        user = User(username=form.username.data,
-                    email=form.email.data,
-                    password=form.password.data)
-        db.session.add(user)
-        db.session.commit()
-        flash('Thank you for registering. You can now login.')
-        return redirect(url_for('users.login'))
-    return render_template('register.html', form=form)
+    #env variable that allows me to toggle registration
+    if registration_toggle == True:
+        form = RegistrationForm()
+        if form.validate_on_submit():
+            user = User(username=form.username.data,
+                        email=form.email.data,
+                        password=form.password.data)
+            db.session.add(user)
+            db.session.commit()
+            flash('Thank you for registering. You can now login.')
+            return redirect(url_for('users.login'))
+        return render_template('register.html', form=form)
+    else:
+        abort(423)
 
 @users_blueprint.route('/login', methods=['GET', 'POST'])
 def login():

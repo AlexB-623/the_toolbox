@@ -9,5 +9,10 @@ def index():
 def page_not_found(e):
     return render_template('404.html'), 404
 
+@app.errorhandler(423)
+def locked(e):
+    #this error is primarily used by the registration toggle to allow/block new registrants
+    return render_template('423.html'), 423
+
 if __name__ == '__main__':
     app.run()

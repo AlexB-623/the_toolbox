@@ -8,6 +8,7 @@ from dotenv import load_dotenv
 
 load_dotenv()
 secret_key = os.getenv('SECRET_KEY')
+registration_toggle = os.getenv('REGISTRATION_TOGGLE')
 login_manager = LoginManager()
 app = Flask(__name__)
 app.config['SECRET_KEY'] = secret_key
@@ -26,4 +27,6 @@ login_manager.login_view = 'login'
 
 ###BLUEPRINTS###
 from base.users.views import users_blueprint
+from base.gibbergen.views import gibbergen_blueprint
 app.register_blueprint(users_blueprint, url_prefix='/users')
+app.register_blueprint(gibbergen_blueprint, url_prefix='/gibbergen')
