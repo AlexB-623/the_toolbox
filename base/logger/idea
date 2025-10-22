@@ -1,0 +1,8 @@
+create a module that:
+-logs user site-actions to a database
+-makes those actions visible
+-makes those actions searchable
+
+later goals:
+-create a user-profile page that shows the current_user's actions and no others
+-gate the full logs behind admin access

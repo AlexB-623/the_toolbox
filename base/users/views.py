@@ -11,7 +11,7 @@ users_blueprint = Blueprint('users', __name__, template_folder='templates/users'
 @users_blueprint.route('/register', methods=['GET', 'POST'])
 def register():
     #env variable that allows me to toggle registration
-    if registration_toggle == True:
+    if registration_toggle == 'True':
         form = RegistrationForm()
         if form.validate_on_submit():
             user = User(username=form.username.data,
