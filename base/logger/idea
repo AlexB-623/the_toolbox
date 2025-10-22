@@ -1,7 +1,8 @@
 create a module that:
 -logs user site-actions to a database
 -makes those actions visible
--makes those actions searchable
+-makes those actions searchable/filterable
+-can be exported to Excel
 
 later goals:
 -create a user-profile page that shows the current_user's actions and no others

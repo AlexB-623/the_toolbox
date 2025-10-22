@@ -1,7 +1,21 @@
 .hacker-console {
     background-color: black;
+    width: fit-content;
 }
 
-li {
+.term-list {
     color: limegreen;
+    font-family: 'Consolas', 'Menlo', 'DejaVu Sans Mono', 'Bitstream Vera Sans Mono', monospace;
+    padding-top: 2px;
+    padding-bottom: 2px;
+    padding-right: 3px;
+    list-style: none;
+}
+
+.fancy-term-text {
+    background-color: black;
+    color: orangered;
+    font-size: 1.25rem;
+    padding: 1px;
+    margin-left: 3px;
 }

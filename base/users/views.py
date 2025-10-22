@@ -8,6 +8,10 @@ from werkzeug.security import generate_password_hash, check_password_hash
 
 users_blueprint = Blueprint('users', __name__, template_folder='templates/users')
 
+@users_blueprint.route('/', methods=['GET'])
+def users():
+    return render_template('users.html')
+
 @users_blueprint.route('/register', methods=['GET', 'POST'])
 def register():
     #env variable that allows me to toggle registration

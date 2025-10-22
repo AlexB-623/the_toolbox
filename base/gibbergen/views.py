@@ -1,7 +1,7 @@
 from flask import Flask, Blueprint, render_template, request, session, redirect, url_for, flash
 import json, random
 from os import getcwd
-from flask_login import login_required
+from flask_login import login_required, current_user
 
 cwd = getcwd()
 gibbergen_blueprint = Blueprint('gibbergen', __name__, template_folder='templates/gibbergen')
@@ -40,7 +40,6 @@ def term_maker():
 def gibbergen():
     term = term_maker()
     return render_template('gibbergen_home.html', term=term)
-
 
 
 @gibbergen_blueprint.route('/sampler')

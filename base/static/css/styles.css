@@ -6,11 +6,13 @@ body {
     background-color: black;
 }
 
+.navbar-item nav-link {
+    color: aqua;
+}
 
 h1 {
     color: blue;
     margin-bottom: 24px;
     font-size: 24px;
-    text-decoration-color: aqua;
 }
 

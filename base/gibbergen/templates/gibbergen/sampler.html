@@ -10,10 +10,12 @@
 {% block content %}
     <h1>GibberGen - The Gibberish Generator</h1>
     <h3>Your terms are:</h3>
-    <ul class="hacker-console">
+    <div class="hacker-console">
+    <ul class="term-list">
         {% for term in terms %}
             <li>{{ term }}</li>
         {% endfor %}
     </ul>
+    </div>
     <p>Reload to generate new terms.</p>
 {% endblock %}

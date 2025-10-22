@@ -7,8 +7,17 @@ def index():
 
 @app.route('/toolbox')
 def toolbox():
-    #need to autogenerate tool modules
     tool_modules = ['gibbergen.gibbergen']
+    # need to autogenerate tool modules
+    # tool_modules = []
+    # blueprints = app.blueprints.items()
+    # for name, url in blueprints:
+    #     tool_modules.append(
+    #         {
+    #             'name': name,
+    #             'url': url or '/'
+    #         }
+    #     )
     return render_template('toolbox.html', tool_modules=tool_modules)
 
 @app.errorhandler(404)
