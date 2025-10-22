@@ -3,10 +3,14 @@
     <title>Alex's Toolbox - GibberGen</title>
 {% endblock %}
 
+{% block additional_css %}
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/gibbergen.css') }}" />
+{% endblock %}
+
 {% block content %}
     <h1>GibberGen - The Gibberish Generator</h1>
     <h3>Your terms are:</h3>
-    <ul>
+    <ul class="hacker-console">
         {% for term in terms %}
             <li>{{ term }}</li>
         {% endfor %}

@@ -52,3 +52,8 @@ def gibbergen_sampler():
         term = term_maker()
         term_list.append(term)
     return render_template('sampler.html', terms=term_list)
+
+#next:
+#save term to a database and call an LLM to generate a made-up meaning for it
+#create a way to browse the db entries
+#for the sampler, allow the terms to be clicked for above functionality

@@ -4,7 +4,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta http-equiv="X-UA-Compatible" content="ie=edge" />
-    <link rel="stylesheet" href="static/css/styles.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+    {% block additional_css %}
+    {% endblock %}
+
     {% block title %}
     {% endblock %}
 
@@ -18,7 +21,7 @@
     <strong>{{ mess }}</strong>
     </div>
 {% endfor %}
-    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <nav class="navbar">
         <a class="navbar-item nav-link" href="{{ url_for('index') }}">Home</a>
         <a class="navbar-item nav-link" href="{{ url_for('toolbox') }}">Toolbox</a>
         {% if current_user.is_authenticated %}

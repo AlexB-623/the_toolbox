@@ -1,6 +1,11 @@
 body {
     background-color: #a6a6a6;
+    font-family: 'Consolas', 'Menlo', 'DejaVu Sans Mono', 'Bitstream Vera Sans Mono', monospace;
 }
+.navbar {
+    background-color: black;
+}
+
 
 h1 {
     color: blue;
