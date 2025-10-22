@@ -1,6 +1,8 @@
 from flask import Flask, Blueprint, render_template, request, session, redirect, url_for, flash
 import json, random
 from os import getcwd
+from flask_login import login_required
+
 cwd = getcwd()
 gibbergen_blueprint = Blueprint('gibbergen', __name__, template_folder='templates/gibbergen')
 
@@ -37,4 +39,16 @@ def term_maker():
 @gibbergen_blueprint.route('/')
 def gibbergen():
     term = term_maker()
-    return render_template('single_term.html', term=term)
+    return render_template('gibbergen_home.html', term=term)
+
+
+
+@gibbergen_blueprint.route('/sampler')
+@login_required
+def gibbergen_sampler():
+    term_list = []
+    i = range(1, 10)
+    for n in i:
+        term = term_maker()
+        term_list.append(term)
+    return render_template('sampler.html', terms=term_list)

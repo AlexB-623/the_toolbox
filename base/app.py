@@ -5,6 +5,12 @@ from flask import render_template
 def index():
     return render_template('index.html')
 
+@app.route('/toolbox')
+def toolbox():
+    #need to autogenerate tool modules
+    tool_modules = ['gibbergen.gibbergen']
+    return render_template('toolbox.html', tool_modules=tool_modules)
+
 @app.errorhandler(404)
 def page_not_found(e):
     return render_template('404.html'), 404

@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+{% block title %}
+    <title>Alex's Toolbox - GibberGen</title>
+{% endblock %}
+
+{% block content %}
+    <h1>GibberGen - The Gibberish Generator</h1>
+    <h3>Your terms are:</h3>
+    <ul>
+        {% for term in terms %}
+            <li>{{ term }}</li>
+        {% endfor %}
+    </ul>
+    <p>Reload to generate new terms.</p>
+{% endblock %}
