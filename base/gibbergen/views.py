@@ -1,7 +1,11 @@
+from time import strftime
+
 from flask import Flask, Blueprint, render_template, request, session, redirect, url_for, flash
 import json, random
+from datetime import datetime
 from os import getcwd
 from flask_login import login_required, current_user
+from base.lumberjack.views import lumberjack_do
 
 cwd = getcwd()
 gibbergen_blueprint = Blueprint('gibbergen', __name__, template_folder='templates/gibbergen')
@@ -13,12 +17,14 @@ clean_tech_path = f'{cwd}/gibbergen/data/tech_terms_clean.json'
 def get_verbs(path):
     with open(path) as json_verb_file:
         data = json.load(json_verb_file)
+        json_verb_file.close()
         return data
 
 
 def get_terms(path):
     with open(path) as json_tech_file:
         data = json.load(json_tech_file)
+        json_tech_file.close()
         return data
 
 def term_maker():
@@ -39,6 +45,7 @@ def term_maker():
 @gibbergen_blueprint.route('/')
 def gibbergen():
     term = term_maker()
+    lumberjack_do(datetime.utcnow(), current_user, "gibbergen", term)
     return render_template('gibbergen_home.html', term=term)
 
 

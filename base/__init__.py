@@ -28,5 +28,8 @@ login_manager.login_view = 'users.login'
 ###BLUEPRINTS###
 from base.users.views import users_blueprint
 from base.gibbergen.views import gibbergen_blueprint
+from base.lumberjack.views import lumberjack_blueprint
+
 app.register_blueprint(users_blueprint, url_prefix='/users')
 app.register_blueprint(gibbergen_blueprint, url_prefix='/gibbergen')
+app.register_blueprint(lumberjack_blueprint, url_prefix='/lumberjack')

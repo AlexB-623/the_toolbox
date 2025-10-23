@@ -28,11 +28,17 @@ class Log_Entry(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     timestamp = db.Column(db.DateTime, index=True, default=datetime.now)
     #the user relevant to the logged activity, if known
-    username = db.Column(db.String(20), unique=True, index=True)
+    user_id = db.Column(db.String(20), unique=True, index=True)
     #the part of the application where the action occurred
     domain = db.Column(db.String(20), unique=True, index=True)
     #logged info
     event = db.Column(db.String(200), unique=False, index=True)
+
+    def __init__(self, timestamp, user_id, domain, event):
+        self.timestamp = timestamp
+        self.user_id = user_id
+        self.domain = domain
+        self.event = event
 
 
 
