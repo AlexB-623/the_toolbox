@@ -1,5 +1,8 @@
 from base import app
-from flask import render_template
+from flask import render_template, request
+from base.lumberjack.views import lumberjack_do
+from flask_login import current_user
+from datetime import datetime
 
 #this module covers the core of the site - home page, toolbox directory, and error pages
 
@@ -25,6 +28,7 @@ def toolbox():
 @app.errorhandler(404)
 def page_not_found(e):
     #log what they were trying to do
+    lumberjack_do(datetime.utcnow(), current_user, "error", {"error": 404, "target": request.url})
     return render_template('404.html'), 404
 
 @app.errorhandler(423)
@@ -35,6 +39,7 @@ def locked(e):
 @app.errorhandler(500)
 def oopsie(e):
     # log what they were trying to do
+    lumberjack_do(datetime.utcnow(), current_user, "error", {"error": 500, "target": request.url})
     return render_template('500.html'), 500
 
 if __name__ == '__main__':

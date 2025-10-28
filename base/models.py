@@ -32,7 +32,7 @@ class Log_Entry(db.Model):
     #the part of the application where the action occurred
     domain = db.Column(db.String(20), unique=True, index=True)
     #logged info
-    event = db.Column(db.String(200), unique=False, index=True)
+    event = db.Column(db.String(500), unique=False, index=True)
 
     def __init__(self, timestamp, user_id, domain, event):
         self.timestamp = timestamp

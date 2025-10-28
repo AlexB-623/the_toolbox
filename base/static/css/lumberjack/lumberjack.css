@@ -1,0 +1,4 @@
+.lumberjack-pages {
+  background-image: url('/static/css/lumberjack/images/pattern1.png');
+  background-repeat: repeat; /* This is the default, tiles in all directions */
+}

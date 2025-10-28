@@ -1,7 +1,15 @@
-body {
+.body-default {
     background-color: #a6a6a6;
+}
+
+body {
     font-family: 'Consolas', 'Menlo', 'DejaVu Sans Mono', 'Bitstream Vera Sans Mono', monospace;
 }
+
+a:visited {
+  color: blue; /* or whatever color you want */
+}
+
 .navbar {
     background-color: black;
 }

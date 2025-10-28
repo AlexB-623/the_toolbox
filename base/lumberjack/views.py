@@ -5,12 +5,13 @@ from flask_login import login_required, current_user
 
 lumberjack_blueprint = Blueprint('lumberjack', __name__, template_folder='templates/lumberjack')
 def lumberjack_do(timestamp, user_id, domain, event):
-    ### timestamp, user_id, domain, and event, and produces a log entry
-    ### lumberjack_do(datetime.utcnow(), current_user, "", )
+    # timestamp, user_id, domain, and event, and produces a log entry
+    # lumberjack_do(datetime.utcnow(), current_user, "", )
+    # maybe find a way to use an ENV variable to enable and disable this
     log_entry = {'timestamp': str(timestamp),
-                 'user_id': str(user_id),
+                 'user_id': str(user_id), #tie this to the username
                  'domain': str(domain).title(),
-                 'event': str(event)}
+                 'event': str(event)} #trim this to match the length of the model field
     print(log_entry)
     #need to get this adding to a database
     return None
