@@ -1,19 +1,26 @@
+from base import db
 from flask import Flask, Blueprint, render_template, request, session, redirect, url_for, flash
 import json, random
 from os import getcwd
 from flask_login import login_required, current_user
+
+from base.models import Log_Entry
 
 lumberjack_blueprint = Blueprint('lumberjack', __name__, template_folder='templates/lumberjack')
 def lumberjack_do(timestamp, user_id, domain, event):
     # timestamp, user_id, domain, and event, and produces a log entry
     # lumberjack_do(datetime.utcnow(), current_user, "", )
     # maybe find a way to use an ENV variable to enable and disable this
-    log_entry = {'timestamp': str(timestamp),
-                 'user_id': str(user_id), #tie this to the username
-                 'domain': str(domain).title(),
-                 'event': str(event)} #trim this to match the length of the model field
-    print(log_entry)
-    #need to get this adding to a database
+    # log_entry = {'timestamp': str(timestamp),
+    #              'user_id': str(user_id),
+    #              'domain': str(domain).title(),
+    #              'event': str(event)}
+    log_entry = Log_Entry(timestamp=timestamp,
+                          user_id=str(user_id), #tie this to the username
+                          domain=str(domain).title(),
+                          event=str(event)) #trim this to match the length of the model field
+    db.session.add(log_entry)
+    db.session.commit()
     return None
 
 
@@ -26,7 +33,10 @@ def lumberjack():
 def view_logs():
     #basic page for seeing last X events
     #export to CSV
-    pass
+    logs = db.session.execute(db.select(Log_Entry.timestamp, Log_Entry.user_id, Log_Entry.domain, Log_Entry.event).order_by(Log_Entry.timestamp.desc()))
+    #render timestamp in readable format
+    #make the page prettier
+    return render_template('lumberjack_viewer.html', logs=logs)
 
 
 @lumberjack_blueprint.route('/filter_logs', methods=['GET', 'POST'])

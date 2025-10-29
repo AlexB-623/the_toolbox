@@ -3,11 +3,15 @@
     <title>Alex's Toolbox - Toolbox</title>
 {% endblock %}
 
+{% block body_class %}toolbox-pages{% endblock %}
+
 {% block content %}
     <h1>The Toolbox</h1>
-    <ul>
-    {% for tool_module in tool_modules %}
-        <li><a href="{{ url_for(tool_module) }}">{{ tool_module }}</a></li>
-    {% endfor %}
-    </ul>
+    <div class="toolbox">
+        <ul>
+            {% for tool_module in tool_modules %}
+                <li><a href="{{ url_for(tool_module) }}">{{ tool_module }}</a></li>
+            {% endfor %}
+        </ul>
+    </div>
 {% endblock %}

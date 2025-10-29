@@ -1,4 +1,20 @@
 .lumberjack-pages {
-  background-image: url('/static/css/lumberjack/images/pattern1.png');
+  background-image: url('/static/css/lumberjack/images/pattern2.png');
   background-repeat: repeat; /* This is the default, tiles in all directions */
+}
+
+.menu {
+    background-color: antiquewhite;
+    margin-top: 50px;
+    margin-right: 50px;
+    margin-left: 50px;
+    padding: 15px;
+}
+
+.log-display {
+    background-color: antiquewhite;
+    margin-top: 50px;
+    margin-right: 50px;
+    margin-left: 50px;
+    padding: 15px;
 }

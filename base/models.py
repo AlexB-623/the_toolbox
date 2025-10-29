@@ -19,6 +19,7 @@ class User(db.Model, UserMixin):
         self.username = username
         self.password_hash = generate_password_hash(password)
 
+
     def check_password(self, password):
         return check_password_hash(self.password_hash, password)
 
@@ -26,11 +27,11 @@ class User(db.Model, UserMixin):
 class Log_Entry(db.Model):
     __tablename__ = 'log_entries'
     id = db.Column(db.Integer, primary_key=True)
-    timestamp = db.Column(db.DateTime, index=True, default=datetime.now)
+    timestamp = db.Column(db.DateTime, index=False, default=datetime.now)
     #the user relevant to the logged activity, if known
-    user_id = db.Column(db.String(20), unique=True, index=True)
+    user_id = db.Column(db.String(20), unique=False, index=True)
     #the part of the application where the action occurred
-    domain = db.Column(db.String(20), unique=True, index=True)
+    domain = db.Column(db.String(20), unique=False, index=True)
     #logged info
     event = db.Column(db.String(500), unique=False, index=True)
 

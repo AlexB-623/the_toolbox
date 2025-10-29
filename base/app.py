@@ -6,7 +6,7 @@ from datetime import datetime
 
 #this module covers the core of the site - home page, toolbox directory, and error pages
 
-@app.route('/', methods=['GET', 'POST'])
+@app.route('/', methods=['GET'])
 def index():
     return render_template('index.html')
 

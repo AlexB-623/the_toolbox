@@ -19,6 +19,7 @@ def register():
     #env variable that allows me to toggle registration
     if registration_toggle == 'True':
         form = RegistrationForm()
+        #force uname and email to lowercase
         if form.validate_on_submit():
             user = User(username=form.username.data,
                         email=form.email.data,
@@ -37,6 +38,7 @@ def register():
 def login():
     form = LoginForm()
     if form.validate_on_submit():
+        # force submitted email to lowercase
         user = User.query.filter_by(email=form.email.data).first()
         if user.check_password(form.password.data) and user is not None:
             login_user(user)
