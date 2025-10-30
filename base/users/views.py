@@ -12,6 +12,7 @@ users_blueprint = Blueprint('users', __name__, template_folder='templates/users'
 
 @users_blueprint.route('/', methods=['GET'])
 def users():
+    #admin only
     return render_template('users.html')
 
 @users_blueprint.route('/register', methods=['GET', 'POST'])
@@ -20,9 +21,10 @@ def register():
     if registration_toggle == 'True':
         form = RegistrationForm()
         #force uname and email to lowercase
+        #check if username exists
         if form.validate_on_submit():
             user = User(username=form.username.data,
-                        email=form.email.data,
+                        email=(form.email.data).lower(),
                         password=form.password.data)
             db.session.add(user)
             db.session.commit()
@@ -34,13 +36,13 @@ def register():
         abort(423)
 
 @users_blueprint.route('/login', methods=['GET', 'POST'])
-#Add functionality for email doesn't exist
 def login():
     form = LoginForm()
     if form.validate_on_submit():
         # force submitted email to lowercase
-        user = User.query.filter_by(email=form.email.data).first()
-        if user.check_password(form.password.data) and user is not None:
+        email = (form.email.data).lower()
+        user = user = db.session.execute(db.select(User).filter_by(email=email)).scalar()
+        if User.check_email(email=email) and user.check_password(form.password.data) and user is not None:
             login_user(user)
             flash('You have been logged in.')
             lumberjack_do(datetime.utcnow(), current_user, "users", "User Logged In")
@@ -65,3 +67,21 @@ def logout():
     logout_user()
     flash('You have been logged out.')
     return redirect(url_for('index'))
+
+
+#admin only - tie into an admin panel
+
+@users_blueprint.route("/user-by-id/<int:id>")
+def user_by_id(id):
+    user = db.get_or_404(User, id)
+    return render_template("show_user.html", user=user)
+
+@users_blueprint.route("/user-by-username/<username>")
+def user_by_username(username):
+    user = db.one_or_404(db.select(User).filter_by(username=username))
+    return render_template("show_user.html", user=user)
+
+@users_blueprint.route("/user-by-email/<email>")
+def user_by_email(email):
+    user = db.one_or_404(db.select(User).filter_by(email=email))
+    return render_template("show_user.html", user=user)

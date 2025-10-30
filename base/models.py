@@ -19,6 +19,16 @@ class User(db.Model, UserMixin):
         self.username = username
         self.password_hash = generate_password_hash(password)
 
+    @classmethod
+    def check_email(cls, email):
+        #query db to see if email exists
+        return db.session.query(db.exists().where(cls.email == email)).scalar()
+
+    @classmethod
+    #confirm this works
+    def check_username(cls, username):
+        #query db to see if uname exists
+        return db.session.query(db.exists().where(cls.username == username)).scalar()
 
     def check_password(self, password):
         return check_password_hash(self.password_hash, password)
