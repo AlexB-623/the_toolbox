@@ -7,6 +7,8 @@ from flask_login import login_required, current_user
 from base.models import Log_Entry
 
 lumberjack_blueprint = Blueprint('lumberjack', __name__, template_folder='templates/lumberjack')
+
+
 def lumberjack_do(timestamp, user_id, domain, event):
     # timestamp, user_id, domain, and event, and produces a log entry
     # lumberjack_do(datetime.utcnow(), current_user, "", )
@@ -32,11 +34,15 @@ def lumberjack():
 @lumberjack_blueprint.route('/view_logs')
 def view_logs():
     #basic page for seeing last X events
-    #export to CSV
-    logs = db.session.execute(db.select(Log_Entry.timestamp, Log_Entry.user_id, Log_Entry.domain, Log_Entry.event).order_by(Log_Entry.timestamp.desc()))
-    #render timestamp in readable format
     #make the page prettier
-    return render_template('lumberjack_viewer.html', logs=logs)
+    # render timestamp in readable format
+    #export to CSV
+    # add a URL functionality to limit number of logs returned - &results=1000 - default = 100
+    raw_logs = db.session.execute(
+        db.select(Log_Entry).order_by(Log_Entry.timestamp.desc())
+    ).scalars()
+    lumber = [log_entry.to_dict() for log_entry in raw_logs]
+    return render_template('lumberjack_viewer.html', lumber=lumber)
 
 
 @lumberjack_blueprint.route('/filter_logs', methods=['GET', 'POST'])

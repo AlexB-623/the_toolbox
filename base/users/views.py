@@ -21,7 +21,7 @@ def register():
     if registration_toggle == 'True':
         form = RegistrationForm()
         #force uname and email to lowercase
-        #check if username exists
+        #check if username or email exists
         if form.validate_on_submit():
             user = User(username=form.username.data,
                         email=(form.email.data).lower(),

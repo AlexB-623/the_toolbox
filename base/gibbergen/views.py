@@ -45,7 +45,7 @@ def term_maker():
 @gibbergen_blueprint.route('/')
 def gibbergen():
     term = term_maker()
-    lumberjack_do(datetime.utcnow(), current_user, "gibbergen", f'generated {term} on main gibbergen page')
+    lumberjack_do(datetime.utcnow(), current_user, "gibbergen", f'generated "{term}" on main gibbergen page')
     return render_template('gibbergen_home.html', term=term)
 
 

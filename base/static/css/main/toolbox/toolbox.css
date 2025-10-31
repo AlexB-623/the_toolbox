@@ -1,0 +1,60 @@
+.toolbox-pages {
+    background-color: red;
+}
+
+.toolbox-list {
+    padding: 25px;
+    background-color: silver;
+}
+
+.toolbox-grid-container {
+    background-color: silver;
+    padding: 10px;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 15px;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.toolbox-grid-item-lumberjack {
+    background-image: url('/static/css/lumberjack/images/pattern2.png');
+    aspect-ratio: 1 / 1;
+    display: flex;
+    padding: 75px;
+    border-radius: 8px;
+    color: white;
+    text-align: center;
+    font-size: 35px;
+    font-weight: bold;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.toolbox-grid-item-gibbergen {
+    background: linear-gradient(90deg, #FFFF00 10%, #00FFFF 90%);
+    aspect-ratio: 1 / 1;
+    display: flex;
+    padding: 75px;
+    border-radius: 8px;
+    color: white;
+    text-align: center;
+    font-size: 35px;
+    font-weight: bold;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.toolbox-grid-item-users {
+    background: linear-gradient(90deg, #FF4500 10%, #4169E1 90%);
+    aspect-ratio: 1 / 1;
+    display: flex;
+    padding: 75px;
+    border-radius: 8px;
+    color: white;
+    text-align: center;
+    font-size: 35px;
+    font-weight: bold;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    transition: transform 0.2s, box-shadow 0.2s;
+}

@@ -3,12 +3,27 @@
 {% block content %}
     <div class="log-display">
         <h1>Lumberjack - The Toolbox Activity Log</h1>
-        <p>
-            <ul>
-                {% for log in logs %}
-                    <li>{{ log }}</li>
-                {% endfor %}
-            </ul>
-        </p>
+        <table class="lumberjack-table">
+  <thead>
+    <tr>
+      <th>ID</th>
+      <th>Timestamp</th>
+      <th>User ID</th>
+      <th>Domain</th>
+      <th>Event</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for board in lumber %}
+    <tr>
+      <td>{{ board.id }}</td>
+      <td>{{ board.timestamp }}</td>
+      <td>{{ board.user_id }}</td>
+      <td>{{ board.domain }}</td>
+      <td>{{ board.event }}</td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
     </div>
 {% endblock %}

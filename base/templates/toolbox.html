@@ -3,15 +3,26 @@
     <title>Alex's Toolbox - Toolbox</title>
 {% endblock %}
 
+{% block additional_css %}
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/main/toolbox/toolbox.css') }}" />
+{% endblock %}
+
 {% block body_class %}toolbox-pages{% endblock %}
 
 {% block content %}
     <h1>The Toolbox</h1>
-    <div class="toolbox">
+    <!-- old list of tools
+    <div class="toolbox-list">
         <ul>
             {% for tool_module in tool_modules %}
-                <li><a href="{{ url_for(tool_module) }}">{{ tool_module }}</a></li>
+                <li><a href="{{ url_for(tool_module.url) }}">{{ tool_module.name }}</a></li>
             {% endfor %}
         </ul>
+    </div>
+    --!>
+    <div class="toolbox-grid-container">
+        {% for tool_module in tool_modules %}
+        <div class="toolbox-grid-item-{{ tool_module.name }}"><a href="{{ url_for(tool_module.url) }}">{{ tool_module.name }}</a></div>
+        {% endfor %}
     </div>
 {% endblock %}

@@ -12,17 +12,18 @@ def index():
 
 @app.route('/toolbox')
 def toolbox():
-    tool_modules = ['gibbergen.gibbergen', 'lumberjack.lumberjack']
+    # tool_modules = ['gibbergen.gibbergen', 'lumberjack.lumberjack']
     # need to autogenerate tool modules
-    # tool_modules = []
-    # blueprints = app.blueprints.items()
-    # for name, url in blueprints:
-    #     tool_modules.append(
-    #         {
-    #             'name': name,
-    #             'url': url or '/'
-    #         }
-    #     )
+    tool_modules = []
+    blueprints = app.blueprints.items()
+    for name, url in blueprints:
+        tool_modules.append(
+            {
+                'name': name,
+                'url': f"{name}.{name}" or '/'
+            }
+        )
+    lumberjack_do(datetime.utcnow(), current_user, "toolbox", "rummaged through the toolbox" )
     return render_template('toolbox.html', tool_modules=tool_modules)
 
 @app.errorhandler(404)

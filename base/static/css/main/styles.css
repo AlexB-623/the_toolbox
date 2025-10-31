@@ -2,15 +2,6 @@
     background-color: #a6a6a6;
 }
 
-.toolbox-pages {
-    background-color: red;
-}
-
-.toolbox {
-    padding: 25px;
-    background-color: silver;
-}
-
 body {
     font-family: 'Consolas', 'Menlo', 'DejaVu Sans Mono', 'Bitstream Vera Sans Mono', monospace;
 }

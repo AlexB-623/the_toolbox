@@ -7,6 +7,7 @@ from flask_login import UserMixin
 def load_user(user_id):
     return User.query.get(user_id)
 
+#create admin user functionality
 class User(db.Model, UserMixin):
     __tablename__ = 'users'
     id = db.Column(db.Integer, primary_key=True)
@@ -34,6 +35,9 @@ class User(db.Model, UserMixin):
         return check_password_hash(self.password_hash, password)
 
 
+# need to get the event field flattened and expanded to HTTP Code, Target, and event details separately.
+# Maybe add IP address too
+# Join on userID and handle anon users
 class Log_Entry(db.Model):
     __tablename__ = 'log_entries'
     id = db.Column(db.Integer, primary_key=True)
@@ -50,6 +54,16 @@ class Log_Entry(db.Model):
         self.user_id = user_id
         self.domain = domain
         self.event = event
+
+    def to_dict(self):
+        #convert model to dict
+        return {
+            'id': self.id,
+            'timestamp': self.timestamp,
+            'user_id': self.user_id,
+            'domain': self.domain,
+            'event': self.event
+        }
 
 
 
