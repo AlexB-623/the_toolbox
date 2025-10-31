@@ -9,10 +9,10 @@
 
 .toolbox-grid-container {
     background-color: silver;
-    padding: 10px;
+    padding: 25px;
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-    gap: 15px;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 75px;
     max-width: 1200px;
     margin: 0 auto;
 }
@@ -23,9 +23,13 @@
     display: flex;
     padding: 75px;
     border-radius: 8px;
-    color: white;
     text-align: center;
+    align-items: center;      /* Centers vertically */
+    justify-content: center;  /* Centers horizontally */
     font-size: 35px;
+    text-transform: capitalize;
+    text-decoration: black;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 1);
     font-weight: bold;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     transition: transform 0.2s, box-shadow 0.2s;
@@ -35,11 +39,15 @@
     background: linear-gradient(90deg, #FFFF00 10%, #00FFFF 90%);
     aspect-ratio: 1 / 1;
     display: flex;
-    padding: 75px;
+    padding: 35px;
     border-radius: 8px;
-    color: white;
+    align-items: center;      /* Centers vertically */
+    justify-content: center;  /* Centers horizontally */
     text-align: center;
     font-size: 35px;
+    text-transform: capitalize;
+    text-decoration: black;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 1);
     font-weight: bold;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     transition: transform 0.2s, box-shadow 0.2s;
@@ -51,9 +59,13 @@
     display: flex;
     padding: 75px;
     border-radius: 8px;
-    color: white;
+    align-items: center;      /* Centers vertically */
+    justify-content: center;  /* Centers horizontally */
     text-align: center;
     font-size: 35px;
+    text-transform: capitalize;
+    text-decoration: black;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 1);
     font-weight: bold;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     transition: transform 0.2s, box-shadow 0.2s;
