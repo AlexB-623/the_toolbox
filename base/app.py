@@ -20,6 +20,7 @@ def toolbox():
         tool_modules.append(
             {
                 'name': name,
+                'display_name': name.replace("_", " ").title(),
                 'url': f"{name}.{name}" or '/'
             }
         )

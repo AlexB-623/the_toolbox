@@ -58,7 +58,7 @@ def gibbergen_sampler():
         term = term_maker()
         term_list.append(term)
     lumberjack_do(datetime.utcnow(), current_user, "gibbergen", f'generated {term_list} on gibbergen sampler page')
-    return render_template('sampler.html', terms=term_list)
+    return render_template('gibbergen_sampler.html', terms=term_list)
 
 #next:
 #save term to a database and call an LLM to generate a made-up meaning for it

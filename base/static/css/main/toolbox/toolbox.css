@@ -26,7 +26,7 @@
     text-align: center;
     align-items: center;      /* Centers vertically */
     justify-content: center;  /* Centers horizontally */
-    font-size: 35px;
+    font-size: 25px;
     text-transform: capitalize;
     text-decoration: black;
     text-shadow: 2px 2px 4px rgba(0, 0, 0, 1);
@@ -39,7 +39,7 @@
     background: linear-gradient(90deg, #FFFF00 10%, #00FFFF 90%);
     aspect-ratio: 1 / 1;
     display: flex;
-    padding: 35px;
+    padding: 25px;
     border-radius: 8px;
     align-items: center;      /* Centers vertically */
     justify-content: center;  /* Centers horizontally */
@@ -57,7 +57,25 @@
     background: linear-gradient(90deg, #FF4500 10%, #4169E1 90%);
     aspect-ratio: 1 / 1;
     display: flex;
-    padding: 75px;
+    padding: 25px;
+    border-radius: 8px;
+    align-items: center;      /* Centers vertically */
+    justify-content: center;  /* Centers horizontally */
+    text-align: center;
+    font-size: 35px;
+    text-transform: capitalize;
+    text-decoration: black;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 1);
+    font-weight: bold;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.toolbox-grid-item-the_usual_weather {
+    background-color: yellow;
+    aspect-ratio: 1 / 1;
+    display: flex;
+    padding: 25px;
     border-radius: 8px;
     align-items: center;      /* Centers vertically */
     justify-content: center;  /* Centers horizontally */

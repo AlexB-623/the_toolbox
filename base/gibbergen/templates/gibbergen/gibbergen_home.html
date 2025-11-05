@@ -5,7 +5,9 @@
         <h1>GibberGen - The Gibberish Generator</h1>
         <h3>Your term is:</h3>
         <div class="hacker-console">
-            <p class="fancy-term-text">{{ term }}</p>
+            <ul class="term-text">
+                <li>{{ term }}</li>
+            </ul>
         </div>
 
         <p>Reload to generate a new term. Click <a href="{{ url_for('gibbergen.gibbergen_sampler') }} ">here</a> to get 10 terms.</p>

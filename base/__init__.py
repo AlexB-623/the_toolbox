@@ -29,7 +29,9 @@ login_manager.login_view = 'users.login'
 from base.users.views import users_blueprint
 from base.gibbergen.views import gibbergen_blueprint
 from base.lumberjack.views import lumberjack_blueprint
+from base.the_usual_weather.views import the_usual_weather_blueprint
 
 app.register_blueprint(users_blueprint, url_prefix='/users')
 app.register_blueprint(gibbergen_blueprint, url_prefix='/gibbergen')
 app.register_blueprint(lumberjack_blueprint, url_prefix='/lumberjack')
+app.register_blueprint(the_usual_weather_blueprint, url_prefix='/the-usual-weather')

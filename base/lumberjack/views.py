@@ -4,7 +4,7 @@ import json, random
 from os import getcwd
 from flask_login import login_required, current_user
 
-from base.models import Log_Entry
+from base.models import Log_Entry, User
 
 lumberjack_blueprint = Blueprint('lumberjack', __name__, template_folder='templates/lumberjack')
 
@@ -41,7 +41,16 @@ def view_logs():
     raw_logs = db.session.execute(
         db.select(Log_Entry).order_by(Log_Entry.timestamp.desc())
     ).scalars()
+    #raw logs get refined into Lumber
     lumber = [log_entry.to_dict() for log_entry in raw_logs]
+    #since the tables are not joined, we should make the username prettier
+    for board in lumber:
+        if "Anonymous" in str(board['user_id']):
+            board['user_id'] = 'Anonymous User'
+        else:
+            raw_id = str(board['user_id']).replace("<User ", "").replace(">", "")
+            username = db.session.execute(db.select(User.username).filter_by(id=raw_id)).scalar_one()
+            board['user_id'] = str(username)
     return render_template('lumberjack_viewer.html', lumber=lumber)
 
 

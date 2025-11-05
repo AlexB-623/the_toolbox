@@ -1,0 +1,9 @@
+{% extends "base.html" %}
+
+{% block title %}
+    <title>Alex's Toolbox - The Usual Weather</title>
+{% endblock %}
+{% block additional_css %}
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/the_usual_weather/the_usual_weather.css') }}" />
+{% endblock %}
+{% block body_class %}the_usual_weather-pages{% endblock %}

@@ -1,9 +1,10 @@
 .gibbergen-pages {
-    background: linear-gradient(90deg, #FFFF00 10%, #00FFFF 90%);
+    background-color: #00FFFF;
 }
 
 .gibbergen-display {
-    background-color: antiquewhite;
+    background-color: #00FFFF;
+    border: 6px solid #FF4500;
     max-width: 1200px;
     position: absolute;
     top: 25%;
@@ -20,18 +21,10 @@
     width: fit-content;
 }
 
-.term-list {
-    color: limegreen;
+.term-text {
+    color: #FF4500;
     padding-top: 2px;
     padding-bottom: 2px;
-    padding-right: 3px;
+    padding-right: 5px;
     list-style: none;
-}
-
-.fancy-term-text {
-    background-color: black;
-    color: orangered;
-    font-size: 1.25rem;
-    padding: 1px;
-    margin-left: 3px;
 }

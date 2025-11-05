@@ -11,18 +11,10 @@
 
 {% block content %}
     <h1>The Toolbox</h1>
-    <!-- old list of tools
-    <div class="toolbox-list">
-        <ul>
-            {% for tool_module in tool_modules %}
-                <li><a href="{{ url_for(tool_module.url) }}">{{ tool_module.name }}</a></li>
-            {% endfor %}
-        </ul>
-    </div>
-    --!>
+
     <div class="toolbox-grid-container">
         {% for tool_module in tool_modules %}
-        <a class="toolbox-grid-item-{{ tool_module.name }}" href="{{ url_for(tool_module.url) }}">{{ tool_module.name }}</a>
+        <a class="toolbox-grid-item-{{ tool_module.name }}" href="{{ url_for(tool_module.url) }}">{{ tool_module.display_name }}</a>
         {% endfor %}
     </div>
 {% endblock %}
