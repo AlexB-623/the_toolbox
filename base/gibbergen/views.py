@@ -28,6 +28,12 @@ def get_terms(path):
         return data
 
 def term_maker():
+    """
+    takes no input.
+    returns a random term that sounds like something technical is happening
+    <verb>ing the <technical noun>
+    :return: text string
+    """
     verbs = get_verbs(clean_verb_path)
     terms = get_terms(clean_tech_path)
     num_verbs = len(verbs)

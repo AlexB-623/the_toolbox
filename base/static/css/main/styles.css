@@ -6,10 +6,6 @@ body {
     font-family: 'Consolas', 'Menlo', 'DejaVu Sans Mono', 'Bitstream Vera Sans Mono', monospace;
 }
 
-a:visited {
-  color: royalblue; /* or whatever color you want */
-}
-
 .navbar {
     background-color: black;
     padding: 15px;
@@ -17,14 +13,29 @@ a:visited {
     font-size: 1.5rem;
 }
 
-.navbar-item nav-link {
-    color: aqua;
+.navbar-item.nav-link {
+    color: #00FFFF;
     font-size: 1.5rem;
+    text-decoration: none;
 }
 
-h1 {
-    color: blue;
-    margin-bottom: 24px;
-    font-size: 2rem;
+.navbar-item.nav-link:hover {
+    color: #FF4500;
 }
+
+
+.navbar-item nav-link:visited {
+  color: aqua;
+  font-size: 1.5rem;
+}
+
+.container {
+    background-color: antiquewhite;
+    margin-top: 50px;
+    margin-right: 50px;
+    margin-left: 50px;
+    padding: 15px;
+}
+
+
 

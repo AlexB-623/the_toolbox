@@ -1,3 +1,11 @@
 .user-pages {
     background: linear-gradient(90deg, #FF4500 10%, #4169E1 90%);
 }
+
+.user-page-container {
+    background-color: antiquewhite;
+    margin-top: 50px;
+    margin-right: 50px;
+    margin-left: 50px;
+    padding: 15px;
+}

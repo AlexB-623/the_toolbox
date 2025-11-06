@@ -10,8 +10,14 @@ lumberjack_blueprint = Blueprint('lumberjack', __name__, template_folder='templa
 
 
 def lumberjack_do(timestamp, user_id, domain, event):
-    # timestamp, user_id, domain, and event, and produces a log entry
-    # lumberjack_do(datetime.utcnow(), current_user, "", )
+    """
+    Takes timestamp, user_id, domain, and event, and produces a log entry
+    :param timestamp: datetime.utcnow()
+    :param user_id: current_user
+    :param domain: typically the blueprint being loaded
+    :param event: notes about what is being logged
+    :return: none - commits the entry to the logs db
+    """
     # maybe find a way to use an ENV variable to enable and disable this
     # log_entry = {'timestamp': str(timestamp),
     #              'user_id': str(user_id),

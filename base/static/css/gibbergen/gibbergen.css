@@ -3,14 +3,12 @@
 }
 
 .gibbergen-display {
-    background-color: #00FFFF;
+    background-color: antiquewhite;
     border: 6px solid #FF4500;
-    max-width: 1200px;
-    position: absolute;
-    top: 25%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    padding: 25px;
+    margin-top: 50px;
+    margin-right: 50px;
+    margin-left: 50px;
+    padding: 15px;
 }
 
 .hacker-console {
