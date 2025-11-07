@@ -5,3 +5,6 @@ from wtforms import (StringField,
                      IntegerField,
                      ValidationError)
 from wtforms.validators import DataRequired, EqualTo
+
+class WeatherSubmitForm(FlaskForm):
+    city = StringField('City', validators=[DataRequired()])

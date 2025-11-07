@@ -24,13 +24,17 @@ def register():
         #check if username or email exists
         if form.validate_on_submit():
             user = User(username=form.username.data,
-                        email=(form.email.data).lower(),
+                        email=form.email.data.lower(),
                         password=form.password.data)
             db.session.add(user)
             db.session.commit()
             lumberjack_do(datetime.utcnow(), current_user, "users", f"{ form.email.data } registered as {form.username.data}")
             flash('Thank you for registering. You can now login.')
             return redirect(url_for('users.login'))
+        if form.errors:
+            for field, errors in form.errors.items():
+                for error in errors:
+                    flash(f"{ field } error: { error }", "danger")
         return render_template('register.html', form=form)
     else:
         abort(423)
@@ -40,7 +44,7 @@ def login():
     form = LoginForm()
     if form.validate_on_submit():
         # force submitted email to lowercase
-        email = (form.email.data).lower()
+        email = form.email.data.lower()
         user = user = db.session.execute(db.select(User).filter_by(email=email)).scalar()
         if User.check_email(email=email) and user.check_password(form.password.data) and user is not None:
             login_user(user)
