@@ -1,7 +1,7 @@
 {% extends "user-base.html" %}
 
 {% block content %}
-    <div class="about-container">
+    <div class="default-container">
     <ul>
         {% if current_user.is_authenticated %}
         <li><a class="user-page-link" href="{{ url_for('users.logout') }}">Log Out</a></li>

@@ -1,7 +1,7 @@
 {% extends "user-base.html" %}
 
 {% block content %}
-    <div class="user-page-container">
+    <div class="default-container">
     <form method="POST">
     {{ form.hidden_tag() }}
     <p class="form-label">{{ form.email.label }}:</p>{{ form.email }}

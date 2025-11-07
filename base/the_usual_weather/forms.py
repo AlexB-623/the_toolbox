@@ -3,8 +3,10 @@ from flask_wtf import FlaskForm
 from wtforms import (StringField,
                      SubmitField,
                      IntegerField,
-                     ValidationError)
+                     ValidationError, DateField)
 from wtforms.validators import DataRequired, EqualTo
 
 class WeatherSubmitForm(FlaskForm):
     city = StringField('City', validators=[DataRequired()])
+    date = DateField('Date', validators=[DataRequired()])
+    submit = SubmitField('Submit')

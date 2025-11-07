@@ -1,8 +1,10 @@
+##About:
+
 Past performance is not a guarantee of future results...
 
 But it *can* be an indication.
 
-Take the weather, for example. Without looking at historical records, you probably know *approximately* what temperature it will be in your area at any given point in the year. You know what is "typical" for that time of the year.
+Take the weather, for example. Without looking at historical records, you probably know *approximately* what temperature it will be in your home area at any given point in the year. You know what is "typical" for that time of the year.
 
 But what if you're trying to plan a vacation 6 months out? It becomes a bit more complicated if you don't know the typical temperatures for the area you want to visit.
 

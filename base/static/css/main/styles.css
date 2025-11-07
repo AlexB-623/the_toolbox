@@ -30,12 +30,13 @@ body {
   font-size: 1.5rem;
 }
 
-.about-container {
+.default-container {
     background-color: antiquewhite;
     padding: 15px;
     max-width: 1200px;
     width: 80%;
     margin: 0 auto;
+    font-size: large;
 }
 
 

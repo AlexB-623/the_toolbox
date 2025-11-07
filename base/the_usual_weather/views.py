@@ -18,22 +18,22 @@ def the_usual_weather():
         about = markdown.markdown(md_about)
     return render_template('the_usual_weather_home.html', about=about)
 
-@the_usual_weather_blueprint.route('/submission', methods=['GET', 'POST'])
+@the_usual_weather_blueprint.route('/submit', methods=['GET', 'POST'])
 @login_required
-def submission():
+def submit():
     if request.method == 'POST': #form.validate on submit
         #validates details and submits to a db
         #logs what was submitted
         #starts process of retrieving data
         pass
     else:
-        return render_template('the_usual_weather_submission.html')
+        return render_template('the_usual_weather_submit.html')
 
-@the_usual_weather_blueprint.route('/waiting-page', methods=['GET'])
-def waiting_page():
+@the_usual_weather_blueprint.route('/report-list', methods=['GET'])
+def report_list():
     #get submitted jobs and shows progress
     #auto-refresh
-    pass
+    return render_template('the_usual_weather_report_list.html')
 
 @the_usual_weather_blueprint.route('/results', methods=['GET'])
 def results():
