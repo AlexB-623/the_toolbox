@@ -2,9 +2,15 @@
     background-color: red;
 }
 
-.toolbox-list {
-    padding: 25px;
-    background-color: silver;
+.toolbox-billboard {
+    max-width: 1200px;
+    width: 80%;
+    margin: 0 auto;
+}
+
+.styled-toolbox {
+    font-size: 4.5rem;
+    outline-color: #a6a6a6;
 }
 
 .toolbox-grid-container {
@@ -36,7 +42,7 @@
 }
 
 .toolbox-grid-item-gibbergen {
-    background: linear-gradient(90deg, #FFFF00 10%, #00FFFF 90%);
+    background-color: #00FFFF;
     aspect-ratio: 1 / 1;
     display: flex;
     padding: 25px;
@@ -54,7 +60,7 @@
 }
 
 .toolbox-grid-item-users {
-    background: linear-gradient(90deg, #FF4500 10%, #4169E1 90%);
+    background-color: #4169E1;
     aspect-ratio: 1 / 1;
     display: flex;
     padding: 25px;

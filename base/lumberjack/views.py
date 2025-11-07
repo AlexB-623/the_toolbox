@@ -1,11 +1,12 @@
 from base import db
 from flask import Flask, Blueprint, render_template, request, session, redirect, url_for, flash
+import markdown
 import json, random
 from os import getcwd
 from flask_login import login_required, current_user
-
+from os import getcwd
 from base.models import Log_Entry, User
-
+cwd = getcwd()
 lumberjack_blueprint = Blueprint('lumberjack', __name__, template_folder='templates/lumberjack')
 
 
@@ -34,7 +35,11 @@ def lumberjack_do(timestamp, user_id, domain, event):
 
 @lumberjack_blueprint.route('/')
 def lumberjack():
-    return render_template('lumberjack_home.html')
+    with open (f'{cwd}/lumberjack/data/about.txt', 'r') as f:
+        md_about = f.read()
+        f.close()
+        about = markdown.markdown(md_about)
+    return render_template('lumberjack_home.html', about=about)
 
 
 @lumberjack_blueprint.route('/view_logs')

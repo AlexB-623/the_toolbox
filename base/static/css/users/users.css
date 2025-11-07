@@ -1,11 +1,13 @@
 .user-pages {
-    background: linear-gradient(90deg, #FF4500 10%, #4169E1 90%);
+    background-color: #4169E1;
 }
 
-.user-page-container {
-    background-color: antiquewhite;
-    margin-top: 50px;
-    margin-right: 50px;
-    margin-left: 50px;
-    padding: 15px;
+.form-label {
+    font-size: 1.25rem;
+    font-weight: bold;
+}
+
+.user-action-button {
+    font-size: 1.5rem;
+    font-weight: bold;
 }

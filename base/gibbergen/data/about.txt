@@ -1,0 +1,21 @@
+**Why does Gibbergen Exist?**
+
+I've seen a few applications and websites where there is a humorous "loading" message - something that is technical-sounding, yet also complete gibberish. I wondered what it might take to randomly generate these phrases.
+
+I knew I needed something to test out my site logging before I started on the more complicated functionality, so Gibbergen seemed like a fun way to get started.
+
+To start out, I thought about the structure of the phrase:
+
+```
+<verb>ing the <noun>
+```
+
+Seems pretty simple. I just need three things:
+
+- a numbered list of verbs ending in "ing"
+- a numbered list of technical-sounding nouns
+- a random number generator
+
+Gibbergen generates a random number, then looks up the "ing" verb corresponding to that number. It does the same for the technical nouns. Then it takes those two results, puts the word "the" in between them.
+
+et, voila, we are now:

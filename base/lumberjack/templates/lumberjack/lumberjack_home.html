@@ -1,11 +1,13 @@
 {% extends "lumberjack-base.html" %}
 
 {% block content %}
-    <div class="menu">
+    <div class="about-container">
         <h1>Lumberjack - The Toolbox Activity Log</h1>
         <p>Welcome to Lumberjack, the Logging Utility. Options are... (list below)</p>
         <ul>
             <li><a href="{{ url_for('lumberjack.view_logs') }}">See the logs</a> </li>
         </ul>
+    <p>About the Lumberjack:</p>
+    <p>{{ about|safe }}</p>
     </div>
 {% endblock %}

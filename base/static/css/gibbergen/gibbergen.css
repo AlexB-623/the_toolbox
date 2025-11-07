@@ -2,19 +2,12 @@
     background-color: #00FFFF;
 }
 
-.gibbergen-display {
-    background-color: antiquewhite;
+.about-container {
     border: 6px solid #FF4500;
-    margin-top: 50px;
-    margin-right: 50px;
-    margin-left: 50px;
-    padding: 15px;
 }
 
 .hacker-console {
-    padding-top: 5px;
-    padding-bottom: 5px;
-    padding-right: 10px;
+    padding: 10px;
     background-color: black;
     width: fit-content;
 }

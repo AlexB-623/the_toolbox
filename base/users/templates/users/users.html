@@ -1,14 +1,13 @@
 {% extends "user-base.html" %}
 
 {% block content %}
-    <div class="user-page-container">
-
+    <div class="about-container">
     <ul>
         {% if current_user.is_authenticated %}
-        <li><a class="navbar-item nav-link" href="{{ url_for('users.logout') }}">Log Out</a></li>
+        <li><a class="user-page-link" href="{{ url_for('users.logout') }}">Log Out</a></li>
         {% else %}
-        <li><a class="navbar-item nav-link" href="{{ url_for('users.register') }}">Register</a></li>
-        <li><a class="navbar-item nav-link" href="{{ url_for('users.login') }}">Login</a></li>
+        <li><a class="user-page-link" href="{{ url_for('users.register') }}">Register</a></li>
+        <li><a class="user-page-link" href="{{ url_for('users.login') }}">Login</a></li>
         {% endif %}
     </ul>
     </div>

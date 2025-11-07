@@ -4,14 +4,11 @@
 {% endblock %}
 
 {% block content %}
-    <div class="container">
+    <div class="about-container">
     <h1>Welcome</h1>
-    <p>About this site... <a href="https://github.com/AlexB-623/the_toolbox" target="_blank">Github Repository</a> </p>
-
     <div>
-        <p>
-            Visit the <a href="{{ url_for("toolbox") }}">Toolbox</a>
-        </p>
+        <p>{{ about|safe }}</p>
+        <p>Visit the <a href="{{ url_for("toolbox") }}">Toolbox</a></p>
     </div>
     </div>
 {% endblock %}

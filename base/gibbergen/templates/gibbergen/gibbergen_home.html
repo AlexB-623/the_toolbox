@@ -1,17 +1,15 @@
 {% extends "gibbergen-base.html" %}
 
 {% block content %}
-    <div class="gibbergen-display">
+    <div class="about-container">
         <h1>GibberGen - The Gibberish Generator</h1>
         <h3>Your term is:</h3>
         <div class="hacker-console">
-            <ul class="term-text">
-                <li>{{ term }}</li>
-            </ul>
+            <p class="term-text">{{ term }}</p>
         </div>
 
         <p>Reload to generate a new term. Click <a href="{{ url_for('gibbergen.gibbergen_sampler') }} ">here</a> to get 10 terms.</p>
-        <p>What is the deal with this? Well, it all started when...</p>
+        <p>{{ about|safe }}{{ about_term }}</p>
     </div>
 
 {% endblock %}

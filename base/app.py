@@ -3,12 +3,17 @@ from flask import render_template, request
 from base.lumberjack.views import lumberjack_do
 from flask_login import current_user
 from datetime import datetime
-
+from os import getcwd
+import markdown
 #this module covers the core of the site - home page, toolbox directory, and error pages
-
+cwd = getcwd()
 @app.route('/', methods=['GET'])
 def index():
-    return render_template('index.html')
+    with open (f'{cwd}/data/about.txt', 'r') as f:
+        md_about = f.read()
+        f.close()
+        about = markdown.markdown(md_about)
+    return render_template('index.html', about=about)
 
 @app.route('/toolbox')
 def toolbox():

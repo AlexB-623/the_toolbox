@@ -1,8 +1,9 @@
 {% extends "the_usual_weather-base.html" %}
 
 {% block content %}
-    <div class="the_usual_weather-container">
+    <div class="about-container">
         <h1>The Usual Weather</h1>
-        <p>Purpose... <a href="https://github.com/AlexB-623/WeatherAnalysisApp">Original Project On Github</a></p>
+        <p><a href="https://github.com/AlexB-623/WeatherAnalysisApp">Original Project On Github</a></p>
+        <p>{{ about|safe }}</p>
     </div>
 {% endblock %}

@@ -4,11 +4,12 @@
     <div class="user-page-container">
     <form method="POST">
     {{ form.hidden_tag() }}
-    {{ form.email.label }}{{ form.email }}
+    <p class="form-label">{{ form.email.label }}:</p>{{ form.email }}
         <br>
-    {{ form.password.label }}{{ form.password }}
+    <p class="form-label">{{ form.password.label }}:</p>{{ form.password }}
         <br>
-    {{ form.submit }}
+        <br>
+    {{ form.submit(class="user-action-button") }}
     </form>
     </div>
 {% endblock %}

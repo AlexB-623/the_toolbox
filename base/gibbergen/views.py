@@ -1,5 +1,5 @@
 from time import strftime
-
+import markdown
 from flask import Flask, Blueprint, render_template, request, session, redirect, url_for, flash
 import json, random
 from datetime import datetime
@@ -51,8 +51,13 @@ def term_maker():
 @gibbergen_blueprint.route('/')
 def gibbergen():
     term = term_maker()
+    about_term = term_maker()
+    with open (f'{cwd}/gibbergen/data/about.txt', 'r') as f:
+        md_about = f.read()
+        f.close()
+        about = markdown.markdown(md_about)
     lumberjack_do(datetime.utcnow(), current_user, "gibbergen", f'generated "{term}" on main gibbergen page')
-    return render_template('gibbergen_home.html', term=term)
+    return render_template('gibbergen_home.html', term=term, about=about, about_term=about_term)
 
 
 @gibbergen_blueprint.route('/sampler')

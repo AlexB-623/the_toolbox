@@ -3,16 +3,17 @@
 {% block content %}
     <div class="user-page-container">
         <form method="POST">
-    {{ form.hidden_tag() }}
-    {{ form.email.label }}{{ form.email }}
-        <br>
-    {{ form.username.label }}{{ form.username }}
-        <br>
-    {{ form.password.label }}{{ form.password }}
-        <br>
-    {{ form.pass_confirm.label }}{{ form.pass_confirm }}
-        <br>
-    {{ form.submit }}
+        {{ form.hidden_tag() }}
+        <p class="form-label">{{ form.email.label }}:</p>{{ form.email }}
+            <br>
+        <p class="form-label">{{ form.username.label }}:</p>{{ form.username }}
+            <br>
+        <p class="form-label">{{ form.password.label }}:</p>{{ form.password }}
+            <br>
+        <p class="form-label">{{ form.pass_confirm.label }}:</p>{{ form.pass_confirm }}
+            <br>
+            <br>
+        {{ form.submit(class="user-action-button") }}
     </form>
     </div>
 {% endblock %}
