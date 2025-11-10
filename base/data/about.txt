@@ -2,9 +2,9 @@ This site is a showcase of the Python projects I've done. My goal is to build us
 
 [Github Repository](https://github.com/AlexB-623/the_toolbox)
 
-## AI Statement:
+## AI Usage Statement:
 
-This site has been written the old-fashioned way - by hand. No vibe coding was used. If you want proof, check out the project history on Github.
+This site has been written the old-fashioned way - by hand. No vibe coding was used. If you want proof, check out the project change history on Github.
 
 There *were* instances where I couldn't figure out how to accomplish a specific thing, so I'd ask AI to tell me ways of doing that. In the old days I might have used Ye Olde Searche Engine to find forums with coding Q&A, but SEO makes them useless nowadays, so AI is pretty good at offering possible ways to code a specific thing.
 

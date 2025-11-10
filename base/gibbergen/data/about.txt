@@ -1,4 +1,4 @@
-**Why does Gibbergen Exist?**
+##Why does Gibbergen Exist?
 
 I've seen a few applications and websites where there is a humorous "loading" message - something that is technical-sounding, yet also complete gibberish. I wondered what it might take to randomly generate these phrases.
 

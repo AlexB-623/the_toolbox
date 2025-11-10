@@ -39,6 +39,9 @@ body {
     font-size: large;
 }
 
-
+.action-button {
+    font-size: 1.5rem;
+    font-weight: bold;
+}
 
 

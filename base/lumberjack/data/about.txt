@@ -1,9 +1,13 @@
+##About the Lumberjack:
+
 Lumberjack exists because I really needed an excuse to put a plaid background on my website.
 
 The pattern here was generated at [plaidmaker.com](www.plaidmaker.com)
 
-Well, I guess logging errors is *also* really important, regardless of style.
+Well, I guess logging errors and user-activity are *also* really important functions, regardless of style.
 
 In my career working for Support organizations, having access to quality logs makes a huge difference in the speed with which I can troubleshoot.
 
-I knew that some of the more complex functionality I wanted to add might have finnicky errors, and being able to catch those and review them would be incredibly useful for getting the site working. Lumberjack became the second major module for the site, after Gibbergen.
+I knew that some of the more complex functionality I wanted to add might have finnicky errors, and being able to catch those and review them would be incredibly useful for continuously improving.
+
+Lumberjack became the second major module for the site, after Gibbergen.

@@ -5,6 +5,7 @@ from flask import Flask, Blueprint, render_template, request, session, redirect,
 import json, random, markdown
 from flask_login import login_required, current_user
 from base.lumberjack.views import lumberjack_do
+from base.the_usual_weather.forms import WeatherSubmitForm
 
 cwd = getcwd()
 
@@ -21,13 +22,24 @@ def the_usual_weather():
 @the_usual_weather_blueprint.route('/submit', methods=['GET', 'POST'])
 @login_required
 def submit():
-    if request.method == 'POST': #form.validate on submit
-        #validates details and submits to a db
-        #logs what was submitted
-        #starts process of retrieving data
-        pass
-    else:
-        return render_template('the_usual_weather_submit.html')
+    form = WeatherSubmitForm()
+    if form.validate_on_submit():
+        #lookup coords
+        #reverse coord lookup for "proper name"
+        #commit to database
+        lumberjack_do(datetime.utcnow(), current_user, "the usual weather", {"type": "Submission",
+                                                                             'Submitted city': form.city.data,
+                                                                             'GPS Coordinates': '',
+                                                                             'Actual city': '',
+                                                                             'date': form.date.data})
+        flash("Thanks for your submission!")
+        return redirect(url_for('the_usual_weather.report_list'))
+    if form.errors:
+        for field, errors in form.errors.items():
+            for error in errors:
+                flash(f"{field} error: {error}", "danger")
+    return render_template('the_usual_weather_submit.html', form=form)
+
 
 @the_usual_weather_blueprint.route('/report-list', methods=['GET'])
 def report_list():

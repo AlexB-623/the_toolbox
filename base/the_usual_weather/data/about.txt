@@ -1,4 +1,4 @@
-##About:
+##About this module:
 
 Past performance is not a guarantee of future results...
 
@@ -20,7 +20,7 @@ The tool works like this:
     - generates a list of dates (mm/dd/yyyy) for all days 1 week before and 1 week after the given date, and for every year going back to 1980
 - Once the tool has the GPS coordinates and the dates, it calls the [Open-Meteo](https://open-meteo.com/) API to get the weather record for the location and dates
 - The API response is collated as a PANDAS dataframe (i.e. like an Excel spreadsheet)
-- The PANDAS dataframe is then analyzed to tell you, from the past ~45 years, what is "The Usual Weather" around that date for in that location.
+- The PANDAS dataframe is then analyzed to tell you, from the past ~45 years, what is "The Usual Weather" for the 2 weeks around that date for in that location.
 
 ## Why write all this code for something you could ask AI and get an answer in ~30 seconds?
 
