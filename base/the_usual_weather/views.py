@@ -1,4 +1,3 @@
-from time import strftime
 from datetime import datetime
 from os import getcwd
 from flask import Flask, Blueprint, render_template, request, session, redirect, url_for, flash
@@ -6,7 +5,7 @@ import json, random, markdown
 from flask_login import login_required, current_user
 from base import db
 from base.lumberjack.views import lumberjack_do
-from base.models import WeatherRequest
+from base.models import WeatherRequest, User
 from base.the_usual_weather.forms import WeatherSubmitForm
 
 
@@ -50,7 +49,6 @@ def submit():
                                          )
         db.session.add(weather_request)
         db.session.commit()
-
         flash("Thanks for your submission!")
         return redirect(url_for('the_usual_weather.report_list'))
     if form.errors:
@@ -64,7 +62,14 @@ def submit():
 def report_list():
     #get submitted jobs and shows progress
     #auto-refresh
-    return render_template('the_usual_weather_report_list.html')
+    raw_list = db.session.execute(
+        db.select(WeatherRequest).order_by(WeatherRequest.submitted_date.desc())
+    ).scalars()
+    pretty_list = [weather_request.to_dict() for weather_request in raw_list]
+    for report in pretty_list:
+        username = db.session.execute(db.select(User.username).filter_by(id=report['requesting_user'])).scalar_one()
+        report['requesting_user'] = str(username)
+    return render_template('the_usual_weather_report_list.html', pretty_list=pretty_list)
 
 @the_usual_weather_blueprint.route('/results', methods=['GET'])
 def results():

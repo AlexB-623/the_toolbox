@@ -1,5 +1,6 @@
 from base import db, login_manager
 from datetime import datetime
+from time import strftime
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_login import UserMixin
 
@@ -69,7 +70,7 @@ class Log_Entry(db.Model):
 class WeatherRequest(db.Model):
     __tablename__ = 'weather_requests'
     id = db.Column(db.Integer, primary_key=True)
-    requesting_user = db.Column(db.String(20), index=True)
+    requesting_user = db.Column(db.Integer, db.ForeignKey('users.id'), unique=False, nullable=True, index=True)
     requested_month = db.Column(db.Integer, index=False)
     requested_day = db.Column(db.Integer, index=False)
     submitted_date = db.Column(db.DateTime, index=False, default=datetime.now)
@@ -108,13 +109,13 @@ class WeatherRequest(db.Model):
         return {
             'id': self.id,
             'requesting_user': self.requesting_user,
-            'submitted_date': self.submitted_date,
+            'submitted_date': self.submitted_date.strftime('%d/%m/%Y'),
             'requested_date': str(f'{self.requested_month}-{self.requested_day}'),
             'submitted_city': self.submitted_city,
             'gps_coordinates': self.gps_coordinates,
             'decoded_city': self.decoded_city,
             'decoded_state': self.decoded_state,
-            'decoded_country': self.decoded_country,
+            'decoded_country': self.decoded_country.upper(),
             'job_status': self.job_status
         }
 
