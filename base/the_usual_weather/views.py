@@ -71,8 +71,8 @@ def report_list():
         report['requesting_user'] = str(username)
     return render_template('the_usual_weather_report_list.html', pretty_list=pretty_list)
 
-@the_usual_weather_blueprint.route('/results', methods=['GET'])
-def results():
+@the_usual_weather_blueprint.route('/report-detail', methods=['GET'])
+def report_detail():
     # takes a <job id> and returns the results
     pass
 
