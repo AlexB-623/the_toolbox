@@ -23,8 +23,8 @@ class WeatherSubmitForm(FlaskForm):
         location = Nominatim(timeout=10000, user_agent="Geopy Library")
         get_location = location.geocode(field.data)
         try:
-            lat = round(float(get_location.latitude), 2)
-            long = round(float(get_location.longitude), 2)
+            lat = round(float(get_location.latitude), 5)
+            long = round(float(get_location.longitude), 5)
             # print(lat, long)
             #storing lat & long so we don't have to redo this
             self.latitude = lat

@@ -1,18 +1,18 @@
 {% extends "the_usual_weather-base.html" %}
 
 {% block content %}
-    <div class="default-container">
+    <div class="report-display">
         <h1 class="tool-home"><a href="{{ url_for('the_usual_weather.the_usual_weather') }}">The Usual Weather</a> </h1>
-        <p>Submit a new request <a href="{{ url_for('the_usual_weather.submit') }}">here</a> </p>
+        <p><strong>Submit a new request <a href="{{ url_for('the_usual_weather.submit') }}">here!</a></strong></p>
     <p>List of prior submissions:</p>
-    <table>
+    <table class="report-table">
         <thead>
             <tr>
                 <th>User</th>
                 <th>Submission Date</th>
                 <th>Submission City</th>
                 <th>Requested Month-Day</th>
-                <th>GPS Coordinates</th>
+                <th>Map Link</th>
                 <th>Decoded City</th>
                 <th>Decoded State</th>
                 <th>Country Code</th>
@@ -26,7 +26,7 @@
                 <td>{{ report.submitted_date }}</td>
                 <td>{{ report.submitted_city }}</td>
                 <td>{{ report.requested_date }}</td>
-                <td>{{ report.gps_coordinates }}</td>
+                <td><a href="https://www.google.com/maps/place/{{ report.gps_coordinates }}" target="_blank">{{ report.gps_coordinates }}</a> </td>
                 <td>{{ report.decoded_city }}</td>
                 <td>{{ report.decoded_state }}</td>
                 <td>{{ report.decoded_country }}</td>

@@ -2,14 +2,27 @@
     background-color: skyblue;
 }
 
-.the_usual_weather-container {
+
+.calendar {
+    font-size: 1.5rem;
+}
+
+.report-display {
     background-color: antiquewhite;
     margin-top: 50px;
     margin-right: 50px;
     margin-left: 50px;
     padding: 15px;
 }
+th {
+    background-color: #007bff;
+    color: white;
+    padding: 5px;
+    text-align: left;
+    font-weight: bold;
+  }
 
-.calendar {
-    font-size: 1.5rem;
-}
+  td {
+    padding: 5px;
+    border-bottom: 1px solid #ddd;
+  }
