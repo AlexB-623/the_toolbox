@@ -1,11 +1,13 @@
 from time import strftime
 from datetime import datetime
+from geopy.geocoders import Nominatim
 from os import getcwd
 from flask import Flask, Blueprint, render_template, request, session, redirect, url_for, flash
 import json, random, markdown
 from flask_login import login_required, current_user
 from base.lumberjack.views import lumberjack_do
 from base.the_usual_weather.forms import WeatherSubmitForm
+
 
 cwd = getcwd()
 
@@ -24,13 +26,13 @@ def the_usual_weather():
 def submit():
     form = WeatherSubmitForm()
     if form.validate_on_submit():
-        #lookup coords
-        #reverse coord lookup for "proper name"
         #commit to database
         lumberjack_do(datetime.utcnow(), current_user, "the usual weather", {"type": "Submission",
-                                                                             'Submitted city': form.city.data,
-                                                                             'GPS Coordinates': '',
-                                                                             'Actual city': '',
+                                                                             'User-Submitted city': form.city.data,
+                                                                             'GPS Coordinates': (form.latitude, form.longitude),
+                                                                             'Decoded City': form.decoded_city,
+                                                                             'Decoded State': form.decoded_state,
+                                                                             'Decoded Country Code': form.decoded_country_code,
                                                                              'date': form.date.data})
         flash("Thanks for your submission!")
         return redirect(url_for('the_usual_weather.report_list'))

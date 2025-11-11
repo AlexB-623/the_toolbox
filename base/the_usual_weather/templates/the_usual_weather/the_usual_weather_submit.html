@@ -2,25 +2,29 @@
 
 {% block content %}
     <div class="default-container">
-        <h1>The Usual Weather</h1>
+        <h1 class="tool-home"><a href="{{ url_for('the_usual_weather.the_usual_weather') }}">The Usual Weather</a> </h1>
+        <h2>What is the usual weather for...</h2>
         <form method="POST">
-        {{ form.hidden_tag() }}
+            {{ form.hidden_tag() }}
+            <p class="form-label">{{ form.city.label }}:</p>{{ form.city }}
+            <p class="form-label">{{ form.date.label }}:</p>{{ form.date(class="calendar") }}
+            <br>
+            <br>
+            {{ form.submit(class="action-button") }}
+        </form>
         <p><strong>Notes about entering the value for "city"</strong>:</p>
-        <ul>
-            <li>Be cautious with spelling - there's no auto-correct. If it's misspelled, then the submission won't go through.</li>
-            <li>If state/province is not provided, it will default to the largest city of that name.</li>
             <ul>
-                <li>Entering <strong>"baltimore"</strong> (no state) will return <strong>"Baltimore, MD"</strong></li>
-                <li>Entering <strong>"baltimore, md"</strong> will return <strong>"Baltimore, MD"</strong></li>
-                <li>Entering <strong>"baltimore, oh"</strong> will return <strong>"Baltimore, Ohio"</strong> (yes, that's a real place)</li>
+                <li>Be cautious with spelling - there's no autocorrect. If it's misspelled, then the submission won't go through.</li>
+                <li>If state/province is not provided, it will default to the largest city of that name.</li>
+                <ul>
+                    <li>Entering <strong>"baltimore"</strong> (no state) will return <strong>"Baltimore, MD"</strong></li>
+                    <li>Entering <strong>"baltimore, md"</strong> will return <strong>"Baltimore, MD"</strong></li>
+                    <li>Entering <strong>"baltimore, oh"</strong> will return <strong>"Baltimore, Ohio"</strong> (yes, that's a real place)</li>
+                </ul>
+                <li>The city-validation checks against open-source mapping services, so if you enter "asdf", you might find somebody has created it as a place in some mapping service.</li>
             </ul>
-            <li>The city-lookup sources from open-source mapping services, so if you enter "asdf", you might find that's technically a place</li>
-        </ul>
-        <p class="form-label">{{ form.city.label }}:</p>{{ form.city }}
-        <p><strong>Note about date entry: The year value is irrelevant.</strong> I chose a calendar date-entry form to avoid users entering an invalid date (Nov 31st, etc.) which would cause things to not work. Once you a pick a date, I just ignore the year value.</p>
-        <p class="form-label">{{ form.date.label }}:</p>{{ form.date(class="calendar") }}
-        <br>
-        <br>
-        {{ form.submit(class="action-button") }}
+            <p><strong>Note about date entry:</strong><p>
+        <p> The year value is irrelevant. I chose a calendar date-entry form to avoid users entering an invalid date (Nov 31st, etc.) which would cause things to not work. Once you a pick a date, I just ignore the year value.</p>
+        <p>Why are these important? See previous page for an overview of how the tool works.</p>
     </div>
 {% endblock %}
