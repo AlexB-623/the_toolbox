@@ -43,7 +43,7 @@ class Log_Entry(db.Model):
     timestamp = db.Column(db.DateTime, index=False, default=datetime.now)
     #the user relevant to the logged activity, if known
     # Foreign key that allows NULL for anonymous users
-    user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=True, index=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id'), unique=False, nullable=True, index=True)
     #the part of the application where the action occurred
     domain = db.Column(db.String(20), unique=False, index=True)
     #logged info
@@ -70,8 +70,9 @@ class WeatherRequest(db.Model):
     __tablename__ = 'weather_requests'
     id = db.Column(db.Integer, primary_key=True)
     requesting_user = db.Column(db.String(20), index=True)
+    requested_month = db.Column(db.Integer, index=False)
+    requested_day = db.Column(db.Integer, index=False)
     submitted_date = db.Column(db.DateTime, index=False, default=datetime.now)
-    requested_date = db.Column(db.DateTime, index=False, default=datetime.now)
     submitted_city = db.Column(db.String(30), index=True)
     gps_coordinates = db.Column(db.String(50), index=True)
     decoded_city = db.Column(db.String(50), index=True)
@@ -81,8 +82,9 @@ class WeatherRequest(db.Model):
 
 
     def __init__(self, requesting_user,
+                 requested_month,
+                 requested_day,
                  submitted_date,
-                 requested_date,
                  submitted_city,
                  gps_coordinates,
                  decoded_city,
@@ -90,8 +92,9 @@ class WeatherRequest(db.Model):
                  decoded_country,
                  job_status):
         self.requesting_user = requesting_user
+        self.requested_month = requested_month
+        self.requested_day = requested_day
         self.submitted_date = submitted_date
-        self.requested_date = requested_date
         self.submitted_city = submitted_city
         self.gps_coordinates = gps_coordinates
         self.decoded_city = decoded_city
@@ -106,7 +109,7 @@ class WeatherRequest(db.Model):
             'id': self.id,
             'requesting_user': self.requesting_user,
             'submitted_date': self.submitted_date,
-            'requested_date': self.requested_date,
+            'requested_date': str(f'{self.requested_month}-{self.requested_day}'),
             'submitted_city': self.submitted_city,
             'gps_coordinates': self.gps_coordinates,
             'decoded_city': self.decoded_city,

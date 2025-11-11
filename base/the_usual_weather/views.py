@@ -4,7 +4,9 @@ from os import getcwd
 from flask import Flask, Blueprint, render_template, request, session, redirect, url_for, flash
 import json, random, markdown
 from flask_login import login_required, current_user
+from base import db
 from base.lumberjack.views import lumberjack_do
+from base.models import WeatherRequest
 from base.the_usual_weather.forms import WeatherSubmitForm
 
 
@@ -25,14 +27,30 @@ def the_usual_weather():
 def submit():
     form = WeatherSubmitForm()
     if form.validate_on_submit():
-        #commit to database
+        # log it just in case
         lumberjack_do(datetime.utcnow(), current_user, "the usual weather", {"type": "Submission",
                                                                              'User-Submitted city': form.city.data,
-                                                                             'GPS Coordinates': (form.latitude, form.longitude),
+                                                                             'GPS Coordinates': str((form.latitude,
+                                                                                                 form.longitude)),
                                                                              'Decoded City': form.decoded_city,
                                                                              'Decoded State': form.decoded_state,
                                                                              'Decoded Country Code': form.decoded_country_code,
                                                                              'date': form.date.data})
+        #commit to database
+        weather_request = WeatherRequest(requesting_user=current_user.id,
+                                         requested_month=form.date.data.month,
+                                         requested_day=form.date.data.day,
+                                         submitted_date=datetime.utcnow(),
+                                         submitted_city=form.city.data,
+                                         gps_coordinates=str((form.latitude, form.longitude)),
+                                         decoded_city=form.decoded_city,
+                                         decoded_state=form.decoded_state,
+                                         decoded_country=form.decoded_country_code,
+                                         job_status="Pending"
+                                         )
+        db.session.add(weather_request)
+        db.session.commit()
+
         flash("Thanks for your submission!")
         return redirect(url_for('the_usual_weather.report_list'))
     if form.errors:

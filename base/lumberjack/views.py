@@ -14,26 +14,6 @@ def lumberjack_do(timestamp, user_id, domain, event):
     """
     Takes timestamp, user_id, domain, and event, and produces a log entry
     :param timestamp: datetime.utcnow()
-    :param user_id: current_user
-    :param domain: typically the blueprint being loaded
-    :param event: notes about what is being logged
-    :return: none - commits the entry to the logs db
-    """
-    # maybe find a way to use an ENV variable to enable and disable this
-    # if user_id and hasattr(user_id, 'id'):
-    #     user = user_id.id
-    # else:
-    #     user = None
-    # log_entry = Log_Entry(timestamp=timestamp,
-    #                       user_id=user,
-    #                       domain=str(domain).title(),
-    #                       event=str(event)) #trim this to match the length of the model field
-    # db.session.add(log_entry)
-    # db.session.commit()
-    # return None
-    """
-    Takes timestamp, user_id, domain, and event, and produces a log entry
-    :param timestamp: datetime.utcnow()
     :param user_id: current_user (can be authenticated or anonymous)
     :param domain: typically the blueprint being loaded
     :param event: notes about what is being logged
