@@ -20,10 +20,6 @@ def lumberjack_do(timestamp, user_id, domain, event):
     :return: none - commits the entry to the logs db
     """
     # maybe find a way to use an ENV variable to enable and disable this
-    # log_entry = {'timestamp': str(timestamp),
-    #              'user_id': str(user_id),
-    #              'domain': str(domain).title(),
-    #              'event': str(event)}
     log_entry = Log_Entry(timestamp=timestamp,
                           user_id=str(user_id), #tie this to the username
                           domain=str(domain).title(),
@@ -55,6 +51,7 @@ def view_logs():
     #raw logs get refined into Lumber
     lumber = [log_entry.to_dict() for log_entry in raw_logs]
     #since the tables are not joined, we should make the username prettier
+    #I should make this a class method on Users
     for board in lumber:
         if "Anonymous" in str(board['user_id']):
             board['user_id'] = 'Anonymous User'

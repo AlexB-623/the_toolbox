@@ -26,7 +26,6 @@ class User(db.Model, UserMixin):
         return db.session.query(db.exists().where(cls.email == email)).scalar()
 
     @classmethod
-    #confirm this works
     def check_username(cls, username):
         #query db to see if uname exists
         return db.session.query(db.exists().where(cls.username == username)).scalar()
@@ -66,4 +65,57 @@ class Log_Entry(db.Model):
         }
 
 
+class WeatherRequest(db.Model):
+    __tablename__ = 'weather_requests'
+    id = db.Column(db.Integer, primary_key=True)
+    requesting_user = db.Column(db.String(20), index=True)
+    submitted_date = db.Column(db.DateTime, index=False, default=datetime.now)
+    requested_date = db.Column(db.DateTime, index=False, default=datetime.now)
+    submitted_city = db.Column(db.String(30), index=True)
+    gps_coordinates = db.Column(db.String(50), index=True)
+    decoded_city = db.Column(db.String(50), index=True)
+    decoded_state = db.Column(db.String(50), index=True)
+    decoded_country = db.Column(db.String(50), index=True)
+    job_status = db.Column(db.String(50), index=True, default="Pending")
 
+
+    def __init__(self, requesting_user,
+                 submitted_date,
+                 requested_date,
+                 submitted_city,
+                 gps_coordinates,
+                 decoded_city,
+                 decoded_state,
+                 decoded_country,
+                 job_status):
+        self.requesting_user = requesting_user
+        self.submitted_date = submitted_date
+        self.requested_date = requested_date
+        self.submitted_city = submitted_city
+        self.gps_coordinates = gps_coordinates
+        self.decoded_city = decoded_city
+        self.decoded_state = decoded_state
+        self.decoded_country = decoded_country
+        self.job_status = job_status
+
+
+    def to_dict(self):
+        #convert model to dict
+        return {
+            'id': self.id,
+            'requesting_user': self.requesting_user,
+            'submitted_date': self.submitted_date,
+            'requested_date': self.requested_date,
+            'submitted_city': self.submitted_city,
+            'gps_coordinates': self.gps_coordinates,
+            'decoded_city': self.decoded_city,
+            'decoded_state': self.decoded_state,
+            'decoded_country': self.decoded_country,
+            'job_status': self.job_status
+        }
+
+
+#need to determine how to join with the Request table so they are linked
+# class WeatherReport(db.Model):
+#     __tablename__ = 'weather_reports'
+#     id = db.Column(db.Integer, primary_key=True)

@@ -6,7 +6,7 @@ from wtforms import (StringField,
                      IntegerField,
                      ValidationError,
                      DateField)
-from wtforms.validators import DataRequired, EqualTo
+from wtforms.validators import DataRequired, EqualTo, length
 from base.lumberjack.views import lumberjack_do
 from base.users.views import current_user
 from datetime import datetime
@@ -14,7 +14,7 @@ from datetime import datetime
 
 
 class WeatherSubmitForm(FlaskForm):
-    city = StringField('City', validators=[DataRequired()])
+    city = StringField('City', validators=[DataRequired(), length(max=30)])
     date = DateField('Date', validators=[DataRequired()])
     submit = SubmitField('Submit')
 
@@ -34,6 +34,8 @@ class WeatherSubmitForm(FlaskForm):
             raise ValidationError('Invalid city name. Please check your spelling and try again.')
         location_details = location.reverse((lat, long))
         location_details_raw = location_details.raw
+        #since city names are not unique, we should reverse lookup the coordinates to give a more descriptive location
+        #need to account for non-english characters in the names
         try:
             self.decoded_city = location_details_raw['address']['city']
         except:

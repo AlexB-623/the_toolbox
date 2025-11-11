@@ -1,6 +1,5 @@
 from time import strftime
 from datetime import datetime
-from geopy.geocoders import Nominatim
 from os import getcwd
 from flask import Flask, Blueprint, render_template, request, session, redirect, url_for, flash
 import json, random, markdown
