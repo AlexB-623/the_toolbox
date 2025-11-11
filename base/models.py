@@ -42,7 +42,8 @@ class Log_Entry(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     timestamp = db.Column(db.DateTime, index=False, default=datetime.now)
     #the user relevant to the logged activity, if known
-    user_id = db.Column(db.String(20), unique=False, index=True)
+    # Foreign key that allows NULL for anonymous users
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=True, index=True)
     #the part of the application where the action occurred
     domain = db.Column(db.String(20), unique=False, index=True)
     #logged info

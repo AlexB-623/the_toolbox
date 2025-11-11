@@ -20,13 +20,47 @@ def lumberjack_do(timestamp, user_id, domain, event):
     :return: none - commits the entry to the logs db
     """
     # maybe find a way to use an ENV variable to enable and disable this
-    log_entry = Log_Entry(timestamp=timestamp,
-                          user_id=str(user_id), #tie this to the username
-                          domain=str(domain).title(),
-                          event=str(event)) #trim this to match the length of the model field
-    db.session.add(log_entry)
-    db.session.commit()
-    return None
+    # if user_id and hasattr(user_id, 'id'):
+    #     user = user_id.id
+    # else:
+    #     user = None
+    # log_entry = Log_Entry(timestamp=timestamp,
+    #                       user_id=user,
+    #                       domain=str(domain).title(),
+    #                       event=str(event)) #trim this to match the length of the model field
+    # db.session.add(log_entry)
+    # db.session.commit()
+    # return None
+    """
+    Takes timestamp, user_id, domain, and event, and produces a log entry
+    :param timestamp: datetime.utcnow()
+    :param user_id: current_user (can be authenticated or anonymous)
+    :param domain: typically the blueprint being loaded
+    :param event: notes about what is being logged
+    :return: True if successful, False otherwise
+    """
+    try:
+        # Check if user is authenticated (not anonymous)
+        if user_id and user_id.is_authenticated:
+            user = user_id.id
+        else:
+            user = None
+
+        log_entry = Log_Entry(
+            timestamp=timestamp,
+            user_id=user,
+            domain=str(domain).title()[:20],
+            event=str(event)[:500]
+        )
+
+        db.session.add(log_entry)
+        db.session.commit()
+        return True
+
+    except Exception as e:
+        db.session.rollback()
+        print(f"Logging error: {e}")
+        return False
 
 
 @lumberjack_blueprint.route('/')
@@ -50,14 +84,12 @@ def view_logs():
     ).scalars()
     #raw logs get refined into Lumber
     lumber = [log_entry.to_dict() for log_entry in raw_logs]
-    #since the tables are not joined, we should make the username prettier
     #I should make this a class method on Users
     for board in lumber:
-        if "Anonymous" in str(board['user_id']):
+        if "None" in str(board['user_id']):
             board['user_id'] = 'Anonymous User'
         else:
-            raw_id = str(board['user_id']).replace("<User ", "").replace(">", "")
-            username = db.session.execute(db.select(User.username).filter_by(id=raw_id)).scalar_one()
+            username = db.session.execute(db.select(User.username).filter_by(id=board['user_id'])).scalar_one()
             board['user_id'] = str(username)
     return render_template('lumberjack_viewer.html', lumber=lumber)
 
