@@ -79,8 +79,11 @@ class WeatherRequest(db.Model):
     decoded_city = db.Column(db.String(50), index=True)
     decoded_state = db.Column(db.String(50), index=True)
     decoded_country = db.Column(db.String(50), index=True)
+    job_id = db.Column(db.String(50), index=True)
     job_status = db.Column(db.String(50), index=True, default="Pending")
 
+    # think about how to handle db table drops - can we generate a unique token for job_id? UUID?
+    #doesn't have to be long, it just has to be long enough that it won't duplicate
 
     def __init__(self, requesting_user,
                  requested_month,
@@ -91,6 +94,7 @@ class WeatherRequest(db.Model):
                  decoded_city,
                  decoded_state,
                  decoded_country,
+                 job_id,
                  job_status):
         self.requesting_user = requesting_user
         self.requested_month = requested_month
@@ -101,6 +105,7 @@ class WeatherRequest(db.Model):
         self.decoded_city = decoded_city
         self.decoded_state = decoded_state
         self.decoded_country = decoded_country
+        self.job_id = job_id
         self.job_status = job_status
 
 
@@ -116,11 +121,13 @@ class WeatherRequest(db.Model):
             'decoded_city': self.decoded_city,
             'decoded_state': self.decoded_state,
             'decoded_country': self.decoded_country.upper(),
+            'job_id': self.job_id,
             'job_status': self.job_status
         }
 
 
 #need to determine how to join with the Request table so they are linked
+# think about how to handle db table drops - can we generate a unique token for job_id? UUID?
 # class WeatherReport(db.Model):
 #     __tablename__ = 'weather_reports'
 #     id = db.Column(db.Integer, primary_key=True)

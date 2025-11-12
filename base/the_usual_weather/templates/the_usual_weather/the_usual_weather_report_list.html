@@ -30,7 +30,7 @@
                 <td>{{ report.decoded_city }}</td>
                 <td>{{ report.decoded_state }}</td>
                 <td>{{ report.decoded_country }}</td>
-                <td>{{ report.job_status }}</td>
+                <td><a href="{{ url_for('the_usual_weather.report_detail', job_id=report.job_id) }}">{{ report.job_status }}</a></td>
             </tr>
         {% endfor %}
         </tbody>

@@ -1,7 +1,7 @@
 from datetime import datetime
 from os import getcwd
 from flask import Flask, Blueprint, render_template, request, session, redirect, url_for, flash
-import json, random, markdown
+import json, random, markdown, uuid
 from flask_login import login_required, current_user
 from base import db
 from base.lumberjack.views import lumberjack_do
@@ -27,6 +27,7 @@ def submit():
     form = WeatherSubmitForm()
     if form.validate_on_submit():
         # log it just in case
+        job_id = str(uuid.uuid4())
         lumberjack_do(datetime.utcnow(), current_user, "the usual weather", {"type": "Submission",
                                                                              'User-Submitted city': form.city.data,
                                                                              'GPS Coordinates': str((form.latitude,
@@ -34,6 +35,7 @@ def submit():
                                                                              'Decoded City': form.decoded_city,
                                                                              'Decoded State': form.decoded_state,
                                                                              'Decoded Country Code': form.decoded_country_code,
+                                                                             'job_id': job_id,
                                                                              'date': form.date.data})
         #commit to database
         weather_request = WeatherRequest(requesting_user=current_user.id,
@@ -45,12 +47,15 @@ def submit():
                                          decoded_city=form.decoded_city,
                                          decoded_state=form.decoded_state,
                                          decoded_country=form.decoded_country_code,
+                                         job_id=job_id,
                                          job_status="Pending"
                                          )
         db.session.add(weather_request)
         db.session.commit()
         flash("Thanks for your submission!")
-        return redirect(url_for('the_usual_weather.report_list'))
+        #eventually, we should redirect to the report_detail page for the job_id
+        # return redirect(url_for('the_usual_weather.report_list'))
+        return redirect(url_for('the_usual_weather.report_detail', job_id=job_id))
     if form.errors:
         for field, errors in form.errors.items():
             for error in errors:
@@ -69,10 +74,28 @@ def report_list():
     for report in pretty_list:
         username = db.session.execute(db.select(User.username).filter_by(id=report['requesting_user'])).scalar_one()
         report['requesting_user'] = str(username)
+    #we need to refresh the page every few minutes
     return render_template('the_usual_weather_report_list.html', pretty_list=pretty_list)
 
-@the_usual_weather_blueprint.route('/report-detail', methods=['GET'])
-def report_detail():
-    # takes a <job id> and returns the results
-    pass
+@the_usual_weather_blueprint.route('/report-detail/<job_id>', methods=['GET'])
+def report_detail(job_id):
+    # takes a <job id> in the URL and returns the results
+    #<job id> = weather_request.id
+    #think about how to handle db table drops - can we generate a unique token for the job id
+    #will need a new table in the db for saving/loading the API results
 
+    # let's start by just loading a blank page
+    #then lets have it retrieve the job and say "pending, please refresh to check status"
+    #this starts the job
+    #when the job is done, you see results during a refresh
+
+    # eventually, we need a method for checking if any jobs have been submitted and running them.
+    # Maybe we just redirect here and conditionally run the job if it hasn't already been run
+    #page should auto-refresh every 30 sec while job is incomplete
+    report = db.session.execute(db.select(WeatherRequest).filter_by(job_id=job_id)).scalar()
+    print(report.to_dict())
+    return render_template('the_usual_weather_report_detail.html', report=report)
+
+
+#admin function:
+#Remove old results - must remove both the request and the results at the same time.

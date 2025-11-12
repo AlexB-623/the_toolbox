@@ -45,7 +45,7 @@ def login():
     if form.validate_on_submit():
         # force submitted email to lowercase
         email = form.email.data.lower()
-        user = user = db.session.execute(db.select(User).filter_by(email=email)).scalar()
+        user = db.session.execute(db.select(User).filter_by(email=email)).scalar()
         if User.check_email(email=email) and user.check_password(form.password.data) and user is not None:
             login_user(user)
             flash('You have been logged in.')
@@ -73,7 +73,9 @@ def logout():
     return redirect(url_for('index'))
 
 
-#admin only - tie into an admin panel
+# admin only -
+# tie into an admin panel where I can manage users, reset pwds, ban, invite, toggle registration, etc
+# Admin panel should link to admin functions in the other modules for managing logs and jobs (i.e. delete old to save space)
 
 @users_blueprint.route("/user-by-id/<int:id>")
 def user_by_id(id):
