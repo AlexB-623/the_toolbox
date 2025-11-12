@@ -14,15 +14,55 @@
     margin-left: 50px;
     padding: 15px;
 }
+
+.job-record {
+    display: flex;
+    gap: 20px
+}
+
+.job-record > .job-record-details {
+    width: 450px;
+
+}
+
+.job-record > .job-record-status {
+    flex: 1;
+}
+
 th {
     background-color: #007bff;
     color: white;
     padding: 5px;
     text-align: left;
     font-weight: bold;
-  }
+}
 
-  td {
+td {
     padding: 5px;
     border-bottom: 1px solid #ddd;
-  }
+}
+
+.report-is-Pending {
+    background-color: gold;
+    font-weight: bold;
+}
+
+.report-is-Processing {
+    background-color: orangered;
+    font-weight: bold;
+}
+
+.report-is-Complete {
+    background-color: limegreen;
+    font-weight: bold;
+}
+
+.report-is-Failed-Pending-Retry {
+    background-color: orangered;
+    font-weight: bold;
+}
+
+.report-is-Failed-Final {
+    background-color: Red;
+    font-weight: bold;
+}

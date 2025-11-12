@@ -71,6 +71,7 @@ def report_list():
         db.select(WeatherRequest).order_by(WeatherRequest.submitted_date.desc())
     ).scalars()
     pretty_list = [weather_request.to_dict() for weather_request in raw_list]
+    #need a user class method for getting username by id
     for report in pretty_list:
         username = db.session.execute(db.select(User.username).filter_by(id=report['requesting_user'])).scalar_one()
         report['requesting_user'] = str(username)
@@ -81,20 +82,30 @@ def report_list():
 def report_detail(job_id):
     # takes a <job id> in the URL and returns the results
     #<job id> = weather_request.id
-    #think about how to handle db table drops - can we generate a unique token for the job id
+
     #will need a new table in the db for saving/loading the API results
 
-    # let's start by just loading a blank page
-    #then lets have it retrieve the job and say "pending, please refresh to check status"
-    #this starts the job
-    #when the job is done, you see results during a refresh
+    # let's start by just loading a page with the request  as "pending, please refresh to check status"
+    # this starts the job
+    # when the job is done, you see results during a refresh
 
-    # eventually, we need a method for checking if any jobs have been submitted and running them.
+    #we need a method for checking if any jobs have been submitted and running them.
     # Maybe we just redirect here and conditionally run the job if it hasn't already been run
     #page should auto-refresh every 30 sec while job is incomplete
     report = db.session.execute(db.select(WeatherRequest).filter_by(job_id=job_id)).scalar()
-    print(report.to_dict())
-    return render_template('the_usual_weather_report_detail.html', report=report)
+    report_request = report.to_dict()
+    # need a user class method for getting username by id
+    username = db.session.execute(db.select(User.username).filter_by(id=report_request['requesting_user'])).scalar_one()
+    report_request['requesting_user'] = str(username)
+    if report_request['job_status'] != "Complete":
+        #start job
+        return render_template('the_usual_weather_report_detail.html',
+                               report_request=report_request)
+    else:
+        #fetch the report and get it prepared for display
+        return render_template('the_usual_weather_report_detail.html',
+                               report_request=report_request,
+                               report=report)
 
 
 #admin function:

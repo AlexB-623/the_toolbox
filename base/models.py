@@ -71,19 +71,22 @@ class WeatherRequest(db.Model):
     __tablename__ = 'weather_requests'
     id = db.Column(db.Integer, primary_key=True)
     requesting_user = db.Column(db.Integer, db.ForeignKey('users.id'), unique=False, nullable=True, index=True)
+    #these cover the month and day the user wants to know about
     requested_month = db.Column(db.Integer, index=False)
     requested_day = db.Column(db.Integer, index=False)
+    #the date the user submitted the request
     submitted_date = db.Column(db.DateTime, index=False, default=datetime.now)
+    #the string that the user entered for city
     submitted_city = db.Column(db.String(30), index=True)
+    #all 4 of the below cover the geo details that we inferred from the user's city
     gps_coordinates = db.Column(db.String(50), index=True)
     decoded_city = db.Column(db.String(50), index=True)
     decoded_state = db.Column(db.String(50), index=True)
     decoded_country = db.Column(db.String(50), index=True)
+    #tracking info
     job_id = db.Column(db.String(50), index=True)
     job_status = db.Column(db.String(50), index=True, default="Pending")
-
-    # think about how to handle db table drops - can we generate a unique token for job_id? UUID?
-    #doesn't have to be long, it just has to be long enough that it won't duplicate
+    #I may need some way to track elapsed time to note long-running jobs
 
     def __init__(self, requesting_user,
                  requested_month,
@@ -114,9 +117,9 @@ class WeatherRequest(db.Model):
         return {
             'id': self.id,
             'requesting_user': self.requesting_user,
-            'submitted_date': self.submitted_date.strftime('%d/%m/%Y'),
+            'submitted_date': self.submitted_date.strftime('%m/%d/%Y'),
             'requested_date': str(f'{self.requested_month}-{self.requested_day}'),
-            'submitted_city': self.submitted_city,
+            'requested_city': self.submitted_city,
             'gps_coordinates': self.gps_coordinates,
             'decoded_city': self.decoded_city,
             'decoded_state': self.decoded_state,

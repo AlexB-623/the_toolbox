@@ -3,6 +3,49 @@
 {% block content %}
     <div class="default-container">
         <h1 class="tool-home"><a href="{{ url_for('the_usual_weather.the_usual_weather') }}">The Usual Weather</a> </h1>
-        <p>{{ report }}</p>
+        <h3>Report Record</h3>
+        <div class="job-record">
+            <div class="job-record-details">
+                <table class="job-details">
+                <tr>
+                    <td>Requested by:</td>
+                    <td>{{ report_request['requesting_user'] }}</td>
+                </tr>
+                <tr>
+                    <td>Date Submitted:</td>
+                    <td>{{ report_request['submitted_date'] }}</td>
+                </tr>
+                <tr>
+                    <td>Requested Month-Day:</td>
+                    <td>{{ report_request['requested_date'] }}</td>
+                </tr>
+                <tr>
+                    <td>Submitted City:</td>
+                    <td>{{ report_request['requested_city'] }}</td>
+                </tr>
+                <tr>
+                    <td>Decoded Location (Map Link):</td>
+                    <td><a href="https://www.google.com/maps/place/{{ report_request.gps_coordinates }}" target="_blank">
+                        {{ report_request['decoded_city'] }},
+                        {{ report_request['decoded_state'] }},
+                        {{ report_request['decoded_country'] }},<br>
+                        {{ report_request['gps_coordinates'] }}</a>
+                    </td>
+                </tr>
+            </table>
+            </div>
+            <div class="job-record-status">
+                <table class="job-status">
+                    <tr>
+                        <td>Report ID:</td>
+                        <td>{{ report_request['job_id'] }}</td>
+                    </tr>
+                    <tr>
+                        <td>Report Status:</td>
+                        <td class="report-is-{{ report_request['job_status'] }}">{{ report_request['job_status'] }}</td>
+                    </tr>
+                </table>
+            </div>
+        </div>
     </div>
 {% endblock %}
