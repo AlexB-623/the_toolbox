@@ -1,5 +1,4 @@
 import os
-
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
@@ -20,6 +19,10 @@ Migrate(app, db)
 
 login_manager.init_app(app)
 login_manager.login_view = 'users.login'
+
+ADMIN_EMAIL = os.getenv('ADMIN_EMAIL', ''). split(',')
+ADMIN_EMAIL = [email.strip() for email in ADMIN_EMAIL if email.strip()]
+app.config['ADMIN_EMAIL'] = ADMIN_EMAIL
 
 #OAUTH#
 

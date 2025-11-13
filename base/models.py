@@ -5,6 +5,7 @@ from time import strftime
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_login import UserMixin
 
+
 @login_manager.user_loader
 def load_user(user_id):
     return User.query.get(user_id)
@@ -16,13 +17,30 @@ class User(db.Model, UserMixin):
     email = db.Column(db.String(64), unique=True, index=True)
     username = db.Column(db.String(20), unique=True, index=True)
     password_hash = db.Column(db.String(128))
-    # is_admin = db.Column(db.Boolean, default=False)
+    is_admin = db.Column(db.Boolean, default=False)
 
     def __init__(self, email, username, password):
         self.email = email
         self.username = username
         self.password_hash = generate_password_hash(password)
-        # self.is_admin = is_admin
+
+    @property
+    def has_admin_access(self):
+        from flask import current_app
+        # Check database flag OR env variable
+        admin_emails = current_app.config.get('ADMIN_EMAIL', [])
+        return self.is_admin or self.email in admin_emails
+
+    def sync_admin_status(self):
+        """Update is_admin flag based on environment variable."""
+        from flask import current_app
+        admin_emails = current_app.config.get('ADMIN_EMAIL', [])
+        should_be_admin = self.email in admin_emails
+
+        if should_be_admin and not self.is_admin:
+            self.is_admin = True
+            return True  # Changed
+        return False  # No change
 
     @classmethod
     def check_email(cls, email):

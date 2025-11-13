@@ -12,8 +12,9 @@ users_blueprint = Blueprint('users', __name__, template_folder='templates/users'
 
 @users_blueprint.route('/', methods=['GET'])
 def users():
-    #admin only
-    return render_template('users.html')
+    #basic home for users
+    #add account management functions
+    return render_template('users-home.html')
 
 @users_blueprint.route('/register', methods=['GET', 'POST'])
 def register():
@@ -34,6 +35,7 @@ def register():
                               f"Somebody tried to register as {form.username.data}")
                 return redirect(url_for('users.register'))
             else:
+                #check if registrant is marked for admin rights
                 user = User(username=form.username.data,
                             email=form.email.data.lower(),
                             password=form.password.data)
@@ -46,7 +48,7 @@ def register():
             for field, errors in form.errors.items():
                 for error in errors:
                     flash(f"{ field } error: { error }", "danger")
-        return render_template('register.html', form=form)
+        return render_template('users-register.html', form=form)
     else:
         abort(423)
 
@@ -58,8 +60,13 @@ def login():
         email = form.email.data.lower()
         user = db.session.execute(db.select(User).filter_by(email=email)).scalar()
         if User.check_email(email=email) and user.check_password(form.password.data) and user is not None:
+            # here we are checking for ENV admins and updating the db
+            if user.sync_admin_status():
+                db.session.commit()
+            #handling the login
             login_user(user)
             flash('You have been logged in.')
+            #logging the login
             lumberjack_do(datetime.utcnow(), current_user, "users", "User Logged In")
             next = request.args.get('next')
             if next == None or not next[0]=='/':
@@ -68,12 +75,12 @@ def login():
         else:
             flash('Invalid username or password')
             return redirect(url_for('users.login'))
-    return render_template('login.html', form=form)
+    return render_template('users-login.html', form=form)
 
 @users_blueprint.route('/welcome', methods=['GET', 'POST'])
 @login_required
 def welcome():
-    return render_template('welcome.html')
+    return render_template('users-welcome.html')
 
 @users_blueprint.route('/logout', methods=['GET', 'POST'])
 @login_required
@@ -90,17 +97,9 @@ def logout():
 # tie into an admin panel where I can manage users, reset pwds, ban, invite, toggle registration, etc
 # Admin panel should link to admin functions in the other modules for managing logs and jobs (i.e. delete old to save space)
 
-@users_blueprint.route("/user-by-id/<int:id>")
-def user_by_id(id):
-    user = db.get_or_404(User, id)
-    return render_template("show_user.html", user=user)
-
-@users_blueprint.route("/user-by-username/<username>")
-def user_by_username(username):
-    user = db.one_or_404(db.select(User).filter_by(username=username))
-    return render_template("show_user.html", user=user)
-
-@users_blueprint.route("/user-by-email/<email>")
-def user_by_email(email):
-    user = db.one_or_404(db.select(User).filter_by(email=email))
-    return render_template("show_user.html", user=user)
+@users_blueprint.route('/administration', methods=['GET', 'POST'])
+@login_required
+def administration():
+    #list users
+    #search users by email/uname
+    pass
