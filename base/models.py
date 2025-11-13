@@ -42,6 +42,7 @@ class User(db.Model, UserMixin):
             return True  # Changed
         return False  # No change
 
+
     @classmethod
     def check_email(cls, email):
         #query db to see if email exists

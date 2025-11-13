@@ -1,6 +1,7 @@
 from flask import Flask, Blueprint, render_template, request, session, redirect, url_for, flash, abort
 from flask_login import login_user, login_required, logout_user, current_user
 from base import db, registration_toggle
+from base.decorators import admin_required
 from datetime import datetime
 from base.lumberjack.views import lumberjack_do
 from base.models import User
@@ -35,7 +36,6 @@ def register():
                               f"Somebody tried to register as {form.username.data}")
                 return redirect(url_for('users.register'))
             else:
-                #check if registrant is marked for admin rights
                 user = User(username=form.username.data,
                             email=form.email.data.lower(),
                             password=form.password.data)
@@ -93,13 +93,13 @@ def logout():
 #profile
 #a page where users can see their past activity
 
-# admin only -
-# tie into an admin panel where I can manage users, reset pwds, ban, invite, toggle registration, etc
+# admin panel where I can manage users, reset pwds, ban, invite, toggle registration, etc
 # Admin panel should link to admin functions in the other modules for managing logs and jobs (i.e. delete old to save space)
 
 @users_blueprint.route('/administration', methods=['GET', 'POST'])
 @login_required
+@admin_required
 def administration():
     #list users
     #search users by email/uname
-    pass
+    return render_template('users-administration.html')

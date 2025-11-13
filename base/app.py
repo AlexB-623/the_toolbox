@@ -32,6 +32,12 @@ def toolbox():
     lumberjack_do(datetime.utcnow(), current_user, "toolbox", "rummaged through the toolbox" )
     return render_template('toolbox.html', tool_modules=tool_modules)
 
+@app.errorhandler(403)
+def page_not_found(e):
+    #log what they were trying to do
+    lumberjack_do(datetime.utcnow(), current_user, "error", {"error": 403, "target": request.url})
+    return render_template('403.html'), 403
+
 @app.errorhandler(404)
 def page_not_found(e):
     #log what they were trying to do
