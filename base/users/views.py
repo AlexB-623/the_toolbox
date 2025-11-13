@@ -96,29 +96,32 @@ def logout():
 #profile
 #a page where users can see their past activity
 
-# admin
+
+#admin only
+
 
 @users_blueprint.route('/list-users')
 @login_required
 @admin_required
 def list_users():
-    # lists all and links to manage user
-    pass
-
+    #lists all and links to manage user
+    user_base = db.session.execute(db.select(User).order_by(User.email.desc())).scalars()
+    users = [user.to_dict() for user in user_base]
+    return render_template('admin-list_users.html', users=users)
 
 @users_blueprint.route('/lookup-user')
 @login_required
 @admin_required
 def lookup_user():
-    # by id
+    #by id
     # if exists - opens manage user page
 
-    # by email
-    # if exists - opens manage user page
-    # else - send invite
+    #by email
+        #if exists - opens manage user page
+        #else - send invite
 
-    # by username
-    # if exists - opens manage user page
+    #by username
+        # if exists - opens manage user page
     pass
 
 
@@ -126,17 +129,16 @@ def lookup_user():
 @login_required
 @admin_required
 def invite_user():
-    # creates a login record with a temp pwd and requires reset on 1st login
+    #creates a login record with a temp pwd and requires reset on 1st login
     pass
-
 
 @users_blueprint.route('/manage-user')
 @login_required
 @admin_required
 def manage_user():
-    # options:
-    # ban
-    # reset pwd
-    # promote to admin
-    # demote
+    #options:
+    #ban
+    #reset pwd
+    #promote to admin
+    #demote
     pass

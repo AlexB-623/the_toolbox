@@ -2,6 +2,10 @@
 
 {% block content %}
     <div class="default-container">
-
+        <ul>
+            {% for route in routes %}
+                <li><a href="{{ url_for(route) }}">{{ route }}</a> </li>
+            {% endfor %}
+        </ul>
     </div>
 {% endblock %}

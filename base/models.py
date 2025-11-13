@@ -24,6 +24,14 @@ class User(db.Model, UserMixin):
         self.username = username
         self.password_hash = generate_password_hash(password)
 
+    def to_dict(self):
+        return {
+            'id': self.id,
+            'email': self.email,
+            'username': self.username,
+            'is_admin': self.is_admin,
+        }
+
     @property
     def has_admin_access(self):
         from flask import current_app
