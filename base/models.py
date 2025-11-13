@@ -1,4 +1,5 @@
 from base import db, login_manager
+from sqlalchemy import func
 from datetime import datetime
 from time import strftime
 from werkzeug.security import generate_password_hash, check_password_hash
@@ -15,11 +16,13 @@ class User(db.Model, UserMixin):
     email = db.Column(db.String(64), unique=True, index=True)
     username = db.Column(db.String(20), unique=True, index=True)
     password_hash = db.Column(db.String(128))
+    # is_admin = db.Column(db.Boolean, default=False)
 
     def __init__(self, email, username, password):
         self.email = email
         self.username = username
         self.password_hash = generate_password_hash(password)
+        # self.is_admin = is_admin
 
     @classmethod
     def check_email(cls, email):
@@ -29,7 +32,7 @@ class User(db.Model, UserMixin):
     @classmethod
     def check_username(cls, username):
         #query db to see if uname exists
-        return db.session.query(db.exists().where(cls.username == username)).scalar()
+        return db.session.query(db.exists().where(func.lower(cls.username) == func.lower(username))).scalar()
 
     def check_password(self, password):
         return check_password_hash(self.password_hash, password)

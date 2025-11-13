@@ -20,17 +20,28 @@ def register():
     #env variable that allows me to toggle registration
     if registration_toggle == 'True':
         form = RegistrationForm()
-        #force uname and email to lowercase
-        #check if username or email exists
         if form.validate_on_submit():
-            user = User(username=form.username.data,
-                        email=form.email.data.lower(),
-                        password=form.password.data)
-            db.session.add(user)
-            db.session.commit()
-            lumberjack_do(datetime.utcnow(), current_user, "users", f"{ form.email.data } registered as {form.username.data}")
-            flash('Thank you for registering. You can now login.')
-            return redirect(url_for('users.login'))
+            # check if email exists
+            if User.check_email(email=form.email.data.lower()):
+                flash('This Email is already registered.')
+                lumberjack_do(datetime.utcnow(), current_user, "users",
+                              f"Somebody tried to register as {form.email.data}")
+                return redirect(url_for('users.register'))
+            # check if username exists
+            elif User.check_username(username=form.username.data.lower()):
+                flash('This username is already taken.')
+                lumberjack_do(datetime.utcnow(), current_user, "users",
+                              f"Somebody tried to register as {form.username.data}")
+                return redirect(url_for('users.register'))
+            else:
+                user = User(username=form.username.data,
+                            email=form.email.data.lower(),
+                            password=form.password.data)
+                db.session.add(user)
+                db.session.commit()
+                lumberjack_do(datetime.utcnow(), current_user, "users", f"{ form.email.data } registered as {form.username.data}")
+                flash('Thank you for registering. You can now login.')
+                return redirect(url_for('users.login'))
         if form.errors:
             for field, errors in form.errors.items():
                 for error in errors:
@@ -72,6 +83,8 @@ def logout():
     flash('You have been logged out.')
     return redirect(url_for('index'))
 
+#profile
+#a page where users can see their past activity
 
 # admin only -
 # tie into an admin panel where I can manage users, reset pwds, ban, invite, toggle registration, etc
