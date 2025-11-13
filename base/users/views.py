@@ -90,16 +90,53 @@ def logout():
     flash('You have been logged out.')
     return redirect(url_for('index'))
 
+
+#reset pwd
+
 #profile
 #a page where users can see their past activity
 
-# admin panel where I can manage users, reset pwds, ban, invite, toggle registration, etc
-# Admin panel should link to admin functions in the other modules for managing logs and jobs (i.e. delete old to save space)
+# admin
 
-@users_blueprint.route('/administration', methods=['GET', 'POST'])
+@users_blueprint.route('/list-users')
 @login_required
 @admin_required
-def administration():
-    #list users
-    #search users by email/uname
-    return render_template('users-administration.html')
+def list_users():
+    # lists all and links to manage user
+    pass
+
+
+@users_blueprint.route('/lookup-user')
+@login_required
+@admin_required
+def lookup_user():
+    # by id
+    # if exists - opens manage user page
+
+    # by email
+    # if exists - opens manage user page
+    # else - send invite
+
+    # by username
+    # if exists - opens manage user page
+    pass
+
+
+@users_blueprint.route('/invite-user')
+@login_required
+@admin_required
+def invite_user():
+    # creates a login record with a temp pwd and requires reset on 1st login
+    pass
+
+
+@users_blueprint.route('/manage-user')
+@login_required
+@admin_required
+def manage_user():
+    # options:
+    # ban
+    # reset pwd
+    # promote to admin
+    # demote
+    pass
