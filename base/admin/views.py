@@ -1,10 +1,10 @@
-from flask import current_app, Flask, Blueprint, render_template, request, session, redirect, url_for, flash, abort
-from flask_login import login_user, login_required, logout_user, current_user
-from base import db, registration_toggle
-from base.decorators import admin_required
-from datetime import datetime
-from base.lumberjack.views import lumberjack_do
-from base.models import User
+from flask import current_app, Blueprint, render_template
+from flask_login import login_required
+
+from os import getcwd
+import markdown
+
+cwd = getcwd()
 
 admin_blueprint = Blueprint('admin', __name__, template_folder='templates/admin')
 
@@ -25,10 +25,14 @@ def get_admin_routes():
 
 @admin_blueprint.route('/')
 @login_required
-@admin_required
 def admin():
     # directory of admin functions
+    # Needs an about section
+    with open (f'{cwd}/admin/data/about.txt', 'r') as f:
+        md_about = f.read()
+        f.close()
+        about = markdown.markdown(md_about)
     admin_routes = get_admin_routes()
     #list is very basic, I can make this prettier and easier to navigate
     routes = [route['endpoint'] for route in admin_routes]
-    return render_template('admin-home.html', routes=routes)
+    return render_template('admin-home.html', routes=routes, about=about)

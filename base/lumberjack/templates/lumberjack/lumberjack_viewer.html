@@ -6,21 +6,21 @@
         <table class="lumberjack-table">
   <thead>
     <tr>
-      <th>Log ID</th>
-      <th>Timestamp</th>
-      <th>User</th>
-      <th>Domain</th>
-      <th>Event</th>
+      <th class="lumberjack-header">Log ID</th>
+      <th class="lumberjack-header">Timestamp</th>
+      <th class="lumberjack-header">User</th>
+      <th class="lumberjack-header">Domain</th>
+      <th class="lumberjack-header">Event</th>
     </tr>
   </thead>
   <tbody>
     {% for board in lumber %}
     <tr>
-      <td>{{ board.id }}</td>
-      <td>{{ board.timestamp }}</td>
-      <td>{{ board.user_id }}</td>
-      <td>{{ board.domain }}</td>
-      <td>{{ board.event }}</td>
+      <td class="lumberjack-row">{{ board.id }}</td>
+      <td class="lumberjack-row">{{ board.timestamp }}</td>
+      <td class="lumberjack-row">{{ board.user_id }}</td>
+      <td class="lumberjack-row">{{ board.domain }}</td>
+      <td class="lumberjack-row">{{ board.event }}</td>
     </tr>
     {% endfor %}
   </tbody>

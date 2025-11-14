@@ -39,6 +39,7 @@ def register():
                 user = User(username=form.username.data,
                             email=form.email.data.lower(),
                             password=form.password.data)
+                #add registration date
                 db.session.add(user)
                 db.session.commit()
                 lumberjack_do(datetime.utcnow(), current_user, "users", f"{ form.email.data } registered as {form.username.data}")
@@ -64,6 +65,7 @@ def login():
             if user.sync_admin_status():
                 db.session.commit()
             #handling the login
+            #update last login date
             login_user(user)
             flash('You have been logged in.')
             #logging the login
@@ -99,30 +101,29 @@ def logout():
 
 #admin only
 
-
-@users_blueprint.route('/list-users')
+@users_blueprint.route('/lookup-users', methods=['GET', 'POST'])
 @login_required
 @admin_required
-def list_users():
-    #lists all and links to manage user
+def lookup_users():
+    #form submission for lookup
+    # by id
+        # if exists - opens manage user page
+
+    # by email
+        # if exists - opens manage user page
+        # else - send invite
+
+    # by username
+        # if exists - opens manage user page
+
+    #returns result as users and feeds to the same table as the GET
+
+    #If not POST
+    #lists all
     user_base = db.session.execute(db.select(User).order_by(User.email.desc())).scalars()
     users = [user.to_dict() for user in user_base]
-    return render_template('admin-list_users.html', users=users)
-
-@users_blueprint.route('/lookup-user')
-@login_required
-@admin_required
-def lookup_user():
-    #by id
-    # if exists - opens manage user page
-
-    #by email
-        #if exists - opens manage user page
-        #else - send invite
-
-    #by username
-        # if exists - opens manage user page
-    pass
+    print(users)
+    return render_template('users-lookup_users.html', users=users)
 
 
 @users_blueprint.route('/invite-user')
@@ -132,13 +133,16 @@ def invite_user():
     #creates a login record with a temp pwd and requires reset on 1st login
     pass
 
-@users_blueprint.route('/manage-user')
+@users_blueprint.route('/manage-user/<int:user_id>', methods=['GET', 'POST'])
 @login_required
 @admin_required
-def manage_user():
+def manage_user(user_id):
+    user_data = db.session.execute(db.select(User).filter_by(id=user_id)).scalar()
+    user = user_data.to_dict()
     #options:
     #ban
+    #delete
     #reset pwd
     #promote to admin
     #demote
-    pass
+    return render_template('users-user_detail.html', user=user)

@@ -18,18 +18,24 @@ class User(db.Model, UserMixin):
     username = db.Column(db.String(20), unique=True, index=True)
     password_hash = db.Column(db.String(128))
     is_admin = db.Column(db.Boolean, default=False)
+    #registration date
+    #last login date
 
     def __init__(self, email, username, password):
         self.email = email
         self.username = username
         self.password_hash = generate_password_hash(password)
+        # registration date
+        # last login date
 
     def to_dict(self):
         return {
-            'id': self.id,
+            'id': int(self.id),
             'email': self.email,
             'username': self.username,
-            'is_admin': self.is_admin,
+            'is_admin': self.is_admin
+            # registration date
+            # last login date
         }
 
     @property

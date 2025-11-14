@@ -32,3 +32,4 @@ class LoginForm(FlaskForm):
     email = EmailField('Email Address', validators=[DataRequired(), Email()])
     password = PasswordField('Password', validators=[DataRequired()])
     submit = SubmitField('Log in')
+

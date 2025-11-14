@@ -1,0 +1,9 @@
+##Admin Panel
+
+There's a handful of functions I need to be able to execute on-demand to ensure the site is usable. These have consequences, so I needed to be able to restrict access to specific users.
+
+Adding an admin panel seemed like the next logical step.
+
+This page checks for any URL on the site that is decorated with the @admin_required decorator, then lists it here.
+
+If you're not an admin, you won't be able to use these, but the names should give you a sense of what they do.

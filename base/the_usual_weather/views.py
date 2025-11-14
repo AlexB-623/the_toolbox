@@ -4,6 +4,7 @@ from flask import Flask, Blueprint, render_template, request, session, redirect,
 import json, random, markdown, uuid
 from flask_login import login_required, current_user
 from base import db
+from base.decorators import admin_required
 from base.lumberjack.views import lumberjack_do
 from base.models import WeatherRequest, User
 from base.the_usual_weather.forms import WeatherSubmitForm
@@ -53,8 +54,6 @@ def submit():
         db.session.add(weather_request)
         db.session.commit()
         flash("Thanks for your submission!")
-        #eventually, we should redirect to the report_detail page for the job_id
-        # return redirect(url_for('the_usual_weather.report_list'))
         return redirect(url_for('the_usual_weather.report_detail', job_id=job_id))
     if form.errors:
         for field, errors in form.errors.items():
@@ -110,3 +109,8 @@ def report_detail(job_id):
 
 #admin function:
 #Remove old results - must remove both the request and the results at the same time.
+@the_usual_weather_blueprint.route('manage-reports', methods=['GET', 'POST'])
+@login_required
+@admin_required
+def manage_reports():
+    pass

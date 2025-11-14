@@ -5,6 +5,8 @@ import json, random
 from os import getcwd
 from flask_login import login_required, current_user
 from os import getcwd
+
+from base.decorators import admin_required
 from base.models import Log_Entry, User
 cwd = getcwd()
 lumberjack_blueprint = Blueprint('lumberjack', __name__, template_folder='templates/lumberjack')
@@ -82,6 +84,8 @@ def filter_logs():
 
 
 @lumberjack_blueprint.route('/manage_logs/', methods=['GET', 'POST'])
+@login_required
+@admin_required
 def manage_logs():
     #allows removal of select logs
     #requires admin user

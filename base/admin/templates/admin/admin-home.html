@@ -2,6 +2,7 @@
 
 {% block content %}
     <div class="default-container">
+    <p>{{ about|safe }}</p>
         <ul>
             {% for route in routes %}
                 <li><a href="{{ url_for(route) }}">{{ route }}</a> </li>

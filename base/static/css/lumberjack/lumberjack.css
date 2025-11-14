@@ -11,7 +11,7 @@
     padding: 15px;
 }
 
-th {
+.lumberjack-header {
     background-color: #007bff;
     color: white;
     padding: 12px;
@@ -19,7 +19,7 @@ th {
     font-weight: bold;
   }
 
-  td {
+.lumberjack-row {
     padding: 10px;
     border-bottom: 1px solid #ddd;
   }

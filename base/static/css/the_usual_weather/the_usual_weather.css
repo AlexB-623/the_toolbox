@@ -29,19 +29,6 @@
     flex: 1;
 }
 
-th {
-    background-color: #007bff;
-    color: white;
-    padding: 5px;
-    text-align: left;
-    font-weight: bold;
-}
-
-td {
-    padding: 5px;
-    border-bottom: 1px solid #ddd;
-}
-
 .report-is-Pending {
     background-color: gold;
     font-weight: bold;
