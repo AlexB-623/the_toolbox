@@ -2,6 +2,11 @@
 
 {% block content %}
     <div class="default-container">
+    <h1>User Registration</h1>
+    {% if bouncer %}
+        <p class="registration-warning">Registration is currently in Invite Only mode. If your email address is not on Alex's approved list, your registration will be rejected.</p>
+        <p>This site is a hobby/portfolio project, access is restricted to save hosting costs.</p>
+    {% endif %}
         <form method="POST">
         {{ form.hidden_tag() }}
         <p class="form-label">{{ form.email.label }}:</p>{{ form.email }}

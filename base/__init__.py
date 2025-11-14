@@ -7,7 +7,8 @@ from dotenv import load_dotenv
 
 load_dotenv()
 secret_key = os.getenv('SECRET_KEY')
-registration_toggle = os.getenv('REGISTRATION_TOGGLE')
+# registration modes: OPEN, CLOSED, INVITE
+registration_mode = os.getenv('REGISTRATION_MODE')
 login_manager = LoginManager()
 app = Flask(__name__)
 app.config['SECRET_KEY'] = secret_key
@@ -19,6 +20,7 @@ Migrate(app, db)
 
 login_manager.init_app(app)
 login_manager.login_view = 'users.login'
+app.config['REGISTRATION_MODE'] = registration_mode
 
 ADMIN_EMAIL = os.getenv('ADMIN_EMAIL', ''). split(',')
 ADMIN_EMAIL = [email.strip() for email in ADMIN_EMAIL if email.strip()]

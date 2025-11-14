@@ -63,6 +63,7 @@ def submit():
 
 
 @the_usual_weather_blueprint.route('/report-list', methods=['GET'])
+@login_required
 def report_list():
     #get submitted jobs and shows progress
     #auto-refresh
@@ -78,6 +79,7 @@ def report_list():
     return render_template('the_usual_weather_report_list.html', pretty_list=pretty_list)
 
 @the_usual_weather_blueprint.route('/report-detail/<job_id>', methods=['GET'])
+@login_required
 def report_detail(job_id):
     # takes a <job id> in the URL and returns the results
     #<job id> = weather_request.id

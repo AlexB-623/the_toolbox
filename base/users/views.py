@@ -1,6 +1,6 @@
-from flask import Flask, Blueprint, render_template, request, session, redirect, url_for, flash, abort
+from flask import current_app, Flask, Blueprint, render_template, request, session, redirect, url_for, flash, abort
 from flask_login import login_user, login_required, logout_user, current_user
-from base import db, registration_toggle
+from base import db
 from base.decorators import admin_required
 from datetime import datetime
 from base.lumberjack.views import lumberjack_do
@@ -19,39 +19,47 @@ def users():
 
 @users_blueprint.route('/register', methods=['GET', 'POST'])
 def register():
-    #env variable that allows me to toggle registration
-    if registration_toggle == 'True':
-        form = RegistrationForm()
-        if form.validate_on_submit():
-            # check if email exists
-            if User.check_email(email=form.email.data.lower()):
-                flash('This Email is already registered.')
-                lumberjack_do(datetime.utcnow(), current_user, "users",
-                              f"Somebody tried to register as {form.email.data}")
-                return redirect(url_for('users.register'))
-            # check if username exists
-            elif User.check_username(username=form.username.data.lower()):
-                flash('This username is already taken.')
-                lumberjack_do(datetime.utcnow(), current_user, "users",
-                              f"Somebody tried to register as {form.username.data}")
-                return redirect(url_for('users.register'))
-            else:
-                user = User(username=form.username.data,
-                            email=form.email.data.lower(),
-                            password=form.password.data)
-                #add registration date
-                db.session.add(user)
-                db.session.commit()
-                lumberjack_do(datetime.utcnow(), current_user, "users", f"{ form.email.data } registered as {form.username.data}")
-                flash('Thank you for registering. You can now login.')
-                return redirect(url_for('users.login'))
-        if form.errors:
-            for field, errors in form.errors.items():
-                for error in errors:
-                    flash(f"{ field } error: { error }", "danger")
-        return render_template('users-register.html', form=form)
-    else:
+    #env variable allows me to toggle registration OPEN CLOSED INVITE ONLY
+    registration_mode = current_app.config['REGISTRATION_MODE']
+    # bouncer tells the template to display a warning that it's invite only or not
+    bouncer = False
+    if registration_mode == "CLOSED":
         abort(423)
+    elif registration_mode == "INVITE_ONLY":
+        bouncer = True
+    form = RegistrationForm()
+    if form.validate_on_submit():
+        # check if email exists
+        if User.check_email(email=form.email.data.lower()):
+            flash('This Email is already registered.')
+            lumberjack_do(datetime.utcnow(), current_user, "users",
+                          f"Somebody tried to register as {form.email.data}")
+            return redirect(url_for('users.register'))
+        # check if username exists
+        elif User.check_username(username=form.username.data.lower()):
+            flash('This username is already taken.')
+            lumberjack_do(datetime.utcnow(), current_user, "users",
+                          f"Somebody tried to register as {form.username.data}")
+            return redirect(url_for('users.register'))
+
+        else:
+            user = User(username=form.username.data,
+                        email=form.email.data.lower(),
+                        password=form.password.data)
+            # add registration date
+            db.session.add(user)
+            db.session.commit()
+            lumberjack_do(datetime.utcnow(), current_user, "users",
+                          f"{form.email.data} registered as {form.username.data}")
+            flash('Thank you for registering. You can now login.')
+            return redirect(url_for('users.login'))
+    if form.errors:
+        for field, errors in form.errors.items():
+            for error in errors:
+                flash(f"{field} error: {error}", "danger")
+    return render_template('users-register.html', form=form, bouncer=bouncer)
+
+
 
 @users_blueprint.route('/login', methods=['GET', 'POST'])
 def login():
@@ -146,3 +154,4 @@ def manage_user(user_id):
     #promote to admin
     #demote
     return render_template('users-user_detail.html', user=user)
+

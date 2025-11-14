@@ -55,6 +55,7 @@ def lumberjack():
 
 
 @lumberjack_blueprint.route('/view_logs')
+@login_required
 def view_logs():
     #basic page for seeing last X events
     #make the page prettier
@@ -77,6 +78,7 @@ def view_logs():
 
 
 @lumberjack_blueprint.route('/filter_logs', methods=['GET', 'POST'])
+@login_required
 def filter_logs():
     #complex page for filtering logs
     #export filtered to CSV
