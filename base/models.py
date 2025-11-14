@@ -18,8 +18,11 @@ class User(db.Model, UserMixin):
     username = db.Column(db.String(20), unique=True, index=True)
     password_hash = db.Column(db.String(128))
     is_admin = db.Column(db.Boolean, default=False)
-    #registration date
-    #last login date
+
+    # registration date
+    # last login date
+    # banned
+    # must reset pwd
 
     def __init__(self, email, username, password):
         self.email = email
@@ -27,6 +30,8 @@ class User(db.Model, UserMixin):
         self.password_hash = generate_password_hash(password)
         # registration date
         # last login date
+        # banned
+        # must reset pwd
 
     def to_dict(self):
         return {
@@ -36,6 +41,8 @@ class User(db.Model, UserMixin):
             'is_admin': self.is_admin
             # registration date
             # last login date
+            # banned
+            # must reset pwd
         }
 
     @property
@@ -71,9 +78,18 @@ class User(db.Model, UserMixin):
         return check_password_hash(self.password_hash, password)
 
 
+class BouncerList(db.Model):
+    __tablename__ = 'bouncer_list'
+    id = db.Column(db.Integer, primary_key=True)
+    email = db.Column(db.String(64), unique=True, index=True)
+
+    def __init__(self, email):
+        self.email = email
+
+
 # need to get the event field flattened and expanded to HTTP Code, Target, and event details separately.
 # Maybe add IP address too
-# Join on userID and handle anon users
+# Should not have an underscore - may need to do a branch for a safe fix
 class Log_Entry(db.Model):
     __tablename__ = 'log_entries'
     id = db.Column(db.Integer, primary_key=True)

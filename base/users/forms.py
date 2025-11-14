@@ -8,13 +8,14 @@ from wtforms import (StringField,
                      EmailField,
                      PasswordField,
                      IntegerField,
-                     ValidationError)
-from wtforms.validators import DataRequired, EqualTo, Email, email
+                     ValidationError,
+                     BooleanField)
+from wtforms.validators import DataRequired, EqualTo, Email, email, length
 
 class RegistrationForm(FlaskForm):
     email = EmailField('Email Address', validators=[DataRequired(), Email()])
-    username = StringField('Username', validators=[DataRequired()])
-    password = PasswordField('Password', validators=[DataRequired(), EqualTo('pass_confirm', message='Passwords must match.')])
+    username = StringField('Username', validators=[DataRequired(), length(min=2, max=20)])
+    password = PasswordField('Password', validators=[DataRequired(), length(min=8, max=20), EqualTo('pass_confirm', message='Passwords must match.')])
     pass_confirm = PasswordField('Confirm Password', validators=[DataRequired(), EqualTo('password', message='Passwords must match.')])
     submit = SubmitField('Register')
 
@@ -33,3 +34,6 @@ class LoginForm(FlaskForm):
     password = PasswordField('Password', validators=[DataRequired()])
     submit = SubmitField('Log in')
 
+class BouncerList(FlaskForm):
+    email = EmailField('Email Address', validators=[DataRequired(), Email()])
+    submit = SubmitField('Submit')

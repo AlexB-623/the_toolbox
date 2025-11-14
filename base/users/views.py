@@ -5,7 +5,7 @@ from base.decorators import admin_required
 from datetime import datetime
 from base.lumberjack.views import lumberjack_do
 from base.models import User
-from base.users.forms import RegistrationForm, LoginForm
+from base.users.forms import RegistrationForm, LoginForm, BouncerList
 from werkzeug.security import generate_password_hash, check_password_hash
 
 
@@ -21,11 +21,11 @@ def users():
 def register():
     #env variable allows me to toggle registration OPEN CLOSED INVITE ONLY
     registration_mode = current_app.config['REGISTRATION_MODE']
-    # bouncer tells the template to display a warning that it's invite only or not
     bouncer = False
     if registration_mode == "CLOSED":
         abort(423)
     elif registration_mode == "INVITE_ONLY":
+        # bouncer tells the template to display a warning and checks if you're on the list
         bouncer = True
     form = RegistrationForm()
     if form.validate_on_submit():
@@ -35,6 +35,9 @@ def register():
             lumberjack_do(datetime.utcnow(), current_user, "users",
                           f"Somebody tried to register as {form.email.data}")
             return redirect(url_for('users.register'))
+        #check if the submitted email is on the approved list
+        # if bouncer:
+
         # check if username exists
         elif User.check_username(username=form.username.data.lower()):
             flash('This username is already taken.')
@@ -68,6 +71,7 @@ def login():
         # force submitted email to lowercase
         email = form.email.data.lower()
         user = db.session.execute(db.select(User).filter_by(email=email)).scalar()
+        #check if user is allowed to log in or if they're banned
         if User.check_email(email=email) and user.check_password(form.password.data) and user is not None:
             # here we are checking for ENV admins and updating the db
             if user.sync_admin_status():
@@ -78,6 +82,7 @@ def login():
             flash('You have been logged in.')
             #logging the login
             lumberjack_do(datetime.utcnow(), current_user, "users", "User Logged In")
+            #check if pwd reset is required and redirect to that page
             next = request.args.get('next')
             if next == None or not next[0]=='/':
                 next = url_for('users.welcome')
@@ -119,7 +124,6 @@ def lookup_users():
 
     # by email
         # if exists - opens manage user page
-        # else - send invite
 
     # by username
         # if exists - opens manage user page
@@ -130,15 +134,22 @@ def lookup_users():
     #lists all
     user_base = db.session.execute(db.select(User).order_by(User.email.desc())).scalars()
     users = [user.to_dict() for user in user_base]
+    #add
+    # registration date
+    # last login date
+    # banned
+    # must reset pwd
     print(users)
     return render_template('users-lookup_users.html', users=users)
 
 
-@users_blueprint.route('/invite-user')
+@users_blueprint.route('/invite-user', methods=['GET', 'POST'])
 @login_required
 @admin_required
 def invite_user():
-    #creates a login record with a temp pwd and requires reset on 1st login
+    #shows the bouncer's list
+    #add/removes an email to a list of approved registrants
+
     pass
 
 @users_blueprint.route('/manage-user/<int:user_id>', methods=['GET', 'POST'])
@@ -149,9 +160,15 @@ def manage_user(user_id):
     user = user_data.to_dict()
     #options:
     #ban
-    #delete
-    #reset pwd
+    #delete - removes user but allows re-register
+    #reset pwd - creates a new pwd and requires a reset at next login
     #promote to admin
     #demote
     return render_template('users-user_detail.html', user=user)
 
+@users_blueprint.route('/toggle-registration-mode', methods=['GET', 'POST'])
+@login_required
+@admin_required
+def toggle_registration_mode():
+    #updates the env variable for registration mode
+    pass
