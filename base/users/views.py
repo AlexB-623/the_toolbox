@@ -48,7 +48,8 @@ def register():
         else:
             user = User(username=form.username.data,
                         email=form.email.data.lower(),
-                        password=form.password.data)
+                        password=form.password.data,
+                        registration_date=datetime.utcnow())
             # add registration date
             db.session.add(user)
             db.session.commit()
@@ -77,8 +78,11 @@ def login():
             if user.sync_admin_status():
                 db.session.commit()
             #handling the login
-            #update last login date
             login_user(user)
+            # update last login date
+            latest_login_date = datetime.utcnow()
+            db.session.execute(db.update(User).where(User.id == user.id).values(last_login_date=latest_login_date))
+            db.session.commit()
             flash('You have been logged in.')
             #logging the login
             lumberjack_do(datetime.utcnow(), current_user, "users", "User Logged In")
@@ -159,11 +163,32 @@ def manage_user(user_id):
     user_data = db.session.execute(db.select(User).filter_by(id=user_id)).scalar()
     user = user_data.to_dict()
     #options:
-    #ban
-    #delete - removes user but allows re-register
-    #reset pwd - creates a new pwd and requires a reset at next login
-    #promote to admin
-    #demote
+    if request.method == 'POST':
+        user_id = request.form.get('user_id')
+        action = request.form.get('action')
+        if action == 'ban':
+            # Ban user logic
+            flash("User has been banned.")
+            pass
+        elif action == 'reset_password':
+            # Reset password logic - creates a new pwd and requires a reset at next login
+            flash("Temp password issued. User will be required to reset their password on next login.")
+            pass
+        elif action == 'delete':
+            # Delete user logic - removes user but allows re-register
+            # check against ENV admin
+            flash("User has been deleted. They can reregister though.")
+            return redirect(url_for('users.lookup_users'))
+        elif action == 'promote':
+            # Promote logic
+            flash("User has been promoted to admin.")
+            pass
+        elif action == 'demote':
+            # Demote logic
+            # check against ENV admin
+            flash("Admin has been demoted to user.")
+            pass
+        return redirect(url_for('users.manage_user', user_id=user_id))
     return render_template('users-user_detail.html', user=user)
 
 @users_blueprint.route('/toggle-registration-mode', methods=['GET', 'POST'])

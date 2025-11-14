@@ -18,31 +18,27 @@ class User(db.Model, UserMixin):
     username = db.Column(db.String(20), unique=True, index=True)
     password_hash = db.Column(db.String(128))
     is_admin = db.Column(db.Boolean, default=False)
+    registration_date = db.Column(db.DateTime, nullable=True)
+    last_login_date = db.Column(db.DateTime, nullable=True)
+    banned = db.Column(db.Boolean, default=False)
+    expired_password =db.Column(db.Boolean, default=False)
 
-    # registration date
-    # last login date
-    # banned
-    # must reset pwd
-
-    def __init__(self, email, username, password):
+    def __init__(self, email, username, password, registration_date):
         self.email = email
         self.username = username
         self.password_hash = generate_password_hash(password)
-        # registration date
-        # last login date
-        # banned
-        # must reset pwd
+        self.registration_date = registration_date
 
     def to_dict(self):
         return {
             'id': int(self.id),
             'email': self.email,
             'username': self.username,
-            'is_admin': self.is_admin
-            # registration date
-            # last login date
-            # banned
-            # must reset pwd
+            'is_admin': self.is_admin,
+            'registration_date': self.registration_date,
+            'last_login': self.last_login_date,
+            'banned': self.banned,
+            'expired_password': self.expired_password
         }
 
     @property

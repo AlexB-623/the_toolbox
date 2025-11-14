@@ -34,6 +34,7 @@ class LoginForm(FlaskForm):
     password = PasswordField('Password', validators=[DataRequired()])
     submit = SubmitField('Log in')
 
+
 class BouncerList(FlaskForm):
     email = EmailField('Email Address', validators=[DataRequired(), Email()])
     submit = SubmitField('Submit')

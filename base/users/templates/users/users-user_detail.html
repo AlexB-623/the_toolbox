@@ -1,31 +1,13 @@
-{% extends "users-base.html" %}
+{% extends "users-lookup_users.html" %}
 
-{% block content %}
-    <div class="default-container">
-        <div class="results-display">
-        <table>
-            <thead>
-                <tr>
-                    <th>Username</th>
-                    <th>Email Address</th>
-                    <th>User ID #</th>
-                    <th>Admin Access</th>
-                    <th>Actions</th>
-                </tr>
-            </thead>
-            <tbody>
-            <tr>
-                <td>{{ user.username }}</td>
-                <td>{{ user.email }}</td>
-                <td>{{ user.id }}</td>
-                <td>{{ user.is_admin }}</td>
-                <td><a href="{{ url_for('users.manage_user', user_id=user.id) }}">Manage User</a></td>
-            </tr>
-        </table>
-    </div>
-    <div>
-
-    </div>
-    </div>
+{% block action %}
+    <form class="user-manager" method="POST">
+        <input type="hidden" name="user_id" value="{{ user.id }}">
+        <button type="submit" name="action" value="ban">Ban User</button>
+        <button type="submit" name="action" value="reset_password">Force Password Reset</button>
+        <button type="submit" name="action" value="delete">Delete User</button>
+        <button type="submit" name="action" value="promote">Promote to Admin</button>
+        <button type="submit" name="action" value="demote">Demote</button>
+    </form>
 {% endblock %}
 

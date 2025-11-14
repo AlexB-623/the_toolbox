@@ -10,20 +10,44 @@
                     <th>Email Address</th>
                     <th>User ID #</th>
                     <th>Admin Access</th>
+                    <th>Registration Date</th>
+                    <th>Last Login</th>
+                    <th>Banned?</th>
+                    <th>Temp Password</th>
                     <th>Action</th>
                 </tr>
             </thead>
             <tbody>
-            {% for user in users %}
-            <tr>
-                <td>{{ user.username }}</td>
-                <td>{{ user.email }}</td>
-                <td>{{ user.id }}</td>
-                <td>{{ user.is_admin }}</td>
-                <td><a href="{{ url_for('users.manage_user', user_id=user.id) }}">Manage User</a></td>
-            </tr>
-            {% endfor %}
+            {% if users %}
+                {% for user in users %}
+                    <tr>
+                        <td>{{ user.username }}</td>
+                        <td>{{ user.email }}</td>
+                        <td>{{ user.id }}</td>
+                        <td>{{ user.is_admin }}</td>
+                        <td>{{ user.registration_date }}</td>
+                        <td>{{ user.last_login }}</td>
+                        <td>{{ user.banned }}</td>
+                        <td>{{ user.expired_password }}</td>
+                        <td><a href="{{ url_for('users.manage_user', user_id=user.id) }}">Manage User</a></td>
+                    </tr>
+                {% endfor %}
+            {% elif user %}
+                    <tr>
+                        <td>{{ user.username }}</td>
+                        <td>{{ user.email }}</td>
+                        <td>{{ user.id }}</td>
+                        <td>{{ user.is_admin }}</td>
+                        <td>{{ user.registration_date }}</td>
+                        <td>{{ user.last_login }}</td>
+                        <td>{{ user.banned }}</td>
+                        <td>{{ user.expired_password }}</td>
+                        <td>See Below</td>
+                    </tr>
+            {% endif %}
         </table>
+    {% block action %}
+    {% endblock %}
     </div>
     </div>
 {% endblock %}
