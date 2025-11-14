@@ -138,12 +138,7 @@ def lookup_users():
     #lists all
     user_base = db.session.execute(db.select(User).order_by(User.email.desc())).scalars()
     users = [user.to_dict() for user in user_base]
-    #add
-    # registration date
-    # last login date
-    # banned
-    # must reset pwd
-    print(users)
+
     return render_template('users-lookup_users.html', users=users)
 
 
@@ -169,6 +164,10 @@ def manage_user(user_id):
         if action == 'ban':
             # Ban user logic
             flash("User has been banned.")
+            pass
+        elif action == 'unban':
+            #unban logic
+            flash("User has been unbanned.")
             pass
         elif action == 'reset_password':
             # Reset password logic - creates a new pwd and requires a reset at next login

@@ -7,3 +7,10 @@
     font-weight: bold;
 }
 
+.user-admin-display {
+    background-color: antiquewhite;
+    margin-top: 50px;
+    margin-right: 50px;
+    margin-left: 50px;
+    padding: 15px;
+}

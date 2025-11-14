@@ -35,8 +35,8 @@ class User(db.Model, UserMixin):
             'email': self.email,
             'username': self.username,
             'is_admin': self.is_admin,
-            'registration_date': self.registration_date,
-            'last_login': self.last_login_date,
+            'registration_date': self.registration_date.strftime('%m/%d/%y'),
+            'last_login': self.last_login_date.strftime('%m/%d/%Y %H:%M'),
             'banned': self.banned,
             'expired_password': self.expired_password
         }

@@ -1,13 +1,22 @@
 {% extends "users-lookup_users.html" %}
 
 {% block action %}
-    <form class="user-manager" method="POST">
+    <div class="user-actions">
+    <form method="POST">
         <input type="hidden" name="user_id" value="{{ user.id }}">
+        {% if not user.banned %}
         <button type="submit" name="action" value="ban">Ban User</button>
+        {% else %}
+        <button type="submit" name="action" value="unban">Un-Ban User</button>
+        {% endif %}
         <button type="submit" name="action" value="reset_password">Force Password Reset</button>
         <button type="submit" name="action" value="delete">Delete User</button>
+        {% if not user.is_admin %}
         <button type="submit" name="action" value="promote">Promote to Admin</button>
-        <button type="submit" name="action" value="demote">Demote</button>
+        {% else %}
+        <button type="submit" name="action" value="demote">Demote to User</button>
+        {% endif %}
     </form>
+    </div>
 {% endblock %}
 
