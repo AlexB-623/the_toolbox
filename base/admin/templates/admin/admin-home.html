@@ -4,9 +4,16 @@
     <div class="default-container">
     <p>{{ about|safe }}</p>
         <ul>
-            {% for route in routes %}
-                <li><a href="{{ url_for(route) }}">{{ route }}</a> </li>
-            {% endfor %}
-        </ul>
+    {% for route in admin_routes %}
+        <li>
+            {% if route.arguments %}
+                <!-- Show text instead of a link -->
+                {{ route.rule }} (requires: {{ route.arguments|join(', ') }})
+            {% else %}
+                <a href="{{ url_for(route.endpoint) }}">{{ route.rule }}</a>
+            {% endif %}
+        </li>
+    {% endfor %}
+</ul>
     </div>
 {% endblock %}

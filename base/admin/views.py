@@ -11,14 +11,13 @@ admin_blueprint = Blueprint('admin', __name__, template_folder='templates/admin'
 def get_admin_routes():
     routes = []
     for rule in current_app.url_map.iter_rules():
-        endpoint = rule.endpoint
-        view_func = current_app.view_functions.get(endpoint)
+        view_func = current_app.view_functions[rule.endpoint]
 
         if getattr(view_func, "_admin_required", False):
             routes.append({
+                "endpoint": rule.endpoint,
                 "rule": rule.rule,
-                "endpoint": endpoint,
-                "methods": sorted(rule.methods - {"HEAD", "OPTIONS"})
+                "arguments": list(rule.arguments),   # <-- capture dynamic args
             })
     return routes
 
@@ -34,5 +33,5 @@ def admin():
         about = markdown.markdown(md_about)
     admin_routes = get_admin_routes()
     #list is very basic, I can make this prettier and easier to navigate
-    routes = [route['endpoint'] for route in admin_routes]
-    return render_template('admin-home.html', routes=routes, about=about)
+    # routes = [route['endpoint'] for route in admin_routes]
+    return render_template('admin-home.html', admin_routes=admin_routes, about=about)
