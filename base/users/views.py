@@ -73,6 +73,9 @@ def login():
         email = form.email.data.lower()
         user = db.session.execute(db.select(User).filter_by(email=email)).scalar()
         #check if user is allowed to log in or if they're banned
+        if user.is_banned():
+            flash('You are banned. Go on, git!')
+            return redirect(url_for('users.login'))
         if User.check_email(email=email) and user.check_password(form.password.data) and user is not None:
             # here we are checking for ENV admins and updating the db
             if user.sync_admin_status():
