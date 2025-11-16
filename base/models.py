@@ -59,6 +59,12 @@ class User(db.Model, UserMixin):
             return True  # Changed
         return False  # No change
 
+    def ban_user(self):
+        self.banned = True
+
+    def unban_user(self):
+        self.banned = False
+
 
     @classmethod
     def check_email(cls, email):

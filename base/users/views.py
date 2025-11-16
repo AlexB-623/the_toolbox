@@ -172,13 +172,19 @@ def manage_user(user_id):
     #options:
     if request.method == 'POST':
         user_id = request.form.get('user_id')
+        user = db.session.query(User).filter_by(id=user_id).scalar()
         action = request.form.get('action')
         if action == 'ban':
             # Ban user logic
+            user = db.session.query(User).filter_by(id=user_id).scalar()
+            user.ban_user()
+            db.session.commit()
             flash("User has been banned.")
             pass
         elif action == 'unban':
             #unban logic
+            user.unban_user()
+            db.session.commit()
             flash("User has been unbanned.")
             pass
         elif action == 'reset_password':
