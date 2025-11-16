@@ -74,13 +74,19 @@ class User(db.Model, UserMixin):
         return check_password_hash(self.password_hash, password)
 
 
-class BouncerList(db.Model):
-    __tablename__ = 'bouncer_list'
+class Invitee(db.Model):
+    __tablename__ = 'invitee'
     id = db.Column(db.Integer, primary_key=True)
     email = db.Column(db.String(64), unique=True, index=True)
 
     def __init__(self, email):
         self.email = email
+
+    def to_dict(self):
+        return {
+            'id': int(self.id),
+            'email': self.email,
+        }
 
 
 # need to get the event field flattened and expanded to HTTP Code, Target, and event details separately.
@@ -108,7 +114,7 @@ class Log_Entry(db.Model):
         #convert model to dict
         return {
             'id': self.id,
-            'timestamp': self.timestamp,
+            'timestamp': self.timestamp.strftime('%m/%d/%Y %H:%M:%S'),
             'user_id': self.user_id,
             'domain': self.domain,
             'event': self.event
@@ -165,7 +171,7 @@ class WeatherRequest(db.Model):
         return {
             'id': self.id,
             'requesting_user': self.requesting_user,
-            'submitted_date': self.submitted_date.strftime('%m/%d/%Y'),
+            'submitted_date': self.submitted_date.strftime('%m/%d/%Y %H:%M'),
             'requested_date': str(f'{self.requested_month}-{self.requested_day}'),
             'requested_city': self.submitted_city,
             'gps_coordinates': self.gps_coordinates,

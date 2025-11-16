@@ -35,6 +35,6 @@ class LoginForm(FlaskForm):
     submit = SubmitField('Log in')
 
 
-class BouncerList(FlaskForm):
+class InviteForm(FlaskForm):
     email = EmailField('Email Address', validators=[DataRequired(), Email()])
-    submit = SubmitField('Submit')
+    submit = SubmitField('Add to Invite List')

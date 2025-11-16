@@ -1,0 +1,21 @@
+{% extends "users-base.html" %}
+
+{% block content %}
+    <div class="default-container">
+        <div class="bouncer-list">
+            <ul>
+            {% for invitee in approved_list_clean %}
+            <li>{{invitee['email']}}</li>
+            {% endfor %}
+        </ul>
+        </div>
+    <div class="invite-container">
+        <form method="POST">
+            {{ form.hidden_tag() }}
+            <p class="form-label">{{ form.email.label }}:</p>{{ form.email }}
+            <br>
+            {{ form.submit(class="action-button") }}
+        </form>
+    </div>
+    </div>
+{% endblock %}

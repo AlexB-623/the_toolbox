@@ -94,3 +94,21 @@
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     transition: transform 0.2s, box-shadow 0.2s;
 }
+
+.toolbox-grid-item-admin {
+    background-color: orangered;
+    aspect-ratio: 1 / 1;
+    display: flex;
+    padding: 25px;
+    border-radius: 8px;
+    align-items: center;      /* Centers vertically */
+    justify-content: center;  /* Centers horizontally */
+    text-align: center;
+    font-size: 35px;
+    text-transform: capitalize;
+    color: navy;
+    text-decoration: none;
+    font-weight: bold;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    transition: transform 0.2s, box-shadow 0.2s;
+}

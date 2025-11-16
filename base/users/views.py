@@ -4,8 +4,8 @@ from base import db
 from base.decorators import admin_required
 from datetime import datetime
 from base.lumberjack.views import lumberjack_do
-from base.models import User
-from base.users.forms import RegistrationForm, LoginForm, BouncerList
+from base.models import User, Invitee
+from base.users.forms import RegistrationForm, LoginForm, InviteForm
 from werkzeug.security import generate_password_hash, check_password_hash
 
 
@@ -146,10 +146,22 @@ def lookup_users():
 @login_required
 @admin_required
 def invite_user():
-    #shows the bouncer's list
+    #shows the invitee list
     #add/removes an email to a list of approved registrants
-
-    pass
+    approved_list = db.session.execute(db.select(Invitee).order_by(Invitee.email.desc())).scalars()
+    print(approved_list)
+    print(type(approved_list))
+    approved_list_clean = [invitee.to_dict() for invitee in approved_list]
+    form = InviteForm()
+    if form.validate_on_submit():
+        email = form.email.data.lower()
+        #need logic to check if they're already on the list
+        db.session.execute(db.insert(Invitee).values(email=email))
+        db.session.commit()
+        lumberjack_do(datetime.utcnow(), current_user, "users", f"{email} was added to the approved list")
+        flash(f'{email} has been added to the approved list.')
+        return redirect(url_for('users.invite_user'))
+    return render_template('users-invite_list.html', approved_list_clean=approved_list_clean, form=form)
 
 @users_blueprint.route('/manage-user/<int:user_id>', methods=['GET', 'POST'])
 @login_required
