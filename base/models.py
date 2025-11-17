@@ -41,8 +41,12 @@ class User(db.Model, UserMixin):
             'expired_password': self.expired_password
         }
 
-    @property
     def has_admin_access(self):
+        from flask import current_app
+        # Check database flag OR env variable
+        return self.is_admin
+
+    def is_webmaster(self):
         from flask import current_app
         # Check database flag OR env variable
         admin_emails = current_app.config.get('ADMIN_EMAIL', [])

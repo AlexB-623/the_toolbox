@@ -171,22 +171,26 @@ def invite_user():
 @admin_required
 def manage_user(user_id):
     user_data = db.session.execute(db.select(User).filter_by(id=user_id)).scalar()
+    # check against ENV admins and stop
     user = user_data.to_dict()
     #options:
     if request.method == 'POST':
         user_id = request.form.get('user_id')
-        user = db.session.query(User).filter_by(id=user_id).scalar()
+        user_to_modify = db.session.query(User).filter_by(id=user_id).scalar()
+        #protecting the webmaster account (ENV admin) from modification
+        if user_to_modify.is_webmaster():
+            flash("You can't modify a webmaster account!")
+            return redirect(url_for('users.manage_user', user_id=user_id))
         action = request.form.get('action')
         if action == 'ban':
             # Ban user logic
-            user = db.session.query(User).filter_by(id=user_id).scalar()
-            user.ban_user()
+            user_to_modify.ban_user()
             db.session.commit()
             flash("User has been banned.")
             pass
         elif action == 'unban':
             #unban logic
-            user.unban_user()
+            user_to_modify.unban_user()
             db.session.commit()
             flash("User has been unbanned.")
             pass
@@ -196,7 +200,6 @@ def manage_user(user_id):
             pass
         elif action == 'delete':
             # Delete user logic - removes user but allows re-register
-            # check against ENV admin
             flash("User has been deleted. They can reregister though.")
             return redirect(url_for('users.lookup_users'))
         elif action == 'promote':
@@ -205,7 +208,6 @@ def manage_user(user_id):
             pass
         elif action == 'demote':
             # Demote logic
-            # check against ENV admin
             flash("Admin has been demoted to user.")
             pass
         return redirect(url_for('users.manage_user', user_id=user_id))
