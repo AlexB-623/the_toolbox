@@ -1,8 +1,8 @@
 from flask import current_app, Flask, Blueprint, render_template, request, session, redirect, url_for, flash, abort
 from flask_login import login_user, login_required, logout_user, current_user
-from base import db
+from base import app, db
 from base.decorators import admin_required
-from datetime import datetime
+from datetime import datetime, timedelta
 from base.lumberjack.views import lumberjack_do
 from base.models import User, Invitee
 from base.users.forms import RegistrationForm, LoginForm, InviteForm
@@ -80,8 +80,8 @@ def login():
             # here we are checking for ENV admins and updating the db
             if user.sync_admin_status():
                 db.session.commit()
-            #handling the login
-            login_user(user)
+            #handling the login and enforcing the default session duration
+            login_user(user, remember=True)
             # update last login date
             latest_login_date = datetime.utcnow()
             db.session.execute(db.update(User).where(User.id == user.id).values(last_login_date=latest_login_date))
@@ -98,6 +98,22 @@ def login():
             flash('Invalid username or password', "warning")
             return redirect(url_for('users.login'))
     return render_template('users-login.html', form=form)
+
+
+#setting global session timeout
+@app.before_request
+def check_session_timeout():
+    if current_user.is_authenticated:
+        last_activity = session.get('last_activity')
+        if last_activity:
+            last_activity_time = datetime.fromisoformat(last_activity)
+            if datetime.now() - last_activity_time > timedelta(hours=1):
+                lumberjack_do(datetime.utcnow(), current_user, "user admin", "user session auto-expired")
+                logout_user()
+                return redirect(url_for('login'))
+
+        session['last_activity'] = datetime.now().isoformat()
+
 
 @users_blueprint.route('/welcome', methods=['GET', 'POST'])
 @login_required
