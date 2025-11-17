@@ -200,14 +200,22 @@ def manage_user(user_id):
             pass
         elif action == 'delete':
             # Delete user logic - removes user but allows re-register
+            db.session.delete(user_to_modify)
+            db.session.commit()
             flash("User has been deleted. They can reregister though.")
             return redirect(url_for('users.lookup_users'))
         elif action == 'promote':
             # Promote logic
+            user_to_modify.grant_admin()
+            db.session.commit()
+            lumberjack_do(datetime.utcnow(), current_user, 'user administration', f'{user_to_modify.email} has been granted admin rights')
             flash("User has been promoted to admin.")
             pass
         elif action == 'demote':
             # Demote logic
+            user_to_modify.remove_admin()
+            db.session.commit()
+            lumberjack_do(datetime.utcnow(), current_user, 'user administration',f'{user_to_modify.email} has been denied admin rights')
             flash("Admin has been demoted to user.")
             pass
         return redirect(url_for('users.manage_user', user_id=user_id))

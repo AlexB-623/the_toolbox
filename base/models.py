@@ -45,9 +45,7 @@ class User(db.Model, UserMixin):
         from flask import current_app
         # Check database flag
         return self.is_admin
-        #     return True
-        # else:
-        #     return False
+
 
     def is_webmaster(self):
         from flask import current_app
@@ -76,6 +74,11 @@ class User(db.Model, UserMixin):
     def is_banned(self):
         return self.banned
 
+    def grant_admin(self):
+        self.is_admin = True
+
+    def remove_admin(self):
+        self.is_admin = False
 
     @classmethod
     def check_email(cls, email):
