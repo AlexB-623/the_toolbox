@@ -89,7 +89,7 @@ def filter_logs():
 @login_required
 @admin_required
 def manage_logs():
-    #allows removal of select logs
+    #allows removal of old logs
     #requires admin user
     pass
 

@@ -104,15 +104,16 @@ def login():
 @app.before_request
 def check_session_timeout():
     if current_user.is_authenticated:
-        last_activity = session.get('last_activity')
-        if last_activity:
-            last_activity_time = datetime.fromisoformat(last_activity)
-            if datetime.now() - last_activity_time > timedelta(hours=1):
+        if current_user.banned:
+            logout_user()
+            flash('You are banned. Go on, git!', "warning")
+            return redirect(url_for('users.login'))
+        last_login = current_user.last_login_date
+        if last_login:
+            if datetime.utcnow() - last_login > timedelta(hours=4):
                 lumberjack_do(datetime.utcnow(), current_user, "user admin", "user session auto-expired")
                 logout_user()
                 return redirect(url_for('users.login'))
-
-        session['last_activity'] = datetime.now().isoformat()
 
 
 @users_blueprint.route('/welcome', methods=['GET', 'POST'])
@@ -168,8 +169,6 @@ def invite_user():
     #shows the invitee list
     #add/removes an email to a list of approved registrants
     approved_list = db.session.execute(db.select(Invitee).order_by(Invitee.email.desc())).scalars()
-    print(approved_list)
-    print(type(approved_list))
     approved_list_clean = [invitee.to_dict() for invitee in approved_list]
     form = InviteForm()
     if form.validate_on_submit():

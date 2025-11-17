@@ -20,11 +20,13 @@ Migrate(app, db)
 
 login_manager.init_app(app)
 login_manager.login_view = 'users.login'
+
 app.config['REGISTRATION_MODE'] = registration_mode
 
 ADMIN_EMAIL = os.getenv('ADMIN_EMAIL', ''). split(',')
 ADMIN_EMAIL = [email.strip() for email in ADMIN_EMAIL if email.strip()]
 app.config['ADMIN_EMAIL'] = ADMIN_EMAIL
+
 
 #OAUTH#
 
