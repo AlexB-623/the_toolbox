@@ -13,14 +13,6 @@
 
 </head>
 <body class="{% block body_class %}body-default{% endblock %}">
-{% for mess in get_flashed_messages() %}
-    <div class="alert alert-warning alert-dismissable fade show" role="alert">
-        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
-        </button>
-    <strong>{{ mess }}</strong>
-    </div>
-{% endfor %}
     <nav class="navbar">
         <a class="navbar-item nav-link" href="{{ url_for('index') }}">Home</a>
         <a class="navbar-item nav-link" href="{{ url_for('toolbox') }}">Toolbox</a>
@@ -31,6 +23,23 @@
         <a class="navbar-item nav-link" href="{{ url_for('users.login') }}">Login</a>
         {% endif %}
     </nav>
+    {% for category, message in get_flashed_messages(with_categories=true) %}
+        {% if category == "warning" %}
+            <div class="flash-warning" role="alert">
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">X</span>
+            </button>
+            <strong>{{ message }}</strong>
+            </div>
+        {% elif category == 'success'%}
+            <div class="flash-success" role="alert">
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">X</span>
+            </button>
+            <strong>{{ message }}</strong>
+            </div>
+        {% endif %}
+    {% endfor %}
 <main class="main">
     {% block content %}
     {% endblock %}

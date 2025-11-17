@@ -31,7 +31,7 @@ def register():
     if form.validate_on_submit():
         # check if email exists
         if User.check_email(email=form.email.data.lower()):
-            flash('This Email is already registered.')
+            flash('This Email is already registered.', "warning")
             lumberjack_do(datetime.utcnow(), current_user, "users",
                           f"Somebody tried to register as {form.email.data}")
             return redirect(url_for('users.register'))
@@ -40,7 +40,7 @@ def register():
 
         # check if username exists
         elif User.check_username(username=form.username.data.lower()):
-            flash('This username is already taken.')
+            flash('This username is already taken.', "warning")
             lumberjack_do(datetime.utcnow(), current_user, "users",
                           f"Somebody tried to register as {form.username.data}")
             return redirect(url_for('users.register'))
@@ -55,12 +55,12 @@ def register():
             db.session.commit()
             lumberjack_do(datetime.utcnow(), current_user, "users",
                           f"{form.email.data} registered as {form.username.data}")
-            flash('Thank you for registering. You can now login.')
+            flash('Thank you for registering. You can now login.', "success")
             return redirect(url_for('users.login'))
     if form.errors:
         for field, errors in form.errors.items():
             for error in errors:
-                flash(f"{field} error: {error}", "danger")
+                flash(f"{field} error: {error}", "warning")
     return render_template('users-register.html', form=form, bouncer=bouncer)
 
 
@@ -74,7 +74,7 @@ def login():
         user = db.session.execute(db.select(User).filter_by(email=email)).scalar()
         #check if user is allowed to log in or if they're banned
         if user.is_banned():
-            flash('You are banned. Go on, git!')
+            flash('You are banned. Go on, git!', "warning")
             return redirect(url_for('users.login'))
         if User.check_email(email=email) and user.check_password(form.password.data) and user is not None:
             # here we are checking for ENV admins and updating the db
@@ -86,7 +86,7 @@ def login():
             latest_login_date = datetime.utcnow()
             db.session.execute(db.update(User).where(User.id == user.id).values(last_login_date=latest_login_date))
             db.session.commit()
-            flash('You have been logged in.')
+            flash('You have been logged in.', "success")
             #logging the login
             lumberjack_do(datetime.utcnow(), current_user, "users", "User Logged In")
             #check if pwd reset is required and redirect to that page
@@ -95,7 +95,7 @@ def login():
                 next = url_for('users.welcome')
             return redirect(next)
         else:
-            flash('Invalid username or password')
+            flash('Invalid username or password', "warning")
             return redirect(url_for('users.login'))
     return render_template('users-login.html', form=form)
 
@@ -162,7 +162,7 @@ def invite_user():
         db.session.execute(db.insert(Invitee).values(email=email))
         db.session.commit()
         lumberjack_do(datetime.utcnow(), current_user, "users", f"{email} was added to the approved list")
-        flash(f'{email} has been added to the approved list.')
+        flash(f'{email} has been added to the approved list.', "success")
         return redirect(url_for('users.invite_user'))
     return render_template('users-invite_list.html', approved_list_clean=approved_list_clean, form=form)
 
@@ -179,44 +179,45 @@ def manage_user(user_id):
         user_to_modify = db.session.query(User).filter_by(id=user_id).scalar()
         #protecting the webmaster account (ENV admin) from modification
         if user_to_modify.is_webmaster():
-            flash("You can't modify a webmaster account!")
+            flash("You can't modify a webmaster account!", "warning")
             return redirect(url_for('users.manage_user', user_id=user_id))
         action = request.form.get('action')
         if action == 'ban':
             # Ban user logic
             user_to_modify.ban_user()
             db.session.commit()
-            flash("User has been banned.")
+            #need something that immediately revokes the user's session.
+            flash("User has been banned.", "warning")
             pass
         elif action == 'unban':
             #unban logic
             user_to_modify.unban_user()
             db.session.commit()
-            flash("User has been unbanned.")
+            flash("User has been unbanned.", 'warning')
             pass
         elif action == 'reset_password':
             # Reset password logic - creates a new pwd and requires a reset at next login
-            flash("Temp password issued. User will be required to reset their password on next login.")
+            flash("Temp password issued. User will be required to reset their password on next login.", "success")
             pass
         elif action == 'delete':
             # Delete user logic - removes user but allows re-register
             db.session.delete(user_to_modify)
             db.session.commit()
-            flash("User has been deleted. They can reregister though.")
+            flash("User has been deleted. They can reregister though.", "warning")
             return redirect(url_for('users.lookup_users'))
         elif action == 'promote':
             # Promote logic
             user_to_modify.grant_admin()
             db.session.commit()
             lumberjack_do(datetime.utcnow(), current_user, 'user administration', f'{user_to_modify.email} has been granted admin rights')
-            flash("User has been promoted to admin.")
+            flash("User has been promoted to admin.", "warning")
             pass
         elif action == 'demote':
             # Demote logic
             user_to_modify.remove_admin()
             db.session.commit()
             lumberjack_do(datetime.utcnow(), current_user, 'user administration',f'{user_to_modify.email} has been denied admin rights')
-            flash("Admin has been demoted to user.")
+            flash("Admin has been demoted to user.", "warning")
             pass
         return redirect(url_for('users.manage_user', user_id=user_id))
     return render_template('users-user_detail.html', user=user)

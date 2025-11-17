@@ -53,12 +53,12 @@ def submit():
                                          )
         db.session.add(weather_request)
         db.session.commit()
-        flash("Thanks for your submission!")
+        flash("Thanks for your submission!", "success")
         return redirect(url_for('the_usual_weather.report_detail', job_id=job_id))
     if form.errors:
         for field, errors in form.errors.items():
             for error in errors:
-                flash(f"{field} error: {error}", "danger")
+                flash(f"{field} error: {error}", "warning")
     return render_template('the_usual_weather_submit.html', form=form)
 
 

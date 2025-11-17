@@ -65,4 +65,21 @@ td {
     border-bottom: 1px solid #ddd;
   }
 
+.flash-warning {
+    background-color: orange;
+    padding: 5px;
+    font-size: 1.5rem;
+    width: fit-content;
+    border: red;
+    border-style: solid;
+}
 
+
+.flash-success {
+    background-color: royalblue;
+    padding: 5px;
+    font-size: 1.5rem;
+    width: fit-content;
+    border: black;
+    border-style: solid;
+}
