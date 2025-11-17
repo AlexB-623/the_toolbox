@@ -202,6 +202,7 @@ def manage_user(user_id):
             # Ban user logic
             user_to_modify.ban_user()
             db.session.commit()
+            lumberjack_do(datetime.utcnow(), current_user, "users", f"{user_to_modify.email} was banned")
             #need something that immediately revokes the user's session.
             flash("User has been banned.", "warning")
             pass
@@ -209,6 +210,7 @@ def manage_user(user_id):
             #unban logic
             user_to_modify.unban_user()
             db.session.commit()
+            lumberjack_do(datetime.utcnow(), current_user, "users", f"{user_to_modify.email} was unbanned")
             flash("User has been unbanned.", 'warning')
             pass
         elif action == 'reset_password':

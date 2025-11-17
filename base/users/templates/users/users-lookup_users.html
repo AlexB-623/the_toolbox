@@ -2,6 +2,7 @@
 
 {% block content %}
     <div class="user-admin-display">
+    <h1>User Administration</h1>
     <div class="user-admin-table">
         <table>
             <thead>
@@ -42,7 +43,7 @@
                         <td>{{ user.last_login }}</td>
                         <td>{{ user.banned }}</td>
                         <td>{{ user.expired_password }}</td>
-                        <td>See Below</td>
+                        <td><a href="{{ url_for('users.lookup_users') }}">Back to all users...</a> </td>
                     </tr>
             {% endif %}
         </table>
