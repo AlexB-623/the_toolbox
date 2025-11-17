@@ -43,14 +43,17 @@ class User(db.Model, UserMixin):
 
     def has_admin_access(self):
         from flask import current_app
-        # Check database flag OR env variable
+        # Check database flag
         return self.is_admin
+        #     return True
+        # else:
+        #     return False
 
     def is_webmaster(self):
         from flask import current_app
-        # Check database flag OR env variable
+        # Check env variable
         admin_emails = current_app.config.get('ADMIN_EMAIL', [])
-        return self.is_admin or self.email in admin_emails
+        return self.email in admin_emails
 
     def sync_admin_status(self):
         """Update is_admin flag based on environment variable."""
@@ -62,6 +65,7 @@ class User(db.Model, UserMixin):
             self.is_admin = True
             return True  # Changed
         return False  # No change
+
 
     def ban_user(self):
         self.banned = True
