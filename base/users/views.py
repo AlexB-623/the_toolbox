@@ -110,7 +110,7 @@ def check_session_timeout():
             if datetime.now() - last_activity_time > timedelta(hours=1):
                 lumberjack_do(datetime.utcnow(), current_user, "user admin", "user session auto-expired")
                 logout_user()
-                return redirect(url_for('login'))
+                return redirect(url_for('users.login'))
 
         session['last_activity'] = datetime.now().isoformat()
 
