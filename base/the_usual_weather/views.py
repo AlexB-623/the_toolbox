@@ -115,4 +115,8 @@ def report_detail(job_id):
 @login_required
 @admin_required
 def manage_reports():
+    #functionality needed
+    #adjust speed to avoid hitting call limits (build delay between calls and set it here)
+    #suspend all job processing
+    #fail a specific job
     pass

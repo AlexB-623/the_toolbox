@@ -36,5 +36,9 @@ class LoginForm(FlaskForm):
 
 
 class InviteForm(FlaskForm):
-    email = EmailField('Email Address', validators=[DataRequired(), Email()])
+    email = EmailField('Email Address to Add', validators=[DataRequired(), Email()])
     submit = SubmitField('Add to Invite List')
+
+class UnInviteForm(FlaskForm):
+    email = EmailField('Email Address to Remove', validators=[DataRequired(), Email()])
+    submit = SubmitField('Remove from Invite List')

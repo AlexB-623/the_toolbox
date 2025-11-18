@@ -3,19 +3,21 @@
 {% block content %}
     <div class="default-container">
         <div class="bouncer-list">
+        <h2>Approved emails:</h2>
             <ul>
             {% for invitee in approved_list_clean %}
-            <li>{{invitee['email']}}</li>
+            <li>{{invitee}}</li>
             {% endfor %}
         </ul>
         </div>
     <div class="invite-container">
         <form method="POST">
             {{ form.hidden_tag() }}
-            <p class="form-label">{{ form.email.label }}:</p>{{ form.email }}
+            <p class="form-label">{{ form.email.label }}:</p><p>{{ form.email }}</p>
             <br>
             {{ form.submit(class="action-button") }}
         </form>
     </div>
+
     </div>
 {% endblock %}

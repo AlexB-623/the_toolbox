@@ -5,7 +5,7 @@ from base.decorators import admin_required
 from datetime import datetime, timedelta
 from base.lumberjack.views import lumberjack_do
 from base.models import User, Invitee
-from base.users.forms import RegistrationForm, LoginForm, InviteForm
+from base.users.forms import RegistrationForm, LoginForm, InviteForm, UnInviteForm
 from werkzeug.security import generate_password_hash, check_password_hash
 
 
@@ -167,18 +167,45 @@ def lookup_users():
 @admin_required
 def invite_user():
     #shows the invitee list
-    #add/removes an email to a list of approved registrants
+    #adds an email to a list of approved registrants
     approved_list = db.session.execute(db.select(Invitee).order_by(Invitee.email.desc())).scalars()
-    approved_list_clean = [invitee.to_dict() for invitee in approved_list]
+    approved_list_clean = [invitee.to_dict()['email'] for invitee in approved_list]
     form = InviteForm()
-    if form.validate_on_submit():
-        email = form.email.data.lower()
-        #need logic to check if they're already on the list
-        db.session.execute(db.insert(Invitee).values(email=email))
-        db.session.commit()
-        lumberjack_do(datetime.utcnow(), current_user, "users", f"{email} was added to the approved list")
-        flash(f'{email} has been added to the approved list.', "success")
-        return redirect(url_for('users.invite_user'))
+    if request.method == 'POST':
+        if form.submit.data and form.validate_on_submit():
+            email = form.email.data.lower()
+            if email in approved_list_clean:
+                flash('This email is already invited.', "warning")
+                return redirect(url_for('users.invite_user'))
+            db.session.execute(db.insert(Invitee).values(email=email))
+            db.session.commit()
+            lumberjack_do(datetime.utcnow(), current_user, "users", f"{email} was added to the approved list")
+            flash(f'{email} has been added to the approved list.', "success")
+            return redirect(url_for('users.invite_user'))
+    return render_template('users-invite_list.html', approved_list_clean=approved_list_clean, form=form)
+
+
+@users_blueprint.route('/uninvite-user', methods=['GET', 'POST'])
+@login_required
+@admin_required
+def uninvite_user():
+    #shows the invitee list
+    #removes an email from a list of approved registrants
+    approved_list = db.session.execute(db.select(Invitee).order_by(Invitee.email.desc())).scalars()
+    approved_list_clean = [invitee.to_dict()['email'] for invitee in approved_list]
+    form = UnInviteForm()
+    if request.method == 'POST':
+        if form.submit.data and form.validate_on_submit():
+            email = form.email.data.lower()
+            if email not in approved_list_clean:
+                flash('This email is not yet invited.', "warning")
+                return redirect(url_for('users.uninvite_user'))
+            to_delete = db.one_or_404(db.select(Invitee).filter_by(email=email))
+            db.session.delete(to_delete)
+            db.session.commit()
+            lumberjack_do(datetime.utcnow(), current_user, "users", f"{email} was removed from the approved list")
+            flash(f'{email} was removed from the approved list.', "success")
+            return redirect(url_for('users.uninvite_user'))
     return render_template('users-invite_list.html', approved_list_clean=approved_list_clean, form=form)
 
 @users_blueprint.route('/manage-user/<int:user_id>', methods=['GET', 'POST'])
