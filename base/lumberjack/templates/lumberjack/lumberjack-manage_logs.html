@@ -1,0 +1,16 @@
+{% extends "lumberjack-base.html" %}
+
+{% block content %}
+    <div class="default-container">
+        <h1>Log Cleanup</h1>
+        <p>Current count of log files: <strong>{{ total_logs }}</strong></p>
+        <form method="POST">
+            {{ form.hidden_tag() }}
+            <p class="form-label">{{ form.num_to_keep.label }}:</p>
+            {{ form.num_to_keep }}
+            <br>
+            <br>
+            {{ form.submit(class="action-button") }}
+        </form>
+    </div>
+{% endblock %}

@@ -1,11 +1,10 @@
 from base import db
 from flask import Flask, Blueprint, render_template, request, session, redirect, url_for, flash
 import markdown
-import json, random
-from os import getcwd
 from flask_login import login_required, current_user
 from os import getcwd
-
+from datetime import datetime
+from base.lumberjack.forms import LogCleanupByCount
 from base.decorators import admin_required
 from base.models import Log_Entry, User
 cwd = getcwd()
@@ -51,7 +50,7 @@ def lumberjack():
         md_about = f.read()
         f.close()
         about = markdown.markdown(md_about)
-    return render_template('lumberjack_home.html', about=about)
+    return render_template('lumberjack-home.html', about=about)
 
 
 @lumberjack_blueprint.route('/view_logs')
@@ -79,7 +78,7 @@ def view_logs():
         else:
             username = db.session.execute(db.select(User.username).filter_by(id=board['user_id'])).scalar_one()
             board['user_id'] = str(username)
-    return render_template('lumberjack_viewer.html', lumber=lumber, pagination=pagination)
+    return render_template('lumberjack-viewer.html', lumber=lumber, pagination=pagination)
 
 
 @lumberjack_blueprint.route('/filter_logs', methods=['GET', 'POST'])
@@ -95,11 +94,37 @@ def filter_logs():
 @admin_required
 def manage_logs():
     #allows removal of old logs
-    #requires admin user
-    #look at log id of most recent log
-    #subtract ~1000
-    #delete any logs lt the current highest number
-    pass
+    total_logs = int(db.session.query(Log_Entry).count())
+    form = LogCleanupByCount()
+    if form.validate_on_submit():
+        num_to_keep = form.num_to_keep.data
+        num_to_delete = total_logs - num_to_keep
+        # print(f'num_to_keep: {num_to_keep}, num_to_delete: {num_to_delete}, total_logs: {total_logs}')
+        # print(num_to_keep > total_logs)
+        if num_to_keep > total_logs:
+            flash("There are fewer logs than you want to delete", category="warning")
+            return redirect(url_for('lumberjack.manage_logs'))
+        #delete action
+        # Get the ID of the 100th most recent entry
+        subquery = (
+            db.session.query(Log_Entry.id)
+            .order_by(Log_Entry.timestamp.desc())
+            .limit(num_to_keep)
+            .subquery()
+        )
+
+        # Delete all entries NOT in the most recent 100
+        deleted_count = (
+            db.session.query(Log_Entry)
+            .filter(~Log_Entry.id.in_(subquery))
+            .delete(synchronize_session=False)
+        )
+        #above queries trigger a warning. Fine for now, but maybe find a cleaner way to do this later
+        db.session.commit()
+        #logging the deletion
+        lumberjack_do(datetime.utcnow(), current_user, 'lumberjack - cleanup', f'{num_to_delete} log entries deleted')
+        return redirect(url_for('lumberjack.manage_logs'))
+    return render_template('lumberjack-manage_logs.html', total_logs=total_logs, form=form)
 
 
 
