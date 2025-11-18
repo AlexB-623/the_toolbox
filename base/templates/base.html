@@ -22,7 +22,7 @@
         <a class="navbar-item nav-link" href="{{ url_for('users.register') }}">Register</a>
         <a class="navbar-item nav-link" href="{{ url_for('users.login') }}">Login</a>
         {% endif %}
-        {% if current_user.has_admin_access %}
+        {% if current_user.is_admin %}
         <a class="navbar-item nav-link" href="{{ url_for('admin.admin') }}">Admin Panel</a>
         <a class="navbar-item nav-link" href="{{ url_for('lumberjack.view_logs') }}">Logs</a>
         {% endif %}
