@@ -25,5 +25,15 @@
     {% endfor %}
   </tbody>
 </table>
+    <br>
+    <div class="pagination">
+    {% if pagination.has_prev %}
+        <a href="{{ url_for('lumberjack.view_logs', page=pagination.prev_num) }}">Previous</a>
+    {% endif %}
+    <span>Page {{ pagination.page }} of {{ pagination.pages }}</span>
+    {% if pagination.has_next %}
+        <a href="{{ url_for('lumberjack.view_logs', page=pagination.next_num) }}">Next</a>
+    {% endif %}
+</div>
     </div>
 {% endblock %}

@@ -58,13 +58,18 @@ def lumberjack():
 @login_required
 def view_logs():
     #basic page for seeing last X events
-    #make the page prettier
-    # render timestamp in readable format
     #export to CSV
-    # add a URL functionality to limit number of logs returned - &results=1000 - default = 100
-    raw_logs = db.session.execute(
-        db.select(Log_Entry).order_by(Log_Entry.timestamp.desc())
-    ).scalars()
+    # add pagination to limit number of logs returned, default = 100
+    # raw_logs = db.session.execute(db.select(Log_Entry).order_by(Log_Entry.timestamp.desc())).scalars()
+    page = request.args.get('page', 1, type=int)
+    per_page = 50
+    pagination = db.paginate(
+        db.select(Log_Entry).order_by(Log_Entry.timestamp.desc()),
+        page=page,
+        per_page=per_page,
+        error_out=False
+    )
+    raw_logs = pagination.items
     #raw logs get refined into Lumber
     lumber = [log_entry.to_dict() for log_entry in raw_logs]
     #I should make this a class method on Users
@@ -74,7 +79,7 @@ def view_logs():
         else:
             username = db.session.execute(db.select(User.username).filter_by(id=board['user_id'])).scalar_one()
             board['user_id'] = str(username)
-    return render_template('lumberjack_viewer.html', lumber=lumber)
+    return render_template('lumberjack_viewer.html', lumber=lumber, pagination=pagination)
 
 
 @lumberjack_blueprint.route('/filter_logs', methods=['GET', 'POST'])
@@ -91,6 +96,9 @@ def filter_logs():
 def manage_logs():
     #allows removal of old logs
     #requires admin user
+    #look at log id of most recent log
+    #subtract ~1000
+    #delete any logs lt the current highest number
     pass
 
 

@@ -184,6 +184,7 @@ def invite_user():
 @users_blueprint.route('/manage-user/<int:user_id>', methods=['GET', 'POST'])
 @login_required
 @admin_required
+#make these separate endpoints with a popup "Are you sure?"
 def manage_user(user_id):
     user_data = db.session.execute(db.select(User).filter_by(id=user_id)).scalar()
     # check against ENV admins and stop
