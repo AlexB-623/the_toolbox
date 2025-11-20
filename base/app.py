@@ -7,6 +7,8 @@ from os import getcwd
 import markdown
 #this module covers the core of the site - home page, toolbox directory, and error pages
 cwd = getcwd()
+
+
 @app.route('/', methods=['GET'])
 def index():
     with open (f'{cwd}/data/about.txt', 'r') as f:
