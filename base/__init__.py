@@ -5,6 +5,12 @@ from flask_migrate import Migrate
 from flask_login import LoginManager
 from dotenv import load_dotenv
 
+### ENV FILE:
+# SECRET_KEY=(generate)
+# REGISTRATION_MODE=INVITE_ONLY
+# ADMIN_EMAIL=alex.brown577@gmail.com
+###
+
 load_dotenv()
 secret_key = os.getenv('SECRET_KEY')
 # registration modes: OPEN, CLOSED, INVITE
