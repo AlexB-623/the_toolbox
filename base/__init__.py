@@ -5,10 +5,16 @@ from flask_migrate import Migrate
 from flask_login import LoginManager
 from dotenv import load_dotenv
 
-### ENV FILE:
+### .env FILE:
 # SECRET_KEY=(generate)
 # REGISTRATION_MODE=INVITE_ONLY
 # ADMIN_EMAIL=alex.brown577@gmail.com
+###
+
+### db init
+#flask db init
+#flask db migrate
+#flask db upgrade
 ###
 
 load_dotenv()
