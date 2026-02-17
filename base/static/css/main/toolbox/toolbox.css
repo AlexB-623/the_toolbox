@@ -24,7 +24,7 @@
 }
 
 .toolbox-grid-item-lumberjack {
-    background-image: url('/static/css/lumberjack/images/pattern2.png');
+    background-image: url('/static/css/lumberjack/images/pattern1.png');
     aspect-ratio: 1 / 1;
     display: flex;
     padding: 25px;
