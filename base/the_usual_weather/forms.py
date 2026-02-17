@@ -30,7 +30,7 @@ class WeatherSubmitForm(FlaskForm):
             self.latitude = lat
             self.longitude = long
         except AttributeError:
-            lumberjack_do(datetime.utcnow(), current_user, "the usual weather", {"type": "Invalid City", 'Submitted City': field.data})
+            lumberjack_do(datetime.datetime.now(datetime.UTC), current_user, "the usual weather", {"type": "Invalid City", 'Submitted City': field.data})
             raise ValidationError('Invalid city name. Please check your spelling and try again.')
         location_details = location.reverse((lat, long))
         location_details_raw = location_details.raw

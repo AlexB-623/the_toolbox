@@ -1,3 +1,3 @@
-import datetime
+x = "3-7"
 
-print(datetime.datetime.now(datetime.UTC))
+print(x[-1:])

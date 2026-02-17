@@ -21,12 +21,12 @@ class RegistrationForm(FlaskForm):
 
     def validate_email(self, field):
         if User.query.filter_by(email=field.data.lower()).first():
-            lumberjack_do(datetime.utcnow(), current_user, "users",f'Someone tried to register with an existing email {field.data.lower()}.')
+            lumberjack_do(datetime.datetime.now(datetime.UTC), current_user, "users",f'Someone tried to register with an existing email {field.data.lower()}.')
             raise ValidationError('Email already registered.')
 
     def validate_username(self, field):
         if User.query.filter_by(username=field.data.lower()).first():
-            lumberjack_do(datetime.utcnow(), current_user, "users", f'Someone tried to register with an existing username {field.data.lower()}.')
+            lumberjack_do(datetime.datetime.now(datetime.UTC), current_user, "users", f'Someone tried to register with an existing username {field.data.lower()}.')
             raise ValidationError('Username already registered.')
 
 class LoginForm(FlaskForm):

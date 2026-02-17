@@ -42,7 +42,7 @@ def submit():
         weather_request = WeatherRequest(requesting_user=current_user.id,
                                          requested_month=form.date.data.month,
                                          requested_day=form.date.data.day,
-                                         submitted_date=datetime.utcnow(),
+                                         submitted_date=datetime.datetime.now(datetime.UTC),
                                          submitted_city=form.city.data,
                                          gps_coordinates=str((form.latitude, form.longitude)),
                                          decoded_city=form.decoded_city,

@@ -11,9 +11,8 @@ from pandas.core.interchange import dataframe
 from retry_requests import retry
 
 
-def process_weather_request(request):
-    # log req start
-    # update weather request to set job in progress
+def process_weather_request(location, month, day):
+    #try except this part
     #api code
     #save to WeatherReport table
     # update weather request to set job complete
@@ -22,25 +21,32 @@ def process_weather_request(request):
 def process_pending_weather_requests(app):
     #query db for list of pending requests
     with app.app_context():
-        raw_list = db.session.execute(
+        request_list = db.session.execute(
             db.select(WeatherRequest).filter_by(job_status='Pending').order_by(WeatherRequest.submitted_date.asc())
-        ).scalars()
-        pretty_list = [weather_request.to_dict() for weather_request in raw_list]
-        #print(pretty_list)
+        ).scalars().all()
         #check num of jobs retrieved
-        work = len(pretty_list)
-        print(work)
-        lumberjack_do(datetime.datetime.now(datetime.UTC), None, "Weather Processor", f"{work} Pending Weather Requests")
-        if work < 1:
+        jobs = len(request_list)
+        lumberjack_do(datetime.datetime.now(datetime.UTC), None, "Weather Processor", f"{jobs} Pending Weather Requests")
+        if jobs < 1:
             pass
         else:
-            for request in pretty_list:
+            #for loop thru reqs
+            for request in request_list:
+                # extract necessary data from req
+                location = f"{request.decoded_city}, {request.decoded_state}, {request.decoded_country}"
+                month = request.requested_month
+                day = request.requested_day
+                # log req start
+                lumberjack_do(datetime.datetime.now(datetime.UTC), None, "Weather Processor",
+                              f"Retrieving Weather for: {location}, {request.requested_month}/{request.requested_day} - Job ID: {request.job_id}")
+                # update weather request to set job in progress
+                # db_record = WeatherRequest.query.filter_by(job_id=request['job_id']).first()
+                request.job_status = "In Progress"
+                db.session.commit()
+                #execute process_weather_request(request)
+
+                #log loop complete
                 pass
-        #log loop start and num jobs
-    #for loop thru reqs
-        #extract necessary data from req
-        #execute process_weather_request(request)
-        #log loop complete
     #stop
     #print("this works")
     pass
