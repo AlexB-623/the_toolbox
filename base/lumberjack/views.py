@@ -3,7 +3,7 @@ from flask import Flask, Blueprint, render_template, request, session, redirect,
 import markdown
 from flask_login import login_required, current_user
 from os import getcwd
-from datetime import datetime
+import datetime
 from base.lumberjack.forms import LogCleanupByCount
 from base.decorators import admin_required
 from base.models import Log_Entry, User
@@ -14,7 +14,7 @@ lumberjack_blueprint = Blueprint('lumberjack', __name__, template_folder='templa
 def lumberjack_do(timestamp, user_id, domain, event):
     """
     Takes timestamp, user_id, domain, and event, and produces a log entry
-    :param timestamp: datetime.utcnow()
+    :param timestamp: datetime.datetime.now(datetime.UTC)
     :param user_id: current_user (can be authenticated or anonymous)
     :param domain: typically the blueprint being loaded
     :param event: notes about what is being logged
@@ -122,7 +122,7 @@ def manage_logs():
         #above queries trigger a warning. Fine for now, but maybe find a cleaner way to do this later
         db.session.commit()
         #logging the deletion
-        lumberjack_do(datetime.utcnow(), current_user, 'lumberjack - cleanup', f'{num_to_delete} log entries deleted')
+        lumberjack_do(datetime.datetime.now(datetime.UTC), current_user, 'lumberjack - cleanup', f'{num_to_delete} log entries deleted')
         return redirect(url_for('lumberjack.manage_logs'))
     return render_template('lumberjack-manage_logs.html', total_logs=total_logs, form=form)
 

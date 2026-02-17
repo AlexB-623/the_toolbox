@@ -2,7 +2,7 @@ from base import app
 from flask import render_template, request
 from base.lumberjack.views import lumberjack_do
 from flask_login import current_user
-from datetime import datetime
+import datetime
 from os import getcwd
 from tasks import process_pending_weather_requests
 import markdown, threading, time
@@ -32,19 +32,19 @@ def toolbox():
                 'url': f"{name}.{name}" or '/'
             }
         )
-    lumberjack_do(datetime.utcnow(), current_user, "toolbox", "rummaged through the toolbox" )
+    lumberjack_do(datetime.datetime.now(datetime.UTC), current_user, "toolbox", "rummaged through the toolbox" )
     return render_template('toolbox.html', tool_modules=tool_modules)
 
 @app.errorhandler(403)
 def page_not_found(e):
     #log what they were trying to do
-    lumberjack_do(datetime.utcnow(), current_user, "error", {"error": 403, "target": request.url})
+    lumberjack_do(datetime.datetime.now(datetime.UTC), current_user, "error", {"error": 403, "target": request.url})
     return render_template('403.html'), 403
 
 @app.errorhandler(404)
 def page_not_found(e):
     #log what they were trying to do
-    lumberjack_do(datetime.utcnow(), current_user, "error", {"error": 404, "target": request.url})
+    lumberjack_do(datetime.datetime.now(datetime.UTC), current_user, "error", {"error": 404, "target": request.url})
     return render_template('404.html'), 404
 
 @app.errorhandler(423)
@@ -55,7 +55,7 @@ def locked(e):
 @app.errorhandler(500)
 def oopsie(e):
     # log what they were trying to do
-    lumberjack_do(datetime.utcnow(), current_user, "error", {"error": 500, "target": request.url})
+    lumberjack_do(datetime.datetime.now(datetime.UTC), current_user, "error", {"error": 500, "target": request.url})
     return render_template('500.html'), 500
 
 

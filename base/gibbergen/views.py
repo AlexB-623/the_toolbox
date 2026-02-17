@@ -2,7 +2,7 @@ from time import strftime
 import markdown
 from flask import Flask, Blueprint, render_template, request, session, redirect, url_for, flash
 import json, random
-from datetime import datetime
+import datetime
 from os import getcwd
 from flask_login import login_required, current_user
 from base.lumberjack.views import lumberjack_do
@@ -56,7 +56,7 @@ def gibbergen():
         md_about = f.read()
         f.close()
         about = markdown.markdown(md_about)
-    lumberjack_do(datetime.utcnow(), current_user, "gibbergen", f'generated "{term}" on main gibbergen page')
+    lumberjack_do(datetime.datetime.now(datetime.UTC), current_user, "gibbergen", f'generated "{term}" on main gibbergen page')
     return render_template('gibbergen_home.html', term=term, about=about, about_term=about_term)
 
 
@@ -68,7 +68,7 @@ def gibbergen_sampler():
     for n in i:
         term = term_maker()
         term_list.append(term)
-    lumberjack_do(datetime.utcnow(), current_user, "gibbergen", f'generated {term_list} on gibbergen sampler page')
+    lumberjack_do(datetime.datetime.now(datetime.UTC), current_user, "gibbergen", f'generated {term_list} on gibbergen sampler page')
     return render_template('gibbergen_sampler.html', terms=term_list)
 
 #next:

@@ -1,4 +1,4 @@
-from datetime import datetime
+import datetime
 from os import getcwd
 from flask import Flask, Blueprint, render_template, request, session, redirect, url_for, flash
 import json, random, markdown, uuid
@@ -29,7 +29,7 @@ def submit():
     if form.validate_on_submit():
         # log it just in case
         job_id = str(uuid.uuid4())
-        lumberjack_do(datetime.utcnow(), current_user, "the usual weather", {"type": "Submission",
+        lumberjack_do(datetime.datetime.now(datetime.UTC), current_user, "the usual weather", {"type": "Submission",
                                                                              'User-Submitted city': form.city.data,
                                                                              'GPS Coordinates': str((form.latitude,
                                                                                                  form.longitude)),
