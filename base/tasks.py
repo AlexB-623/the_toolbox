@@ -11,7 +11,7 @@ from pandas.core.interchange import dataframe
 from retry_requests import retry
 
 
-def process_weather_request(location, month, day):
+def process_weather_request(gps_coords, month, day):
     #try except this part
     #api code
     #save to WeatherReport table
@@ -34,17 +34,23 @@ def process_pending_weather_requests(app):
             for request in request_list:
                 # extract necessary data from req
                 location = f"{request.decoded_city}, {request.decoded_state}, {request.decoded_country}"
+                #taking the existing coords and making into a tuple for ease of use
+                listgps = list(request.gps_coordinates.replace("(", "").replace(")", "").split(","))
+                listgps[0] = float(listgps[0])
+                listgps[1] = float(listgps[1])
+                gps_coords = tuple(listgps)
+                # print(type(gps_coords))
                 month = request.requested_month
                 day = request.requested_day
                 # log req start
                 lumberjack_do(datetime.datetime.now(datetime.UTC), None, "Weather Processor",
-                              f"Retrieving Weather for: {location}, {request.requested_month}/{request.requested_day} - Job ID: {request.job_id}")
+                              f"Retrieving Weather for: {location}({str(gps_coords)}), {month}/{day} - Job ID: {request.job_id}")
                 # update weather request to set job in progress
-                # db_record = WeatherRequest.query.filter_by(job_id=request['job_id']).first()
                 request.job_status = "In Progress"
                 db.session.commit()
                 #execute process_weather_request(request)
-
+                #try/except
+                process_weather_request(gps_coords, month, day)
                 #log loop complete
                 pass
     #stop
@@ -180,18 +186,18 @@ def make_dataframe(api_response):
 def make_master_dataframe(input_location, month, day):
     """
     Whatever you use to gather the input from a user, be sure to do some kind of input validation to get real locations and dates.
-    :param input_location: string, city name
+    :param input_location: tuple, gps
     :param month: 1-12
     :param day: 1-31
     :return: pandas dataframe with weather data for the requested city/date
     """
     is_first_result = True
-    location = convert_location_to_gps(input_location)
-    if type(location) == str:
-        return location
+    # location = convert_location_to_gps(input_location)
+    # if type(location) == str:
+    #     return location
     years_to_call = generate_master_date_list(month, day)
     for year in years_to_call:
-        year_data = call_for_data(latitude=location[0], longitude=location[1], start_date=year[-1], end_date=year[0])
+        year_data = call_for_data(latitude=input_location[0], longitude=input_location[1], start_date=year[-1], end_date=year[0])
         if is_first_result:
             master_dataframe = make_dataframe(year_data)
             is_first_result = False
