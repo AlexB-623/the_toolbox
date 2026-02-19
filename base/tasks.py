@@ -1,11 +1,9 @@
 from base import db
 from base.models import WeatherRequest
 from base.lumberjack.views import lumberjack_do
-import datetime, re
 from geopy.geocoders import Nominatim
 from timezonefinder import TimezoneFinder
-import openmeteo_requests
-import requests_cache
+import requests, openmeteo_requests, requests_cache, datetime, re
 import pandas as pd
 from pandas.core.interchange import dataframe
 from retry_requests import retry
@@ -27,9 +25,14 @@ def process_pending_weather_requests(app):
         #check num of jobs retrieved
         jobs = len(request_list)
         lumberjack_do(datetime.datetime.now(datetime.UTC), None, "Weather Processor", f"{jobs} Pending Weather Requests")
+
         if jobs < 1:
             pass
         else:
+            # Check if OpenMeteo is currently responding:
+            if requests.get("https://archive-api.open-meteo.com/v1/archive") != 200:
+                lumberjack_do(datetime.datetime.now(datetime.UTC), None, "Weather Processor", "OpenMeteo not responding, aborting.")
+                return
             #for loop thru reqs
             for request in request_list:
                 # extract necessary data from req
