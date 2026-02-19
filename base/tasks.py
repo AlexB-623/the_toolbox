@@ -12,6 +12,12 @@ from retry_requests import retry
 
 def process_weather_request(gps_coords, month, day, job_id):
     #if check for errors,then abort, else return
+    job_result = make_master_dataframe(input_location=gps_coords, month=month, day=day, job_id=job_id)
+    if type(job_result) != pd.DataFrame:
+        raise Exception("API Error")
+    else:
+        job_result.job_status = "Complete"
+        print(job_result)
     #api code
     #save to WeatherReport table
     # update weather request to set job complete
@@ -30,11 +36,14 @@ def process_pending_weather_requests(app):
         if jobs < 1:
             pass
         else:
-            # Check if OpenMeteo is currently responding:
-            api_check = requests.get("https://archive-api.open-meteo.com/v1/archive")
-            if api_check.status_code != 200:
-                lumberjack_do(datetime.datetime.now(datetime.UTC), None, "Weather Processor", f"OpenMeteo not responding, aborting. HTTP: {api_check.status_code}.")
-                pass
+            # # Check if OpenMeteo is currently responding:
+            # try:
+            #     api_check = requests.get("https://archive-api.open-meteo.com/v1/archive")
+            # except:
+            #
+            # if api_check.status_code != 200:
+            #     lumberjack_do(datetime.datetime.now(datetime.UTC), None, "Weather Processor", f"OpenMeteo not responding, aborting. HTTP: {api_check.status_code}.")
+            #     pass
             #for loop thru reqs
             for request in request_list:
                 # extract necessary data from req
@@ -53,10 +62,17 @@ def process_pending_weather_requests(app):
                 # update weather request to set job in progress
                 request.job_status = "In Progress"
                 db.session.commit()
-                #execute process_weather_request(request)
                 #try/except
-                process_weather_request(gps_coords, month, day, request.job_id)
+                try:
+                    process_weather_request(gps_coords, month, day, request.job_id)
+                    request.job_status = "Complete"
+                    db.session.commit()
+                except:
+                    request.job_status = "Failed, Pending Retry"
+                    db.session.commit()
+                    continue
                 #log loop complete
+                lumberjack_do(datetime.datetime.now(datetime.UTC), None, "Weather Processor", f"Background job completed.")
                 pass
     #stop
     #print("this works")
@@ -210,7 +226,7 @@ def make_master_dataframe(input_location, month, day, job_id):
     :param month: 1-12
     :param day: 1-31
     :param job_id: job being done
-    :return: pandas dataframe with weather data for the requested city/date or "error"
+    :return: pandas dataframe with weather data for the requested city/date or returns a string as "error"
     """
     is_first_result = True
     # location = convert_location_to_gps(input_location)
@@ -221,12 +237,12 @@ def make_master_dataframe(input_location, month, day, job_id):
         year_data = call_for_data(latitude=input_location[0], longitude=input_location[1], start_date=year[-1], end_date=year[0], job_id=job_id)
         #check if the API call had an error and abort
         if year_data == "error":
-            return "error"
+            master_dataframe = "error"
+            break
         if is_first_result:
             master_dataframe = make_dataframe(year_data)
             is_first_result = False
         else:
             year_dataframe = make_dataframe(year_data)
             master_dataframe = pd.concat([master_dataframe, year_dataframe])
-            year_dataframe = None
     return master_dataframe
