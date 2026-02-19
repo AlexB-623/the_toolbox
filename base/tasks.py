@@ -9,19 +9,8 @@ from pandas.core.interchange import dataframe
 from openmeteo_requests import OpenMeteoRequestsError
 from retry_requests import retry
 
+#this page contains all functions needed to handle the background processing of a weather request
 
-def process_weather_request(gps_coords, month, day, job_id):
-    #if check for errors,then abort, else return
-    job_result = make_master_dataframe(input_location=gps_coords, month=month, day=day, job_id=job_id)
-    if type(job_result) != pd.DataFrame:
-        raise Exception("API Error")
-    else:
-        job_result.job_status = "Complete"
-        print(job_result)
-    #api code
-    #save to WeatherReport table
-    # update weather request to set job complete
-    pass
 
 def process_pending_weather_requests(app):
     #query db for list of pending requests
@@ -47,7 +36,7 @@ def process_pending_weather_requests(app):
             #for loop thru reqs
             for request in request_list:
                 # extract necessary data from req
-                location = f"{request.decoded_city}, {request.decoded_state}, {request.decoded_country}"
+                location = f"{request.decoded_city}, {request.decoded_state}, {request.decoded_country.upper()}"
                 #taking the existing coords and making into a tuple for ease of use
                 listgps = list(request.gps_coordinates.replace("(", "").replace(")", "").split(","))
                 listgps[0] = float(listgps[0])
@@ -76,6 +65,22 @@ def process_pending_weather_requests(app):
                 pass
     #stop
     #print("this works")
+    pass
+
+
+def process_weather_request(gps_coords, month, day, job_id):
+    #if check for errors,then abort, else return
+    job_result = make_master_dataframe(input_location=gps_coords, month=month, day=day, job_id=job_id)
+    if type(job_result) != pd.DataFrame:
+        raise Exception("API Error")
+    else:
+        lumberjack_do(datetime.datetime.now(datetime.UTC), None, "Weather Processor", f'Job ID: {job_id} - completed.')
+        print(job_result)
+        #save to WeatherReport table
+        #perform analysis
+    pass
+
+def weather_analysis():
     pass
 
 def get_dates_to_call_for_year(year, month, day):
