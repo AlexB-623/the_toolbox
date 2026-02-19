@@ -31,9 +31,10 @@ def process_pending_weather_requests(app):
             pass
         else:
             # Check if OpenMeteo is currently responding:
-            if requests.get("https://archive-api.open-meteo.com/v1/archive") != 200:
-                lumberjack_do(datetime.datetime.now(datetime.UTC), None, "Weather Processor", "OpenMeteo not responding, aborting.")
-                return
+            api_check = requests.get("https://archive-api.open-meteo.com/v1/archive")
+            if api_check.status_code != 200:
+                lumberjack_do(datetime.datetime.now(datetime.UTC), None, "Weather Processor", f"OpenMeteo not responding, aborting. HTTP: {api_check.status_code}.")
+                pass
             #for loop thru reqs
             for request in request_list:
                 # extract necessary data from req
