@@ -6,11 +6,12 @@ from timezonefinder import TimezoneFinder
 import requests, openmeteo_requests, requests_cache, datetime, re
 import pandas as pd
 from pandas.core.interchange import dataframe
+from openmeteo_requests import OpenMeteoRequestsError
 from retry_requests import retry
 
 
-def process_weather_request(gps_coords, month, day):
-    #try except this part
+def process_weather_request(gps_coords, month, day, job_id):
+    #if check for errors,then abort, else return
     #api code
     #save to WeatherReport table
     # update weather request to set job complete
@@ -53,7 +54,7 @@ def process_pending_weather_requests(app):
                 db.session.commit()
                 #execute process_weather_request(request)
                 #try/except
-                process_weather_request(gps_coords, month, day)
+                process_weather_request(gps_coords, month, day, request.job_id)
                 #log loop complete
                 pass
     #stop
@@ -103,27 +104,30 @@ def generate_master_date_list(month, day):
 
 loc = Nominatim(user_agent="Geopy Library")
 
-def convert_location_to_gps(location):
-    """
-    takes a string and tries to determine if it is a known city.
-    if it is, it will return GPS coordinates for that city as a Tuple, otherwise, returns a string with an error message.
-    :param location: string
-    :return: tuple: (lat, long, timezone) OR string with an error message.
-    """
-    getloc = loc.geocode(location)
-    try:
-        lat = round(float(getloc.latitude), 3)
-        long = round(float(getloc.longitude), 3)
-    except AttributeError:
-        return "Could not convert the entered location name to GPS\n" \
-                "Please check the spelling and try again"
-    return lat, long
+#I think I only needed this in the initial project, before it was a website.
+# def convert_location_to_gps(location):
+#     """
+#     takes a string and tries to determine if it is a known city.
+#     if it is, it will return GPS coordinates for that city as a Tuple, otherwise, returns a string with an error message.
+#     :param location: string
+#     :return: tuple: (lat, long, timezone) OR string with an error message.
+#     """
+#     getloc = loc.geocode(location)
+#     try:
+#         lat = round(float(getloc.latitude), 3)
+#         long = round(float(getloc.longitude), 3)
+#     except AttributeError:
+#         return "Could not convert the entered location name to GPS\n" \
+#                 "Please check the spelling and try again"
+#     return lat, long
+#
+# def get_timezone(latitude, longitude):
+#     obj = TimezoneFinder()
+#     # returns 'Europe/Berlin'
+#     result = obj.timezone_at(lat=latitude, lng=longitude)
+#     return result
+#
 
-def get_timezone(latitude, longitude):
-    obj = TimezoneFinder()
-    # returns 'Europe/Berlin'
-    result = obj.timezone_at(lat=latitude, lng=longitude)
-    return result
 
 # Setup the Open-Meteo API client with cache and retry on error
 cache_session = requests_cache.CachedSession('.cache', expire_after = -1)
@@ -134,14 +138,15 @@ open_meteo = openmeteo_requests.Client(session = retry_session)
 
 # Make sure all required weather variables are listed here
 # The order of variables in hourly or daily is important to assign them correctly below
-def call_for_data(latitude, longitude, start_date, end_date):
+def call_for_data(latitude, longitude, start_date, end_date, job_id):
     """
     calls the openmeteo API for historical weather data
     :param latitude:
     :param longitude:
     :param start_date:
     :param end_date:
-    :return:
+    :param job_id
+    :return: API response or "error"
     """
     url = "https://archive-api.open-meteo.com/v1/archive"
     params = {
@@ -153,11 +158,22 @@ def call_for_data(latitude, longitude, start_date, end_date):
 		"timezone": "auto",
         "temperature_unit": "fahrenheit"
 	}
-    responses = open_meteo.weather_api(url, params=params)
-    # Process first location. Add a for-loop for multiple locations or weather models
-    response = responses[0]
+    try:
+        responses = open_meteo.weather_api(url, params=params)
+        # Process first location. Add a for-loop for multiple locations or weather models
+        response = responses[0]
+    except OpenMeteoRequestsError as e:
+        # Handle gracefully — log it, return a default, retry, etc.
+        lumberjack_do(datetime.datetime.now(datetime.UTC), None, "Weather Processor", f"Error calling OpenMeteo API: {e}. Job ID: {job_id}")
+        return "error"
+        #need to pass the error up, revert the job, and abort the loop
+    except Exception as e:
+        # Catch any unexpected errors (network issues, etc.)
+        lumberjack_do(datetime.datetime.now(datetime.UTC), None, "Weather Processor", f"Error calling OpenMeteo API: {e}. Job ID: {job_id}")
+        return "error"
+        # need to pass the error up, revert the job, and abort the loop
     return response
-    #we may want to add some functionality to determine if there was an error with the API response
+
 
 
 def make_dataframe(api_response):
@@ -186,13 +202,14 @@ def make_dataframe(api_response):
     return pd.DataFrame(data = hourly_data)
 
 
-def make_master_dataframe(input_location, month, day):
+def make_master_dataframe(input_location, month, day, job_id):
     """
     Whatever you use to gather the input from a user, be sure to do some kind of input validation to get real locations and dates.
     :param input_location: tuple, gps
     :param month: 1-12
     :param day: 1-31
-    :return: pandas dataframe with weather data for the requested city/date
+    :param job_id: job being done
+    :return: pandas dataframe with weather data for the requested city/date or "error"
     """
     is_first_result = True
     # location = convert_location_to_gps(input_location)
@@ -200,7 +217,10 @@ def make_master_dataframe(input_location, month, day):
     #     return location
     years_to_call = generate_master_date_list(month, day)
     for year in years_to_call:
-        year_data = call_for_data(latitude=input_location[0], longitude=input_location[1], start_date=year[-1], end_date=year[0])
+        year_data = call_for_data(latitude=input_location[0], longitude=input_location[1], start_date=year[-1], end_date=year[0], job_id=job_id)
+        #check if the API call had an error and abort
+        if year_data == "error":
+            return "error"
         if is_first_result:
             master_dataframe = make_dataframe(year_data)
             is_first_result = False
