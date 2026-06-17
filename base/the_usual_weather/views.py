@@ -1,12 +1,14 @@
 import datetime
 from os import getcwd
+
+import pandas as pd
 from flask import Flask, Blueprint, render_template, request, session, redirect, url_for, flash
 import json, random, markdown, uuid
 from flask_login import login_required, current_user
 from base import db
 from base.decorators import admin_required
 from base.lumberjack.views import lumberjack_do
-from base.models import WeatherRequest, User
+from base.models import WeatherRequest, User, WeatherReport
 from base.the_usual_weather.forms import WeatherSubmitForm
 
 
@@ -105,6 +107,11 @@ def report_detail(job_id):
                                report_request=report_request)
     else:
         #fetch the report and get it prepared for display
+        # report_data = db.session.execute(db.select(WeatherReport).filter_by(job_id=job_id)).scalar().to_dict()
+        report_data_raw = WeatherReport.query.filter_by(job_id=job_id).all()
+
+        # report_data = WeatherReport.to_dict(report_data_raw)
+        print(report_data)
         #add a "download" data button that collects the report data and exports to a CSV
         #add a "download" analysis button that collects the report analysis and exports to a CSV
         return render_template('the_usual_weather_report_detail.html',

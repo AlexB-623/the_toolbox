@@ -222,3 +222,12 @@ class WeatherReport(db.Model):
         self.precipitation = precipitation
         self.wind_speed_100m = wind_speed_100m
         self.cloud_cover = cloud_cover
+
+    def to_dict(self):
+        return {
+            'date': self.date.strftime('%m/%d/%Y %H:%M'),
+            'temperature_2m': self.temperature_2m,
+            'precipitation': self.precipitation,
+            'wind_speed_100m': self.wind_speed_100m,
+            'cloud_cover': self.cloud_cover
+        }
