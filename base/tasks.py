@@ -76,16 +76,20 @@ def process_weather_request(gps_coords, month, day, job_id):
     #if check for errors,then abort, else return
     job_result = make_master_dataframe(input_location=gps_coords, month=month, day=day, job_id=job_id)
     if type(job_result) != pd.DataFrame:
+        #here we're checking to confirm that we actually got data back and not an API error.
         raise Exception("API Error")
     else:
         lumberjack_do(datetime.datetime.now(datetime.UTC), None, "Weather Processor", f'Job ID: {job_id} - completed.')
         print(job_result)
-        #save to WeatherReport table
+        #define WeatherReport Model and create Table
+        #save report to WeatherReport table
         #perform analysis
     pass
 
 
 def weather_analysis():
+    # define WeatherAnalysis Model and create Table
+    # save report to WeatherAnalysis table
     pass
 
 

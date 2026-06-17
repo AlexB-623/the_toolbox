@@ -94,20 +94,21 @@ def report_detail(job_id):
     #we need a method for checking if any jobs have been submitted and running them.
     # Maybe we just redirect here and conditionally run the job if it hasn't already been run
     #page should auto-refresh every 30 sec while job is incomplete
-    report = db.session.execute(db.select(WeatherRequest).filter_by(job_id=job_id)).scalar()
-    report_request = report.to_dict()
+    report_request = db.session.execute(db.select(WeatherRequest).filter_by(job_id=job_id)).scalar().to_dict()
+    #report_request = report_detail.to_dict()
     # need a user class method for getting username by id
     username = db.session.execute(db.select(User.username).filter_by(id=report_request['requesting_user'])).scalar_one()
     report_request['requesting_user'] = str(username)
     if report_request['job_status'] != "Complete":
-        #start job
+        #refresh page periodically
         return render_template('the_usual_weather_report_detail.html',
                                report_request=report_request)
     else:
         #fetch the report and get it prepared for display
+        #add a "download" data button that collects the report data and exports to a CSV
+        #add a "download" analysis button that collects the report analysis and exports to a CSV
         return render_template('the_usual_weather_report_detail.html',
-                               report_request=report_request,
-                               report=report)
+                               report_request=report_request)
 
 
 #admin function:
