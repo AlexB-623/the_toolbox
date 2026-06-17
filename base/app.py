@@ -4,7 +4,8 @@ from base.lumberjack.views import lumberjack_do
 from flask_login import current_user
 import datetime
 from os import getcwd
-from tasks import process_pending_weather_requests
+#moving to import only when used
+# from tasks import process_pending_weather_requests
 import markdown, threading, time
 #this module covers the core of the site - home page, toolbox directory, and error pages
 cwd = getcwd()
@@ -61,6 +62,7 @@ def oopsie(e):
 
 def background_job_checker():
     """Runs continuously, checking for pending weather requests"""
+    from tasks import process_pending_weather_requests
     while True:
         process_pending_weather_requests(app)
         #Adjust Sleep for production
