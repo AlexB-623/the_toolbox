@@ -1,5 +1,5 @@
 from base import db
-from base.models import WeatherRequest
+from base.models import WeatherRequest, WeatherReport
 from base.lumberjack.views import lumberjack_do
 from geopy.geocoders import Nominatim
 from timezonefinder import TimezoneFinder
@@ -81,10 +81,11 @@ def process_weather_request(gps_coords, month, day, job_id):
         raise Exception("API Error")
     else:
         lumberjack_do(datetime.datetime.now(datetime.UTC), None, "Weather Processor", f'Job ID: {job_id} - completed.')
-        print("job run, attempting save")
-        job_result.to_pickle(job_result.pkl)
-        #define WeatherReport Model and create Table
-        #save report to WeatherReport table
+        # print("job run, attempting db commit")
+        weather_report = job_result.to_dict(orient='records')
+        db.session.bulk_insert_mappings(WeatherReport, weather_report)
+        db.session.commit()
+        # print("db commit did not fail, I think")
         #perform analysis
     pass
 
