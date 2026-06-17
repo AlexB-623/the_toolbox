@@ -114,10 +114,10 @@ def make_master_dataframe(input_location, month, day, job_id):
             master_dataframe = "error"
             break
         if is_first_result:
-            master_dataframe = make_dataframe(year_data)
+            master_dataframe = make_dataframe(year_data, job_id)
             is_first_result = False
         else:
-            year_dataframe = make_dataframe(year_data)
+            year_dataframe = make_dataframe(year_data, job_id)
             master_dataframe = pd.concat([master_dataframe, year_dataframe])
     return master_dataframe
 
@@ -161,7 +161,7 @@ def call_for_data(latitude, longitude, start_date, end_date, job_id):
     return response
 
 
-def make_dataframe(api_response):
+def make_dataframe(api_response, job_id):
     """
     takes the result of call for data and transforms it into a dataframe
     :param api_response:
@@ -179,10 +179,12 @@ def make_dataframe(api_response):
 		freq = pd.Timedelta(seconds = hourly.Interval()),
 		inclusive = "left"
 	)}
+    hourly_data["job_id"] = job_id
     hourly_data["temperature_2m"] = hourly_temperature_2m
     hourly_data["precipitation"] = hourly_precipitation
     hourly_data["cloud_cover"] = hourly_cloud_cover
     hourly_data["wind_speed_100m"] = hourly_wind_speed_100m
+
 
     return pd.DataFrame(data = hourly_data)
 
