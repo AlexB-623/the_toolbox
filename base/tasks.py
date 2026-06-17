@@ -20,6 +20,7 @@ open_meteo = openmeteo_requests.Client(session = retry_session)
 def process_pending_weather_requests(app):
     #query db for list of pending requests
     with app.app_context():
+        #add logic for retry
         request_list = db.session.execute(
             db.select(WeatherRequest).filter_by(job_status='Pending').order_by(WeatherRequest.submitted_date.asc())
         ).scalars().all()
@@ -80,7 +81,8 @@ def process_weather_request(gps_coords, month, day, job_id):
         raise Exception("API Error")
     else:
         lumberjack_do(datetime.datetime.now(datetime.UTC), None, "Weather Processor", f'Job ID: {job_id} - completed.')
-        print(job_result)
+        print("job run, attempting save")
+        job_result.to_pickle(job_result.pkl)
         #define WeatherReport Model and create Table
         #save report to WeatherReport table
         #perform analysis
@@ -179,11 +181,11 @@ def make_dataframe(api_response, job_id):
 		freq = pd.Timedelta(seconds = hourly.Interval()),
 		inclusive = "left"
 	)}
-    hourly_data["job_id"] = job_id
     hourly_data["temperature_2m"] = hourly_temperature_2m
     hourly_data["precipitation"] = hourly_precipitation
     hourly_data["cloud_cover"] = hourly_cloud_cover
     hourly_data["wind_speed_100m"] = hourly_wind_speed_100m
+    hourly_data["job_id"] = job_id
 
 
     return pd.DataFrame(data = hourly_data)

@@ -205,6 +205,20 @@ class WeatherRequest(db.Model):
 
 #need to determine how to join with the Request table so they are linked
 # think about how to handle db table drops - can we generate a unique token for job_id? UUID?
-# class WeatherReport(db.Model):
-#     __tablename__ = 'weather_reports'
-#     id = db.Column(db.Integer, primary_key=True)
+class WeatherReport(db.Model):
+    __tablename__ = 'weather_reports'
+    id = db.Column(db.Integer, primary_key=True)
+    job_id = db.Column(db.String(50), db.ForeignKey('weather_requests.job_id'), unique=False, nullable=True, index=True)
+    date = db.Column(db.DateTime, index=True)
+    temperature_2m = db.Column(db.Float, index=True)
+    precipitation = db.Column(db.Float, index=True)
+    wind_speed_100m = db.Column(db.Float, index=True)
+    cloud_cover = db.Column(db.Float, index=True)
+
+    def __init__(self, job_id, date, temperature_2m, precipitation, wind_speed_100m, cloud_cover):
+        self.job_id = job_id
+        self.date = date
+        self.temperature_2m = temperature_2m
+        self.precipitation = precipitation
+        self.wind_speed_100m = wind_speed_100m
+        self.cloud_cover = cloud_cover

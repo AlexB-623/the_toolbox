@@ -9,7 +9,7 @@ from wtforms import (StringField,
 from wtforms.validators import DataRequired, EqualTo, length
 from base.lumberjack.views import lumberjack_do
 from base.users.views import current_user
-from datetime import datetime
+import datetime
 
 
 
