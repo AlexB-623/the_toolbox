@@ -107,7 +107,6 @@ def weather_analysis(job_result, job_id, month, day, location, timezone):
     )
     avg_low = daily_temps['daily_low'].mean()
     avg_high = daily_temps['daily_high'].mean()
-    print("avg temps calcd")
     # probablilty wind is not 0
     # average daily wind speed
     # probablilty clouds is not 0
@@ -128,9 +127,7 @@ def weather_analysis(job_result, job_id, month, day, location, timezone):
                                        precipitation_probability=50.0,
                                        average_precipitation=2.5
                                        )
-    print("insert prepped")
     db.session.add(weather_analysis)
-    print("add started")
     db.session.commit()
     lumberjack_do(datetime.datetime.now(datetime.UTC), None, "Weather Processor", f"Job ID: {job_id} - Analysis written to DB")
 

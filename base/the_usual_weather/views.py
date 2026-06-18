@@ -8,7 +8,7 @@ from flask_login import login_required, current_user
 from base import db
 from base.decorators import admin_required
 from base.lumberjack.views import lumberjack_do
-from base.models import WeatherRequest, User, WeatherReport
+from base.models import User, WeatherRequest, WeatherReport, WeatherAnalysis
 from base.the_usual_weather.forms import WeatherSubmitForm
 
 
@@ -114,11 +114,13 @@ def report_detail(job_id):
         report_data = report_data.drop(['job_id', 'id'], axis=1)
         report_data = report_data[['date', 'temperature_2m', 'precipitation', 'wind_speed_100m', 'cloud_cover']]
         report_data = report_data.to_html()
-        # print(report_data)
+        report_details = db.session.execute(db.select(WeatherAnalysis).filter_by(job_id=job_id)).scalar().to_dict()
+        # report_details = report_details.to_dict()
         #add a "download" data button that collects the report data and exports to a CSV
         #add a "download" analysis button that collects the report analysis and exports to a CSV
         return render_template('the_usual_weather_report_detail.html',
                                report_request=report_request,
+                               report_details=report_details,
                                report_data=report_data)
 
 
