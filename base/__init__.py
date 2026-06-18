@@ -13,8 +13,18 @@ from dotenv import load_dotenv
 
 ### db init
 #flask db init
+### db change###
 #flask db migrate
 #flask db upgrade
+###
+
+### clearing db
+# PRAGMA foreign_keys = OFF;
+# delete from log_entries;
+# delete from weather_reports;
+# delete from weather_requests;
+# delete from users;
+# PRAGMA foreign_keys = ON;
 ###
 
 load_dotenv()
