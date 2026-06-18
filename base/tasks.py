@@ -26,11 +26,13 @@ def process_pending_weather_requests(app):
         ).scalars().all()
         #check num of jobs retrieved
         jobs = len(request_list)
-        lumberjack_do(datetime.datetime.now(datetime.UTC), None, "Weather Processor", f"{jobs} Pending Weather Requests")
+
 
         if jobs < 1:
             pass
         else:
+            lumberjack_do(datetime.datetime.now(datetime.UTC), None, "Weather Processor",
+                          f"{jobs} Pending Weather Requests")
             # # Check if OpenMeteo is currently responding:
             # try:
             #     api_check = requests.get("https://archive-api.open-meteo.com/v1/archive")
@@ -99,6 +101,13 @@ def weather_analysis(job_result, job_id, month, day, location, timezone):
     # calculate:
     # average daily low
     # average daily high
+    daily_temps = dataset.groupby('Dates')['temperature_2m'].agg(
+        daily_low='min',
+        daily_high='max'
+    )
+    avg_low = daily_temps['daily_low'].mean()
+    avg_high = daily_temps['daily_high'].mean()
+    print("avg temps calcd")
     # probablilty wind is not 0
     # average daily wind speed
     # probablilty clouds is not 0
@@ -109,10 +118,21 @@ def weather_analysis(job_result, job_id, month, day, location, timezone):
     weather_analysis = WeatherAnalysis(job_id=job_id,
                                        month=month,
                                        day=day,
-                                       location=location
+                                       location=location,
+                                       average_low=avg_low,
+                                       average_high=avg_high,
+                                       wind_probability=50.0,
+                                       average_wind_speed=1.5,
+                                       cloud_probability=50.0,
+                                       average_cloud_cover=50.0,
+                                       precipitation_probability=50.0,
+                                       average_precipitation=2.5
                                        )
+    print("insert prepped")
     db.session.add(weather_analysis)
+    print("add started")
     db.session.commit()
+    lumberjack_do(datetime.datetime.now(datetime.UTC), None, "Weather Processor", f"Job ID: {job_id} - Analysis written to DB")
 
     pass
 

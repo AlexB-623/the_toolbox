@@ -23,6 +23,7 @@ from dotenv import load_dotenv
 # delete from log_entries;
 # delete from weather_reports;
 # delete from weather_requests;
+# delete from weather_analysis;
 # delete from users;
 # PRAGMA foreign_keys = ON;
 ###

@@ -246,12 +246,12 @@ class WeatherAnalysis(db.Model):
     location = db.Column(db.String(50), index=True)
     average_low = db.Column(db.Float, index=True)
     average_high = db.Column(db.Float, index=True)
-    wind_probability = db.Column(db.Float, index=True)
-    average_wind_speed = db.Column(db.Float, index=True)
-    cloud_probability = db.Column(db.Float, index=True)
-    average_cloud_cover = db.Column(db.Float, index=True)
-    precipitation_probability = db.Column(db.Float, index=True)
-    average_precipitation = db.Column(db.Float, index=True)
+    wind_probability = db.Column(db.Float, nullable=True, index=True)
+    average_wind_speed = db.Column(db.Float, nullable=True, index=True)
+    cloud_probability = db.Column(db.Float, nullable=True, index=True)
+    average_cloud_cover = db.Column(db.Float, nullable=True, index=True)
+    precipitation_probability = db.Column(db.Float, nullable=True, index=True)
+    average_precipitation = db.Column(db.Float, nullable=True, index=True)
 
     def __init__(self, job_id, month, day, location, average_low, average_high, wind_probability, average_wind_speed, cloud_probability, average_cloud_cover, precipitation_probability, average_precipitation):
         self.job_id = job_id
