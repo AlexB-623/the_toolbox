@@ -1,5 +1,5 @@
 from base import db
-from base.models import WeatherRequest, WeatherReport
+from base.models import WeatherRequest, WeatherReport, WeatherAnalysis
 from base.lumberjack.views import lumberjack_do
 from geopy.geocoders import Nominatim
 from timezonefinder import TimezoneFinder
@@ -59,7 +59,7 @@ def process_pending_weather_requests(app):
                 db.session.commit()
                 #try/except
                 try:
-                    process_weather_request(gps_coords, month, day, request.job_id)
+                    process_weather_request(gps_coords, location, month, day, request.job_id)
                     request.job_status = "Complete"
                     db.session.commit()
                 except:
@@ -73,7 +73,7 @@ def process_pending_weather_requests(app):
     pass
 
 
-def process_weather_request(gps_coords, month, day, job_id):
+def process_weather_request(gps_coords, location, month, day, job_id):
     #if check for errors,then abort, else return
     job_result = make_master_dataframe(input_location=gps_coords, month=month, day=day, job_id=job_id)
     if type(job_result) != pd.DataFrame:
@@ -85,16 +85,30 @@ def process_weather_request(gps_coords, month, day, job_id):
         weather_report = job_result.to_dict(orient='records')
         db.session.bulk_insert_mappings(WeatherReport, weather_report)
         db.session.commit()
-        lumberjack_do(datetime.datetime.now(datetime.UTC), None, "Weather Processor", f"Job ID: {job_id} - DB insert completed.")
+        lumberjack_do(datetime.datetime.now(datetime.UTC), None, "Weather Processor", f"Job ID: {job_id} - DB insert completed, performing analysis...")
         # print("db commit did not fail, I think")
         #perform analysis
 
     pass
 
 
-def weather_analysis():
-    # define WeatherAnalysis Model and create Table
-    # save report to WeatherAnalysis table
+def weather_analysis(job_result, job_id, month, day, location):
+    # calculate:
+    # average daily low
+    # average daily high
+    # probablilty wind is not 0
+    # average daily wind speed
+    # probablilty clouds is not 0
+    # average daily cloud cover
+    # probablilty precip is not 0
+    # average daily precip
+    weather_analysis = WeatherAnalysis(job_id=job_id,
+                                       month=month,
+                                       day=day,
+                                       location=location)
+    db.session.add(weather_analysis)
+    db.session.commit()
+
     pass
 
 

@@ -1,3 +1,5 @@
+from geopy import location
+
 from base import db, login_manager
 from sqlalchemy import func
 from datetime import datetime
@@ -238,6 +240,7 @@ class WeatherAnalysis(db.Model):
     job_id = db.Column(db.String(50), db.ForeignKey('weather_requests.job_id'), unique=False, nullable=True, index=True)
     month = db.Column(db.Integer, index=True)
     day = db.Column(db.Integer, index=True)
+    location = db.Column(db.String(50), index=True)
     average_low = db.Column(db.Float, index=True)
     average_high = db.Column(db.Float, index=True)
     wind_probability = db.Column(db.Float, index=True)
@@ -251,6 +254,7 @@ class WeatherAnalysis(db.Model):
         self.job_id = job_id
         self.month = month
         self.day = day
+        self.location = location
         self.average_low = average_low
         self.average_high = average_high
         self.wind_probability = wind_probability
@@ -265,6 +269,7 @@ class WeatherAnalysis(db.Model):
             'job_id': self.job_id,
             'month': self.month,
             'day': self.day,
+            'location': self.location,
             'average_low': self.average_low,
             'average_high': self.average_high,
             'wind_probability': self.wind_probability,
