@@ -51,6 +51,7 @@ def process_pending_weather_requests(app):
                 # print(type(gps_coords))
                 month = request.requested_month
                 day = request.requested_day
+                timezone = request.decoded_timezone
                 # log req start
                 lumberjack_do(datetime.datetime.now(datetime.UTC), None, "Weather Processor",
                               f"Retrieving Weather for: {location}({str(gps_coords)}), {month}/{day} - Job ID: {request.job_id}")
@@ -59,7 +60,7 @@ def process_pending_weather_requests(app):
                 db.session.commit()
                 #try/except
                 try:
-                    process_weather_request(gps_coords, location, month, day, request.job_id)
+                    process_weather_request(gps_coords, location, timezone, month, day, request.job_id)
                     request.job_status = "Complete"
                     db.session.commit()
                 except:
@@ -73,7 +74,7 @@ def process_pending_weather_requests(app):
     pass
 
 
-def process_weather_request(gps_coords, location, month, day, job_id):
+def process_weather_request(gps_coords, location, timezone, month, day, job_id):
     #if check for errors,then abort, else return
     job_result = make_master_dataframe(input_location=gps_coords, month=month, day=day, job_id=job_id)
     if type(job_result) != pd.DataFrame:
@@ -88,13 +89,13 @@ def process_weather_request(gps_coords, location, month, day, job_id):
         lumberjack_do(datetime.datetime.now(datetime.UTC), None, "Weather Processor", f"Job ID: {job_id} - DB insert completed, performing analysis...")
         # print("db commit did not fail, I think")
         #perform analysis
-
+        weather_analysis(job_result, job_id, month, day, location, timezone)
     pass
 
 
-def weather_analysis(job_result, job_id, month, day, location):
+def weather_analysis(job_result, job_id, month, day, location, timezone):
     #localize the dataframe to the local time zone
-    dataset = localize_dataframe(job_result, local_tz)
+    dataset = localize_dataframe(job_result, timezone)
     # calculate:
     # average daily low
     # average daily high
@@ -108,19 +109,20 @@ def weather_analysis(job_result, job_id, month, day, location):
     weather_analysis = WeatherAnalysis(job_id=job_id,
                                        month=month,
                                        day=day,
-                                       location=location)
+                                       location=location
+                                       )
     db.session.add(weather_analysis)
     db.session.commit()
 
     pass
 
-def localize_dataframe(dataframe, local_tz):
+def localize_dataframe(dataframe, timezone):
     """
     Takes a dataframe, converts times to local, then groups by hour for analysis
     :param dataframe:
     :return:
     """
-    dataframe['local'] = dataframe['date'].dt.tz_localize('utc').dt.tz_convert(local_tz)
+    dataframe['local'] = dataframe['date'].dt.tz_localize('utc').dt.tz_convert(timezone)
     dataframe = dataframe.drop('date', axis=1)
     dataframe['Dates'] = pd.to_datetime(dataframe['local']).dt.date
     dataframe['Time'] = pd.to_datetime(dataframe['local']).dt.time
