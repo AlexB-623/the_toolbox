@@ -159,6 +159,7 @@ class WeatherRequest(db.Model):
     decoded_city = db.Column(db.String(50), index=True)
     decoded_state = db.Column(db.String(50), index=True)
     decoded_country = db.Column(db.String(50), index=True)
+    decoded_timezone = db.Column(db.String(50), index=True)
     #tracking info
     job_id = db.Column(db.String(50), index=True)
     job_status = db.Column(db.String(50), index=True, default="Pending")
@@ -173,6 +174,7 @@ class WeatherRequest(db.Model):
                  decoded_city,
                  decoded_state,
                  decoded_country,
+                 decoded_timezone,
                  job_id,
                  job_status):
         self.requesting_user = requesting_user
@@ -184,6 +186,7 @@ class WeatherRequest(db.Model):
         self.decoded_city = decoded_city
         self.decoded_state = decoded_state
         self.decoded_country = decoded_country
+        self.decoded_timezone = decoded_timezone
         self.job_id = job_id
         self.job_status = job_status
 
@@ -250,7 +253,7 @@ class WeatherAnalysis(db.Model):
     precipitation_probability = db.Column(db.Float, index=True)
     average_precipitation = db.Column(db.Float, index=True)
 
-    def __init__(self, job_id, month, day, average_low, average_high, wind_probability, average_wind_speed, cloud_probability, average_cloud_cover, precipitation_probability, average_precipitation):
+    def __init__(self, job_id, month, day, location, average_low, average_high, wind_probability, average_wind_speed, cloud_probability, average_cloud_cover, precipitation_probability, average_precipitation):
         self.job_id = job_id
         self.month = month
         self.day = day

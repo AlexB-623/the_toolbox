@@ -93,6 +93,8 @@ def process_weather_request(gps_coords, location, month, day, job_id):
 
 
 def weather_analysis(job_result, job_id, month, day, location):
+    #localize the dataframe to the local time zone
+    dataset = localize_dataframe(job_result, local_tz)
     # calculate:
     # average daily low
     # average daily high
@@ -102,6 +104,7 @@ def weather_analysis(job_result, job_id, month, day, location):
     # average daily cloud cover
     # probablilty precip is not 0
     # average daily precip
+
     weather_analysis = WeatherAnalysis(job_id=job_id,
                                        month=month,
                                        day=day,
@@ -111,6 +114,18 @@ def weather_analysis(job_result, job_id, month, day, location):
 
     pass
 
+def localize_dataframe(dataframe, local_tz):
+    """
+    Takes a dataframe, converts times to local, then groups by hour for analysis
+    :param dataframe:
+    :return:
+    """
+    dataframe['local'] = dataframe['date'].dt.tz_localize('utc').dt.tz_convert(local_tz)
+    dataframe = dataframe.drop('date', axis=1)
+    dataframe['Dates'] = pd.to_datetime(dataframe['local']).dt.date
+    dataframe['Time'] = pd.to_datetime(dataframe['local']).dt.time
+    dataframe = dataframe.drop('local', axis=1)
+    return dataframe
 
 def make_master_dataframe(input_location, month, day, job_id):
     """
