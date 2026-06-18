@@ -1,6 +1,5 @@
 from flask_wtf import FlaskForm
 from timezonefinder import TimezoneFinder
-tf = TimezoneFinder()
 from geopy.geocoders import Nominatim
 #from base.models import weather model
 from wtforms import (StringField,
@@ -12,7 +11,7 @@ from wtforms.validators import DataRequired, EqualTo, length
 from base.lumberjack.views import lumberjack_do
 from base.users.views import current_user
 import datetime
-
+tf = TimezoneFinder()
 
 
 class WeatherSubmitForm(FlaskForm):

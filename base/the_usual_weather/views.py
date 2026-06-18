@@ -51,6 +51,7 @@ def submit():
                                          decoded_city=form.decoded_city,
                                          decoded_state=form.decoded_state,
                                          decoded_country=form.decoded_country_code,
+                                         decoded_timezone=form.decoded_timezone,
                                          job_id=job_id,
                                          job_status="Pending"
                                          )
