@@ -1,4 +1,6 @@
 from flask_wtf import FlaskForm
+from timezonefinder import TimezoneFinder
+tf = TimezoneFinder()
 from geopy.geocoders import Nominatim
 #from base.models import weather model
 from wtforms import (StringField,
@@ -48,3 +50,7 @@ class WeatherSubmitForm(FlaskForm):
             self.decoded_country_code = location_details_raw['address']['country_code']
         except:
             self.decoded_country_code = "Is this Antarctica? I haven't tested for Antarctica."
+        try:
+            self.decoded_timezone = tf.timezone_at(lat=lat, lng=long)
+        except:
+            self.decoded_timezone = "UTC"
