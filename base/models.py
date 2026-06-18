@@ -231,3 +231,46 @@ class WeatherReport(db.Model):
             'wind_speed_100m': self.wind_speed_100m,
             'cloud_cover': self.cloud_cover
         }
+
+class WeatherAnalysis(db.Model):
+    __tablename__ = 'weather_analysis'
+    id = db.Column(db.Integer, primary_key=True)
+    job_id = db.Column(db.String(50), db.ForeignKey('weather_requests.job_id'), unique=False, nullable=True, index=True)
+    month = db.Column(db.Integer, index=True)
+    day = db.Column(db.Integer, index=True)
+    average_low = db.Column(db.Float, index=True)
+    average_high = db.Column(db.Float, index=True)
+    wind_probability = db.Column(db.Float, index=True)
+    average_wind_speed = db.Column(db.Float, index=True)
+    cloud_probability = db.Column(db.Float, index=True)
+    average_cloud_cover = db.Column(db.Float, index=True)
+    precipitation_probability = db.Column(db.Float, index=True)
+    average_precipitation = db.Column(db.Float, index=True)
+
+    def __init__(self, job_id, month, day, average_low, average_high, wind_probability, average_wind_speed, cloud_probability, average_cloud_cover, precipitation_probability, average_precipitation):
+        self.job_id = job_id
+        self.month = month
+        self.day = day
+        self.average_low = average_low
+        self.average_high = average_high
+        self.wind_probability = wind_probability
+        self.average_wind_speed = average_wind_speed
+        self.cloud_probability = cloud_probability
+        self.average_cloud_cover = average_cloud_cover
+        self.precipitation_probability = precipitation_probability
+        self.average_precipitation = average_precipitation
+
+    def to_dict(self):
+        return {
+            'job_id': self.job_id,
+            'month': self.month,
+            'day': self.day,
+            'average_low': self.average_low,
+            'average_high': self.average_high,
+            'wind_probability': self.wind_probability,
+            'average_wind_speed': self.average_wind_speed,
+            'cloud_probability': self.cloud_probability,
+            'average_cloud_cover': self.average_cloud_cover,
+            'precipitation_probability': self.precipitation_probability,
+            'average_precipitation': self.average_precipitation
+        }

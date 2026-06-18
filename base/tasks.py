@@ -85,9 +85,10 @@ def process_weather_request(gps_coords, month, day, job_id):
         weather_report = job_result.to_dict(orient='records')
         db.session.bulk_insert_mappings(WeatherReport, weather_report)
         db.session.commit()
-        lumberjack_do(datetime.datetime.now(datetime.UTC), None, "Weather Processor", f"{job_id} - DB insert completed.")
+        lumberjack_do(datetime.datetime.now(datetime.UTC), None, "Weather Processor", f"Job ID: {job_id} - DB insert completed.")
         # print("db commit did not fail, I think")
         #perform analysis
+
     pass
 
 

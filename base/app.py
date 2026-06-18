@@ -66,7 +66,7 @@ def background_job_checker():
     while True:
         process_pending_weather_requests(app)
         #Adjust Sleep for production
-        time.sleep(5)
+        time.sleep(60)
 
 thread = threading.Thread(target=background_job_checker, daemon=True)
 thread.start()
