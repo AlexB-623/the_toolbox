@@ -120,6 +120,7 @@ def report_detail(job_id):
         #add a "download" data button that collects the report data and exports to a CSV
         #add a "download" analysis button that collects the report analysis and exports to a CSV
         return render_template('the_usual_weather_report_detail.html',
+                               refresh='false',
                                report_request=report_request,
                                report_details=report_details,
                                report_data=report_data)
