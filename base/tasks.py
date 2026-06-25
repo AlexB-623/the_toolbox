@@ -31,7 +31,7 @@ def process_pending_weather_requests(app):
         if jobs < 1:
             pass
         else:
-            lumberjack_do(datetime.datetime.now(datetime.UTC), None, "Weather Processor",
+            lumberjack_do(None, "Weather Processor",
                           f"{jobs} Pending Weather Requests")
             # # Check if OpenMeteo is currently responding:
             # try:
@@ -39,7 +39,7 @@ def process_pending_weather_requests(app):
             # except:
             #
             # if api_check.status_code != 200:
-            #     lumberjack_do(datetime.datetime.now(datetime.UTC), None, "Weather Processor", f"OpenMeteo not responding, aborting. HTTP: {api_check.status_code}.")
+            #     lumberjack_do(None, "Weather Processor", f"OpenMeteo not responding, aborting. HTTP: {api_check.status_code}.")
             #     pass
             #for loop thru reqs
             for request in request_list:
@@ -55,7 +55,7 @@ def process_pending_weather_requests(app):
                 day = request.requested_day
                 timezone = request.decoded_timezone
                 # log req start
-                lumberjack_do(datetime.datetime.now(datetime.UTC), None, "Weather Processor",
+                lumberjack_do(None, "Weather Processor",
                               f"Retrieving Weather for: {location}({str(gps_coords)}), {month}/{day} - Job ID: {request.job_id}")
                 # update weather request to set job in progress
                 request.job_status = "Processing"
@@ -70,7 +70,7 @@ def process_pending_weather_requests(app):
                     db.session.commit()
                     continue
                 #log loop complete
-                lumberjack_do(datetime.datetime.now(datetime.UTC), None, "Weather Processor", f"Background job completed.")
+                lumberjack_do(None, "Weather Processor", f"Background job completed.")
                 pass
     #stop
     pass
@@ -83,12 +83,12 @@ def process_weather_request(gps_coords, location, timezone, month, day, job_id):
         #here we're checking to confirm that we actually got data back and not an API error.
         raise Exception("API Error")
     else:
-        lumberjack_do(datetime.datetime.now(datetime.UTC), None, "Weather Processor", f'Job ID: {job_id} - API retrieval completed.')
+        lumberjack_do(None, "Weather Processor", f'Job ID: {job_id} - API retrieval completed.')
         # print("job run, attempting db commit")
         weather_report = job_result.to_dict(orient='records')
         db.session.bulk_insert_mappings(WeatherReport, weather_report)
         db.session.commit()
-        lumberjack_do(datetime.datetime.now(datetime.UTC), None, "Weather Processor", f"Job ID: {job_id} - DB insert completed, performing analysis...")
+        lumberjack_do(None, "Weather Processor", f"Job ID: {job_id} - DB insert completed, performing analysis...")
         # print("db commit did not fail, I think")
         #perform analysis
         weather_analysis(job_result, job_id, month, day, location, timezone)
@@ -138,7 +138,7 @@ def weather_analysis(job_result, job_id, month, day, location, timezone):
                                        )
     db.session.add(weather_analysis)
     db.session.commit()
-    lumberjack_do(datetime.datetime.now(datetime.UTC), None, "Weather Processor", f"Job ID: {job_id} - Analysis written to DB")
+    lumberjack_do(None, "Weather Processor", f"Job ID: {job_id} - Analysis written to DB")
     pass
 
 def localize_dataframe(dataframe, timezone):
@@ -214,12 +214,12 @@ def call_for_data(latitude, longitude, start_date, end_date, job_id):
         response = responses[0]
     except OpenMeteoRequestsError as e:
         # Handle gracefully — log it, return a default, retry, etc.
-        lumberjack_do(datetime.datetime.now(datetime.UTC), None, "Weather Processor", f"Error calling OpenMeteo API: {e}. Job ID: {job_id}")
+        lumberjack_do(None, "Weather Processor", f"Error calling OpenMeteo API: {e}. Job ID: {job_id}")
         return "error"
         #need to pass the error up, revert the job, and abort the loop
     except Exception as e:
         # Catch any unexpected errors (network issues, etc.)
-        lumberjack_do(datetime.datetime.now(datetime.UTC), None, "Weather Processor", f"Error calling OpenMeteo API: {e}. Job ID: {job_id}")
+        lumberjack_do(None, "Weather Processor", f"Error calling OpenMeteo API: {e}. Job ID: {job_id}")
         return "error"
         # need to pass the error up, revert the job, and abort the loop
     return response

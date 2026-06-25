@@ -11,15 +11,15 @@ cwd = getcwd()
 lumberjack_blueprint = Blueprint('lumberjack', __name__, template_folder='templates/lumberjack')
 
 
-def lumberjack_do(timestamp, user_id, domain, event):
+def lumberjack_do(user_id, domain, event):
     """
-    Takes timestamp, user_id, domain, and event, and produces a log entry
-    :param timestamp: datetime.datetime.now(datetime.UTC)
+    Takes user_id, domain, and event, and produces a log entry
     :param user_id: current_user (can be authenticated or anonymous)
     :param domain: typically the blueprint being loaded
     :param event: notes about what is being logged
     :return: True if successful, False otherwise
     """
+    timestamp = datetime.datetime.now(datetime.UTC)
     try:
         # Check if user is authenticated (not anonymous)
         if user_id and user_id.is_authenticated:
@@ -122,7 +122,7 @@ def manage_logs():
         #above queries trigger a warning. Fine for now, but maybe find a cleaner way to do this later
         db.session.commit()
         #logging the deletion
-        lumberjack_do(datetime.datetime.now(datetime.UTC), current_user, 'lumberjack - cleanup', f'{num_to_delete} log entries deleted')
+        lumberjack_do(current_user, 'lumberjack - cleanup', f'{num_to_delete} log entries deleted')
         return redirect(url_for('lumberjack.manage_logs'))
     return render_template('lumberjack-manage_logs.html', total_logs=total_logs, form=form)
 

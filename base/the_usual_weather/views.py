@@ -32,7 +32,7 @@ def submit():
         # log it just in case
         #May need to verify we can get to Nominatim to take a submission
         job_id = str(uuid.uuid4())
-        lumberjack_do(datetime.datetime.now(datetime.UTC), current_user, "the usual weather", {"type": "Submission",
+        lumberjack_do(current_user, "the usual weather", {"type": "Submission",
                                                                              'User-Submitted city': form.city.data,
                                                                              'GPS Coordinates': str((form.latitude,
                                                                                                  form.longitude)),

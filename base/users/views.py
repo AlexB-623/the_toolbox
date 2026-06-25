@@ -33,7 +33,7 @@ def register():
         # check if email exists
         if User.check_email(email=form.email.data.lower()):
             flash('This Email is already registered.', "warning")
-            lumberjack_do(datetime.datetime.now(datetime.UTC), current_user, "users",
+            lumberjack_do(current_user, "users",
                           f"Somebody tried to register as {form.email.data}")
             return redirect(url_for('users.register'))
         #check if the submitted email is on the approved list
@@ -42,7 +42,7 @@ def register():
         # check if username exists
         elif User.check_username(username=form.username.data.lower()):
             flash('This username is already taken.', "warning")
-            lumberjack_do(datetime.datetime.now(datetime.UTC), current_user, "users",
+            lumberjack_do(current_user, "users",
                           f"Somebody tried to register as {form.username.data}")
             return redirect(url_for('users.register'))
 
@@ -54,7 +54,7 @@ def register():
             # add registration date
             db.session.add(user)
             db.session.commit()
-            lumberjack_do(datetime.datetime.now(datetime.UTC), current_user, "users",
+            lumberjack_do(current_user, "users",
                           f"{form.email.data} registered as {form.username.data}")
             flash('Thank you for registering. You can now login.', "success")
             return redirect(url_for('users.login'))
@@ -89,7 +89,7 @@ def login():
             db.session.commit()
             flash('You have been logged in.', "success")
             #logging the login
-            lumberjack_do(datetime.datetime.now(datetime.UTC), current_user, "users", "User Logged In")
+            lumberjack_do(current_user, "users", "User Logged In")
             #check if pwd reset is required and redirect to that page
             next = request.args.get('next')
             if next == None or not next[0]=='/':
@@ -113,7 +113,7 @@ def check_session_timeout():
         #REDO THE SESSION TIMEOUT
         # if last_login:
         #     if datetime.datetime.now(datetime.UTC) - last_login > timedelta(hours=4):
-        #         lumberjack_do(datetime.datetime.now(datetime.UTC), current_user, "user admin", "user session auto-expired")
+        #         lumberjack_do(current_user, "user admin", "user session auto-expired")
         #         logout_user()
         #         return redirect(url_for('users.login'))
 
@@ -126,7 +126,7 @@ def welcome():
 @users_blueprint.route('/logout', methods=['GET', 'POST'])
 @login_required
 def logout():
-    lumberjack_do(datetime.datetime.now(datetime.UTC), current_user, "users", "User Logged Out")
+    lumberjack_do(current_user, "users", "User Logged Out")
     logout_user()
     flash('You have been logged out.')
     return redirect(url_for('index'))
@@ -181,7 +181,7 @@ def invite_user():
                 return redirect(url_for('users.invite_user'))
             db.session.execute(db.insert(Invitee).values(email=email))
             db.session.commit()
-            lumberjack_do(datetime.datetime.now(datetime.UTC), current_user, "users", f"{email} was added to the approved list")
+            lumberjack_do(current_user, "users", f"{email} was added to the approved list")
             flash(f'{email} has been added to the approved list.', "success")
             return redirect(url_for('users.invite_user'))
     return render_template('users-invite_list.html', approved_list_clean=approved_list_clean, form=form)
@@ -205,7 +205,7 @@ def uninvite_user():
             to_delete = db.one_or_404(db.select(Invitee).filter_by(email=email))
             db.session.delete(to_delete)
             db.session.commit()
-            lumberjack_do(datetime.datetime.now(datetime.UTC), current_user, "users", f"{email} was removed from the approved list")
+            lumberjack_do(current_user, "users", f"{email} was removed from the approved list")
             flash(f'{email} was removed from the approved list.', "success")
             return redirect(url_for('users.uninvite_user'))
     return render_template('users-invite_list.html', approved_list_clean=approved_list_clean, form=form)
@@ -231,7 +231,7 @@ def manage_user(user_id):
             # Ban user logic
             user_to_modify.ban_user()
             db.session.commit()
-            lumberjack_do(datetime.datetime.now(datetime.UTC), current_user, "users", f"{user_to_modify.email} was banned")
+            lumberjack_do(current_user, "users", f"{user_to_modify.email} was banned")
             #need something that immediately revokes the user's session.
             flash("User has been banned.", "warning")
             pass
@@ -239,7 +239,7 @@ def manage_user(user_id):
             #unban logic
             user_to_modify.unban_user()
             db.session.commit()
-            lumberjack_do(datetime.datetime.now(datetime.UTC), current_user, "users", f"{user_to_modify.email} was unbanned")
+            lumberjack_do(current_user, "users", f"{user_to_modify.email} was unbanned")
             flash("User has been unbanned.", 'warning')
             pass
         elif action == 'reset_password':
@@ -256,14 +256,14 @@ def manage_user(user_id):
             # Promote logic
             user_to_modify.grant_admin()
             db.session.commit()
-            lumberjack_do(datetime.datetime.now(datetime.UTC), current_user, 'user administration', f'{user_to_modify.email} has been granted admin rights')
+            lumberjack_do(current_user, 'user administration', f'{user_to_modify.email} has been granted admin rights')
             flash("User has been promoted to admin.", "warning")
             pass
         elif action == 'demote':
             # Demote logic
             user_to_modify.remove_admin()
             db.session.commit()
-            lumberjack_do(datetime.datetime.now(datetime.UTC), current_user, 'user administration',f'{user_to_modify.email} has been denied admin rights')
+            lumberjack_do(current_user, 'user administration',f'{user_to_modify.email} has been denied admin rights')
             flash("Admin has been demoted to user.", "warning")
             pass
         return redirect(url_for('users.manage_user', user_id=user_id))

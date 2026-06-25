@@ -56,7 +56,7 @@ def gibbergen():
         md_about = f.read()
         f.close()
         about = markdown.markdown(md_about)
-    lumberjack_do(datetime.datetime.now(datetime.UTC), current_user, "gibbergen", f'generated "{term}" on main gibbergen page')
+    lumberjack_do(current_user, "gibbergen", f'generated "{term}" on main gibbergen page')
     return render_template('gibbergen_home.html', term=term, about=about, about_term=about_term)
 
 
@@ -68,7 +68,7 @@ def gibbergen_sampler():
     for n in i:
         term = term_maker()
         term_list.append(term)
-    lumberjack_do(datetime.datetime.now(datetime.UTC), current_user, "gibbergen", f'generated {term_list} on gibbergen sampler page')
+    lumberjack_do(current_user, "gibbergen", f'generated {term_list} on gibbergen sampler page')
     return render_template('gibbergen_sampler.html', terms=term_list)
 
 #next:
