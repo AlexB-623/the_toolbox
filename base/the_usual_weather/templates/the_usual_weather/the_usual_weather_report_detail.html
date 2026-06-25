@@ -49,7 +49,40 @@
         </div>
         <div>
             <h4>Weather Analysis</h4>
-            {{ report_details | safe }}
+            <table class="job-details">
+                <tr>
+                    <td>Average Low Temp:</td>
+                    <td>{{ report_details['average_low'] }}</td>
+                </tr>
+                <tr>
+                    <td>Average High Temp:</td>
+                    <td>{{ report_details['average_high'] }}</td>
+                </tr>
+                <tr>
+                    <td>Cloud Probability:</td>
+                    <td>{{ report_details['cloud_probability'] }}</td>
+                </tr>
+                <tr>
+                    <td>Average Cloud Cover:</td>
+                    <td>{{ report_details['average_cloud_cover'] }}</td>
+                </tr>
+                <tr>
+                    <td>Wind Probability:</td>
+                    <td>{{ report_details['wind_probability'] }}</td>
+                </tr>
+                <tr>
+                    <td>Average Wind Speed:</td>
+                    <td>{{ report_details['average_wind_speed'] }}</td>
+                </tr>
+                <tr>
+                    <td>Precipitation Probability:</td>
+                    <td>{{ report_details['precipitation_probability'] }}</td>
+                </tr>
+                <tr>
+                    <td>Average Precipitation Amount:</td>
+                    <td>{{ report_details['average_precipitation'] }}</td>
+                </tr>
+            </table>
         </div>
     <div>
         <h4>Report Data</h4>

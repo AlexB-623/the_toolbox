@@ -108,11 +108,17 @@ def weather_analysis(job_result, job_id, month, day, location, timezone):
     avg_low = daily_temps['daily_low'].mean()
     avg_high = daily_temps['daily_high'].mean()
     # probablilty wind is not 0
+    wind_probability = (dataset['wind_speed_100m'] == 0).mean() * 100
     # average daily wind speed
+    average_wind_speed = dataset[dataset['wind_speed_100m'] > 0]['wind_speed_100m'].mean()
     # probablilty clouds is not 0
+    cloud_probability = (dataset['wind_speed_100m'] == 0).mean() * 100
     # average daily cloud cover
+    average_cloud_cover = dataset[dataset['wind_speed_100m'] > 0]['wind_speed_100m'].mean()
     # probablilty precip is not 0
+    precipitation_probability = (dataset['wind_speed_100m'] == 0).mean() * 100
     # average daily precip
+    average_precipitation = dataset[dataset['wind_speed_100m'] > 0]['wind_speed_100m'].mean()
 
     weather_analysis = WeatherAnalysis(job_id=job_id,
                                        month=month,
@@ -120,12 +126,12 @@ def weather_analysis(job_result, job_id, month, day, location, timezone):
                                        location=location,
                                        average_low=avg_low,
                                        average_high=avg_high,
-                                       wind_probability=50.0,
-                                       average_wind_speed=1.5,
-                                       cloud_probability=50.0,
-                                       average_cloud_cover=50.0,
-                                       precipitation_probability=50.0,
-                                       average_precipitation=2.5
+                                       wind_probability=wind_probability,
+                                       average_wind_speed=average_wind_speed,
+                                       cloud_probability=cloud_probability,
+                                       average_cloud_cover=average_cloud_cover,
+                                       precipitation_probability=precipitation_probability,
+                                       average_precipitation=average_precipitation
                                        )
     db.session.add(weather_analysis)
     db.session.commit()
