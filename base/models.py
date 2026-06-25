@@ -218,15 +218,15 @@ class WeatherReport(db.Model):
     date = db.Column(db.DateTime, index=True)
     temperature_2m = db.Column(db.Float, index=True)
     precipitation = db.Column(db.Float, index=True)
-    wind_speed_100m = db.Column(db.Float, index=True)
+    wind_speed_10m = db.Column(db.Float, index=True)
     cloud_cover = db.Column(db.Float, index=True)
 
-    def __init__(self, job_id, date, temperature_2m, precipitation, wind_speed_100m, cloud_cover):
+    def __init__(self, job_id, date, temperature_2m, precipitation, wind_speed_10m, cloud_cover):
         self.job_id = job_id
         self.date = date
         self.temperature_2m = temperature_2m
         self.precipitation = precipitation
-        self.wind_speed_100m = wind_speed_100m
+        self.wind_speed_10m = wind_speed_10m
         self.cloud_cover = cloud_cover
 
     def to_dict(self):
@@ -234,7 +234,7 @@ class WeatherReport(db.Model):
             'date': self.date.strftime('%m/%d/%Y %H:%M'),
             'temperature_2m': self.temperature_2m,
             'precipitation': self.precipitation,
-            'wind_speed_100m': self.wind_speed_100m,
+            'wind_speed_10m': self.wind_speed_00m,
             'cloud_cover': self.cloud_cover
         }
 

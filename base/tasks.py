@@ -107,19 +107,21 @@ def weather_analysis(job_result, job_id, month, day, location, timezone):
     )
     avg_low = daily_temps['daily_low'].mean()
     avg_high = daily_temps['daily_high'].mean()
-    daily_probability = dataset.groupby('Dates')[['wind_speed_100m', 'precipitation', 'cloud_cover']].max()
+    daily_probability = dataset.groupby('Dates')[['wind_speed_10m', 'precipitation', 'cloud_cover']].max()
     # probablilty wind is not 0
-    wind_probability = (daily_probability['wind_speed_100m'] >= 12).mean() * 100
+    wind_probability = (daily_probability['wind_speed_10m'] >= 12.5).mean() * 100
     # average daily wind speed
-    average_wind_speed = dataset[dataset['wind_speed_100m'] > 0]['wind_speed_100m'].mean()
+    average_wind_speed = dataset[dataset['wind_speed_10m'] > 0]['wind_speed_10m'].mean()
     # probablilty clouds is not 0
-    cloud_probability = (daily_probability['cloud_cover'] >= 50).mean() * 100
+    cloud_probability = (daily_probability['cloud_cover'] >= 55).mean() * 100
     # average daily cloud cover
     average_cloud_cover = dataset[dataset['cloud_cover'] > 0]['cloud_cover'].mean()
     # probablilty precip is not 0
     precipitation_probability = (daily_probability['precipitation'] > 0.2).mean() * 100
     # average daily precip
-    average_precipitation = dataset[dataset['precipitation'] > 0]['precipitation'].mean()
+    daily_precipitation = dataset.groupby('Dates')['precipitation'].sum()
+    average_precipitation = daily_precipitation[daily_precipitation >= 0.1].mean()
+    #average_precipitation = dataset[dataset['precipitation'] > 0]['precipitation'].mean()
 
     weather_analysis = WeatherAnalysis(job_id=job_id,
                                        month=month,
@@ -199,9 +201,9 @@ def call_for_data(latitude, longitude, start_date, end_date, job_id):
 		"longitude": longitude,
 		"start_date": start_date,
 		"end_date": end_date,
-		"hourly": ["temperature_2m", "precipitation", "cloud_cover", "wind_speed_100m"],
+		"hourly": ["temperature_2m", "precipitation", "cloud_cover", "wind_speed_10m"],
         #confirm the time zone
-		"timezone": "auto",
+		"timezone": "UTC",
         "temperature_unit": "fahrenheit",
         "wind_speed_unit": "mph",
         "precipitation_unit": "inch"
@@ -234,7 +236,7 @@ def make_dataframe(api_response, job_id):
     hourly_temperature_2m = hourly.Variables(0).ValuesAsNumpy()
     hourly_precipitation = hourly.Variables(1).ValuesAsNumpy()
     hourly_cloud_cover = hourly.Variables(2).ValuesAsNumpy()
-    hourly_wind_speed_100m = hourly.Variables(3).ValuesAsNumpy()
+    hourly_wind_speed_10m = hourly.Variables(3).ValuesAsNumpy()
     hourly_data = {"date": pd.date_range(
 		start = pd.to_datetime(hourly.Time(), unit = "s"),
 		end = pd.to_datetime(hourly.TimeEnd(), unit = "s"),
@@ -244,7 +246,7 @@ def make_dataframe(api_response, job_id):
     hourly_data["temperature_2m"] = hourly_temperature_2m
     hourly_data["precipitation"] = hourly_precipitation
     hourly_data["cloud_cover"] = hourly_cloud_cover
-    hourly_data["wind_speed_100m"] = hourly_wind_speed_100m
+    hourly_data["wind_speed_10m"] = hourly_wind_speed_10m
     hourly_data["job_id"] = job_id
 
 
