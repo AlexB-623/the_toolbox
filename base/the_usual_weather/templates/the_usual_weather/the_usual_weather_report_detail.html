@@ -1,5 +1,11 @@
 {% extends "the_usual_weather-base.html" %}
 
+{% if refresh %}
+{% block head_extra %}
+    <meta http-equiv="refresh" content="5">
+{% endblock %}
+{% endif %}
+
 {% block content %}
     <div class="default-container">
         <h1 class="tool-home"><a href="{{ url_for('the_usual_weather.the_usual_weather') }}">The Usual Weather</a> </h1>

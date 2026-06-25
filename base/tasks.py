@@ -58,7 +58,7 @@ def process_pending_weather_requests(app):
                 lumberjack_do(datetime.datetime.now(datetime.UTC), None, "Weather Processor",
                               f"Retrieving Weather for: {location}({str(gps_coords)}), {month}/{day} - Job ID: {request.job_id}")
                 # update weather request to set job in progress
-                request.job_status = "In Progress"
+                request.job_status = "Processing"
                 db.session.commit()
                 #try/except
                 try:
@@ -66,7 +66,7 @@ def process_pending_weather_requests(app):
                     request.job_status = "Complete"
                     db.session.commit()
                 except:
-                    request.job_status = "Failed, Pending Retry"
+                    request.job_status = "Failed"
                     db.session.commit()
                     continue
                 #log loop complete

@@ -105,6 +105,7 @@ def report_detail(job_id):
     if report_request['job_status'] != "Complete":
         #refresh page periodically
         return render_template('the_usual_weather_report_detail.html',
+                               refresh = 'true',
                                report_request=report_request)
     else:
         #fetch the report and get it prepared for display
