@@ -109,17 +109,17 @@ def weather_analysis(job_result, job_id, month, day, location, timezone):
     avg_high = daily_temps['daily_high'].mean()
     daily_probability = dataset.groupby('Dates')[['wind_speed_100m', 'precipitation', 'cloud_cover']].max()
     # probablilty wind is not 0
-    wind_probability = (daily_probability['wind_speed_100m'] > 0).mean() * 100
+    wind_probability = (daily_probability['wind_speed_100m'] >= 12).mean() * 100
     # average daily wind speed
     average_wind_speed = dataset[dataset['wind_speed_100m'] > 0]['wind_speed_100m'].mean()
     # probablilty clouds is not 0
-    cloud_probability = (daily_probability['wind_speed_100m'] > 0).mean() * 100
+    cloud_probability = (daily_probability['cloud_cover'] >= 50).mean() * 100
     # average daily cloud cover
-    average_cloud_cover = dataset[dataset['wind_speed_100m'] > 0]['wind_speed_100m'].mean()
+    average_cloud_cover = dataset[dataset['cloud_cover'] > 0]['cloud_cover'].mean()
     # probablilty precip is not 0
-    precipitation_probability = (daily_probability['wind_speed_100m'] > 0).mean() * 100
+    precipitation_probability = (daily_probability['precipitation'] > 0.2).mean() * 100
     # average daily precip
-    average_precipitation = dataset[dataset['wind_speed_100m'] > 0]['wind_speed_100m'].mean()
+    average_precipitation = dataset[dataset['precipitation'] > 0]['precipitation'].mean()
 
     weather_analysis = WeatherAnalysis(job_id=job_id,
                                        month=month,
@@ -200,8 +200,11 @@ def call_for_data(latitude, longitude, start_date, end_date, job_id):
 		"start_date": start_date,
 		"end_date": end_date,
 		"hourly": ["temperature_2m", "precipitation", "cloud_cover", "wind_speed_100m"],
+        #confirm the time zone
 		"timezone": "auto",
-        "temperature_unit": "fahrenheit"
+        "temperature_unit": "fahrenheit",
+        "wind_speed_unit": "mph",
+        "precipitation_unit": "inch"
 	}
     try:
         responses = open_meteo.weather_api(url, params=params)
