@@ -47,6 +47,7 @@
                 </table>
             </div>
         </div>
+        {% if report_details %}
         <div>
             <h4>Weather Analysis</h4>
             <table class="job-details">
@@ -83,10 +84,13 @@
                     <td>{{ report_details['average_precipitation'] }}</td>
                 </tr>
             </table>
+
         </div>
+
     <div>
         <h4>Report Data</h4>
         {{ report_data | safe }}
     </div>
+    {% endif %}
     </div>
 {% endblock %}
