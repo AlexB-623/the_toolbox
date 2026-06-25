@@ -203,6 +203,7 @@ class WeatherRequest(db.Model):
             'decoded_city': self.decoded_city,
             'decoded_state': self.decoded_state,
             'decoded_country': self.decoded_country.upper(),
+            'decoded_timezone': self.decoded_timezone,
             'job_id': self.job_id,
             'job_status': self.job_status
         }
