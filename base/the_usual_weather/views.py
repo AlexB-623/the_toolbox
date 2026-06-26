@@ -113,7 +113,7 @@ def report_detail(job_id):
         report_data_raw = WeatherReport.query.filter_by(job_id=job_id).all()
         report_data = pd.DataFrame([{k: v for k, v in r.__dict__.items() if k != '_sa_instance_state'} for r in report_data_raw])
         report_data = report_data.drop(['job_id', 'id'], axis=1)
-        report_data = report_data[['date', 'temperature_2m', 'precipitation', 'wind_speed_10m', 'cloud_cover']]
+        report_data = report_data[['date', 'temperature_2m', 'precipitation', 'wind_speed_10m', 'cloud_cover', 'apparent_temperature', 'relative_humidity_2m']]
         report_data = report_data.to_html()
         report_details = db.session.execute(db.select(WeatherAnalysis).filter_by(job_id=job_id)).scalar().to_dict()
         # report_details = report_details.to_dict()

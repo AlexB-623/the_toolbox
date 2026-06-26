@@ -203,7 +203,12 @@ def call_for_data(latitude, longitude, start_date, end_date, job_id):
 		"longitude": longitude,
 		"start_date": start_date,
 		"end_date": end_date,
-		"hourly": ["temperature_2m", "precipitation", "cloud_cover", "wind_speed_10m"],
+		"hourly": ["temperature_2m",
+                   "precipitation",
+                   "cloud_cover",
+                   "wind_speed_10m",
+                   "apparent_temperature",
+                   "relative_humidity_2m"],
         #confirm the time zone
 		"timezone": "UTC",
         "temperature_unit": "fahrenheit",
@@ -239,6 +244,8 @@ def make_dataframe(api_response, job_id):
     hourly_precipitation = hourly.Variables(1).ValuesAsNumpy()
     hourly_cloud_cover = hourly.Variables(2).ValuesAsNumpy()
     hourly_wind_speed_10m = hourly.Variables(3).ValuesAsNumpy()
+    hourly_apparent_temperature = hourly.Variables(4).ValuesAsNumpy()
+    hourly_relative_humidity_2m = hourly.Variables(5).ValuesAsNumpy()
     hourly_data = {"date": pd.date_range(
 		start = pd.to_datetime(hourly.Time(), unit = "s"),
 		end = pd.to_datetime(hourly.TimeEnd(), unit = "s"),
@@ -249,6 +256,8 @@ def make_dataframe(api_response, job_id):
     hourly_data["precipitation"] = hourly_precipitation
     hourly_data["cloud_cover"] = hourly_cloud_cover
     hourly_data["wind_speed_10m"] = hourly_wind_speed_10m
+    hourly_data["apparent_temperature"] = hourly_apparent_temperature
+    hourly_data["relative_humidity_2m"] = hourly_relative_humidity_2m
     hourly_data["job_id"] = job_id
 
 

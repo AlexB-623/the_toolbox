@@ -209,8 +209,6 @@ class WeatherRequest(db.Model):
         }
 
 
-#need to determine how to join with the Request table so they are linked
-# think about how to handle db table drops - can we generate a unique token for job_id? UUID?
 class WeatherReport(db.Model):
     __tablename__ = 'weather_reports'
     id = db.Column(db.Integer, primary_key=True)
@@ -220,22 +218,28 @@ class WeatherReport(db.Model):
     precipitation = db.Column(db.Float, index=True)
     wind_speed_10m = db.Column(db.Float, index=True)
     cloud_cover = db.Column(db.Float, index=True)
+    apparent_temperature = db.Column(db.Float, index=True)
+    relative_humidity_2m = db.Column(db.Float, index=True)
 
-    def __init__(self, job_id, date, temperature_2m, precipitation, wind_speed_10m, cloud_cover):
+    def __init__(self, job_id, date, temperature_2m, precipitation, wind_speed_10m, cloud_cover, apparent_temperature, relative_humidity_2m):
         self.job_id = job_id
         self.date = date
         self.temperature_2m = temperature_2m
         self.precipitation = precipitation
         self.wind_speed_10m = wind_speed_10m
         self.cloud_cover = cloud_cover
+        self.apparent_temperature = apparent_temperature
+        self.relative_humidity_2m = relative_humidity_2m
 
     def to_dict(self):
         return {
             'date': self.date.strftime('%m/%d/%Y %H:%M'),
             'temperature_2m': self.temperature_2m,
             'precipitation': self.precipitation,
-            'wind_speed_10m': self.wind_speed_00m,
-            'cloud_cover': self.cloud_cover
+            'wind_speed_10m': self.wind_speed_10m,
+            'cloud_cover': self.cloud_cover,
+            'apparent_temperature': self.apparent_temperature,
+            'relative_humidity_2m': self.relative_humidity_2m
         }
 
 class WeatherAnalysis(db.Model):
