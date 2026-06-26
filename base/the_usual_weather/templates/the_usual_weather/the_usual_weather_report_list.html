@@ -8,6 +8,7 @@
     <table class="report-table">
         <thead>
             <tr>
+                <th>Report Status</th>
                 <th>Requested By</th>
                 <th>Submission Date</th>
                 <th>Submission City</th>
@@ -16,12 +17,12 @@
                 <th>Decoded City</th>
                 <th>Decoded State</th>
                 <th>Country Code</th>
-                <th>Report Status</th>
             </tr>
         </thead>
         <tbody>
         {% for report in pretty_list %}
             <tr>
+                <td class="report-is-{{ report.job_status }}"><a href="{{ url_for('the_usual_weather.report_detail', job_id=report.job_id) }}">{{ report.job_status }}</a></td>
                 <td>{{ report.requesting_user }}</td>
                 <td>{{ report.submitted_date }}</td>
                 <td>{{ report.requested_city }}</td>
@@ -30,7 +31,6 @@
                 <td>{{ report.decoded_city }}</td>
                 <td>{{ report.decoded_state }}</td>
                 <td>{{ report.decoded_country }}</td>
-                <td class="report-is-{{ report.job_status }}"><a href="{{ url_for('the_usual_weather.report_detail', job_id=report.job_id) }}">{{ report.job_status }}</a></td>
             </tr>
         {% endfor %}
         </tbody>

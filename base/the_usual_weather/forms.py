@@ -48,7 +48,7 @@ class WeatherSubmitForm(FlaskForm):
         try:
             self.decoded_country_code = location_details_raw['address']['country_code']
         except:
-            self.decoded_country_code = "Is this Antarctica? I haven't tested for Antarctica."
+            self.decoded_country_code = "Is this Antarctica?"
         try:
             self.decoded_timezone = tf.timezone_at(lat=lat, lng=long)
         except:
