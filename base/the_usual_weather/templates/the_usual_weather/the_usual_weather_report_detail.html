@@ -60,44 +60,44 @@
             <h4>Weather Analysis</h4>
             <table class="job-details">
                 <tr>
-                    <td>Location</td>
+                    <td>Location:</td>
                     <td>{{ report_details['location'] }}</td>
                 </tr>
                 <tr>
-                    <td>Local Time Zone</td>
+                    <td>Local Time Zone:</td>
                     <td>{{ report_request['decoded_timezone'] }}</td>
                 </tr>
                 <tr>
-                    <td>Average Low Temp:</td>
-                    <td>{{ report_details['average_low']|round(2) }}</td>
+                    <td class="low-temp">Average Low Temp:</td>
+                    <td class="low-temp">{{ report_details['average_low']|round(2) }} °F</td>
                 </tr>
                 <tr>
-                    <td>Average High Temp:</td>
-                    <td>{{ report_details['average_high']|round(2) }}</td>
+                    <td class="high-temp">Average High Temp:</td>
+                    <td class="high-temp">{{ report_details['average_high']|round(2) }} °F</td>
                 </tr>
                 <tr>
                     <td>Cloudiness Probability:</td>
-                    <td>{{ report_details['cloud_probability']|round(2) }}</td>
+                    <td>{{ report_details['cloud_probability']|round(2) }}%</td>
                 </tr>
                 <tr>
                     <td>Average Cloud Cover:</td>
-                    <td>{{ report_details['average_cloud_cover']|round(2) }}</td>
+                    <td>{{ report_details['average_cloud_cover']|round(2) }}%</td>
                 </tr>
                 <tr>
                     <td>Windiness Probability:</td>
-                    <td>{{ report_details['wind_probability']|round(2) }}</td>
+                    <td>{{ report_details['wind_probability']|round(2) }}%</td>
                 </tr>
                 <tr>
                     <td>Average Wind Speed:</td>
-                    <td>{{ report_details['average_wind_speed']|round(2) }}</td>
+                    <td>{{ report_details['average_wind_speed']|round(2) }} MPH</td>
                 </tr>
                 <tr>
                     <td>Precipitation Probability:</td>
-                    <td>{{ report_details['precipitation_probability']|round(2) }}</td>
+                    <td>{{ report_details['precipitation_probability']|round(2) }} %</td>
                 </tr>
                 <tr>
                     <td>Average Precipitation Amount:</td>
-                    <td>{{ report_details['average_precipitation']|round(2) }}</td>
+                    <td>{{ report_details['average_precipitation']|round(2) }} inches</td>
                 </tr>
             </table>
 

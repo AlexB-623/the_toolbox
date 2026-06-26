@@ -54,3 +54,11 @@
     background-color: Red;
     font-weight: bold;
 }
+
+.low-temp {
+    background-color: aqua;
+}
+
+.high-temp {
+    background-color: orangered;
+}
