@@ -40,6 +40,10 @@
                         {{ report_request['gps_coordinates'] }}</a>
                     </td>
                 </tr>
+                    <tr>
+                        <td>Local Time Zone:</td>
+                        <td>{{ report_request['decoded_timezone'] }}</td>
+                </tr>
             </table>
             </div>
             <div class="job-record-status">
@@ -59,14 +63,6 @@
         <div>
             <h4>Weather Analysis</h4>
             <table class="job-details">
-                <tr>
-                    <td>Location:</td>
-                    <td>{{ report_details['location'] }}</td>
-                </tr>
-                <tr>
-                    <td>Local Time Zone:</td>
-                    <td>{{ report_request['decoded_timezone'] }}</td>
-                </tr>
                 <tr>
                     <td class="low-temp">Average Low Temp:</td>
                     <td class="low-temp">{{ report_details['average_low']|round(2) }} °F</td>
