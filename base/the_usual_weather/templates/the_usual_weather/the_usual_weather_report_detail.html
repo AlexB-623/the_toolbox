@@ -73,6 +73,22 @@
                     <td class="high-temp">{{ report_details['average_high']|round(2) }} °F</td>
                 </tr>
                 <tr>
+                    <td>Average Low Relative Humidity:</td>
+                    <td>{{ report_details['average_low_relative_humidity']|round(2) }}%</td>
+                </tr>
+                <tr>
+                    <td>Average High Relative Humidity:</td>
+                    <td>{{ report_details['average_high_relative_humidity']|round(2) }}%</td>
+                </tr>
+                <tr>
+                    <td class="low-temp">Average Low "Feels Like" Temp:</td>
+                    <td class="low-temp">{{ report_details['average_low_apparent_temperature']|round(2) }} °F</td>
+                </tr>
+                <tr>
+                    <td class="high-temp">Average High "Feels Like" Temp:</td>
+                    <td class="high-temp">{{ report_details['average_high_apparent_temperature']|round(2) }} °F</td>
+                </tr>
+                <tr>
                     <td>Cloudiness Probability:</td>
                     <td>{{ report_details['cloud_probability']|round(2) }}%</td>
                 </tr>
