@@ -106,8 +106,20 @@ def weather_analysis(job_result, job_id, month, day, location, timezone):
         daily_low='min',
         daily_high='max'
     )
-    avg_low = daily_temps['daily_low'].mean()
-    avg_high = daily_temps['daily_high'].mean()
+    avg_low_temp = daily_temps['daily_low'].mean()
+    avg_high_temp = daily_temps['daily_high'].mean()
+    daily_humidity = dataset.groupby('Dates')['relative_humidity_2m'].agg(
+        daily_low='min',
+        daily_high='max'
+    )
+    avg_low_relative_humidity = daily_humidity['daily_low'].mean()
+    avg_high_relative_humidity = daily_humidity['daily_high'].mean()
+    daily_apparent_temperature = dataset.groupby('Dates')['apparent_temperature'].agg(
+        daily_low='min',
+        daily_high='max'
+    )
+    avg_low_apparent_temperature = daily_apparent_temperature['daily_low'].mean()
+    avg_high_apparent_temperature = daily_apparent_temperature['daily_high'].mean()
     daily_probability = dataset.groupby('Dates')[['wind_speed_10m', 'precipitation', 'cloud_cover']].max()
     # probablilty wind is not 0
     wind_probability = (daily_probability['wind_speed_10m'] >= 12.5).mean() * 100
@@ -129,8 +141,12 @@ def weather_analysis(job_result, job_id, month, day, location, timezone):
                                        month_proper=month_proper,
                                        day=day,
                                        location=location,
-                                       average_low=avg_low,
-                                       average_high=avg_high,
+                                       average_low=avg_low_temp,
+                                       average_high=avg_high_temp,
+                                       average_low_apparent_temperature=avg_low_apparent_temperature,
+                                       average_high_apparent_temperature=avg_high_apparent_temperature,
+                                       average_low_relative_humidity=avg_low_relative_humidity,
+                                       average_high_relative_humidity=avg_high_relative_humidity,
                                        wind_probability=wind_probability,
                                        average_wind_speed=average_wind_speed,
                                        cloud_probability=cloud_probability,

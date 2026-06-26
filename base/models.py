@@ -252,6 +252,10 @@ class WeatherAnalysis(db.Model):
     location = db.Column(db.String(50), index=True)
     average_low = db.Column(db.Float, index=True)
     average_high = db.Column(db.Float, index=True)
+    average_low_apparent_temperature = db.Column(db.Float, index=True)
+    average_high_apparent_temperature = db.Column(db.Float, index=True)
+    average_low_relative_humidity = db.Column(db.Float, index=True)
+    average_high_relative_humidity = db.Column(db.Float, index=True)
     wind_probability = db.Column(db.Float, nullable=True, index=True)
     average_wind_speed = db.Column(db.Float, nullable=True, index=True)
     cloud_probability = db.Column(db.Float, nullable=True, index=True)
@@ -259,7 +263,7 @@ class WeatherAnalysis(db.Model):
     precipitation_probability = db.Column(db.Float, nullable=True, index=True)
     average_precipitation = db.Column(db.Float, nullable=True, index=True)
 
-    def __init__(self, job_id, month, month_proper, day, location, average_low, average_high, wind_probability, average_wind_speed, cloud_probability, average_cloud_cover, precipitation_probability, average_precipitation):
+    def __init__(self, job_id, month, month_proper, day, location, average_low, average_high, wind_probability, average_wind_speed, cloud_probability, average_cloud_cover, precipitation_probability, average_precipitation, average_low_apparent_temperature, average_high_apparent_temperature, average_low_relative_humidity, average_high_relative_humidity):
         self.job_id = job_id
         self.month = month
         self.month_proper = month_proper
@@ -267,6 +271,10 @@ class WeatherAnalysis(db.Model):
         self.location = location
         self.average_low = average_low
         self.average_high = average_high
+        self.average_low_apparent_temperature = average_low_apparent_temperature
+        self.average_high_apparent_temperature = average_high_apparent_temperature
+        self.average_low_relative_humidity = average_low_relative_humidity
+        self.average_high_relative_humidity = average_high_relative_humidity
         self.wind_probability = wind_probability
         self.average_wind_speed = average_wind_speed
         self.cloud_probability = cloud_probability
@@ -283,6 +291,10 @@ class WeatherAnalysis(db.Model):
             'location': self.location,
             'average_low': self.average_low,
             'average_high': self.average_high,
+            'average_low_apparent_temperature': self.average_low_apparent_temperature,
+            'average_high_apparent_temperature': self.average_high_apparent_temperature,
+            'average_low_relative_humidity': self.average_low_relative_humidity,
+            'average_high_relative_humidity': self.average_high_relative_humidity,
             'wind_probability': self.wind_probability,
             'average_wind_speed': self.average_wind_speed,
             'cloud_probability': self.cloud_probability,
