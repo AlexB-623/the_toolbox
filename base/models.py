@@ -243,6 +243,7 @@ class WeatherAnalysis(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     job_id = db.Column(db.String(50), db.ForeignKey('weather_requests.job_id'), unique=False, nullable=True, index=True)
     month = db.Column(db.Integer, index=True)
+    month_proper = db.Column(db.String(50), index=True)
     day = db.Column(db.Integer, index=True)
     location = db.Column(db.String(50), index=True)
     average_low = db.Column(db.Float, index=True)
@@ -254,9 +255,10 @@ class WeatherAnalysis(db.Model):
     precipitation_probability = db.Column(db.Float, nullable=True, index=True)
     average_precipitation = db.Column(db.Float, nullable=True, index=True)
 
-    def __init__(self, job_id, month, day, location, average_low, average_high, wind_probability, average_wind_speed, cloud_probability, average_cloud_cover, precipitation_probability, average_precipitation):
+    def __init__(self, job_id, month, month_proper, day, location, average_low, average_high, wind_probability, average_wind_speed, cloud_probability, average_cloud_cover, precipitation_probability, average_precipitation):
         self.job_id = job_id
         self.month = month
+        self.month_proper = month_proper
         self.day = day
         self.location = location
         self.average_low = average_low
@@ -272,6 +274,7 @@ class WeatherAnalysis(db.Model):
         return {
             'job_id': self.job_id,
             'month': self.month,
+            'month_proper': self.month_proper,
             'day': self.day,
             'location': self.location,
             'average_low': self.average_low,

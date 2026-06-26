@@ -97,6 +97,7 @@ def process_weather_request(gps_coords, location, timezone, month, day, job_id):
 
 def weather_analysis(job_result, job_id, month, day, location, timezone):
     #localize the dataframe to the local time zone
+    month_proper = month_lookup(month)
     dataset = localize_dataframe(job_result, timezone)
     # calculate:
     # average daily low
@@ -125,6 +126,7 @@ def weather_analysis(job_result, job_id, month, day, location, timezone):
 
     weather_analysis = WeatherAnalysis(job_id=job_id,
                                        month=month,
+                                       month_proper=month_proper,
                                        day=day,
                                        location=location,
                                        average_low=avg_low,
